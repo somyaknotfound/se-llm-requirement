@@ -7,10 +7,13 @@ Your previous response did not satisfy the required output contract.
 {PREVIOUS}
 
 # TASK
-Return a corrected version of the SAME requirement set. Fix only what the errors
-above identify. Do not add new requirements, do not renumber existing ones, and
-do not silently drop a requirement to make an error go away — if a requirement is
-faulty, repair its fields.
+Return a corrected requirement set that satisfies EVERY error listed above.
+
+{DIRECTIVE}
+
+Otherwise leave the set alone: do not renumber existing requirements, do not drop
+one to make an error go away, and do not rewrite requirements the errors did not
+implicate. If a requirement is faulty, repair its fields.
 
 Reminders on the constraints that were violated most often:
 

@@ -17,7 +17,15 @@ here.
 
 # TASK
 Produce between {MIN_REQS} and {MAX_REQS} requirements for the target
-functionality, of which AT LEAST {MIN_NFRS} must be non-functional requirements.
+functionality. AT LEAST {MIN_NFRS} must be non-functional requirements (NFR), and
+AT LEAST {MIN_FRS} must be functional requirements (FR).
+
+Count as you go and do not stop early. {MIN_REQS} is a floor, not a target to
+approach. Every distinct step of the workflow is its own functional requirement —
+composing the order, checking allergies, checking interactions, warning the
+prescriber, authenticating the prescriber, signing, transmitting to the pharmacy,
+cancelling or changing an order, and writing the audit record are separate FRs,
+not one.
 
 Rules — each one is checked mechanically downstream:
 

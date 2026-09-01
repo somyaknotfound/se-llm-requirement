@@ -89,6 +89,61 @@ def render(template: str, **fields: str) -> str:
     return out
 
 
+def repair_directive(payload: Any, cfg: dict[str, Any]) -> str:
+    """Tell the repair prompt what kind of edit the errors actually require.
+
+    A count shortfall is the one violation a repair cannot fix while obeying a
+    blanket "do not add new requirements" rule. The first Colab run failed exactly
+    here: the model returned 13 requirements, was told only that 18 were required,
+    and dutifully returned the same 13 because the prompt forbade adding any.
+    """
+    gen = cfg["generation"]
+    reqs = payload.get("requirements", []) if isinstance(payload, dict) else []
+    n = len(reqs)
+    n_nfr = sum(1 for r in reqs if isinstance(r, dict) and r.get("type") == "NFR")
+    n_fr = n - n_nfr
+
+    lines: list[str] = []
+    if n < gen["min_requirements"]:
+        need = gen["min_requirements"] - n
+        lines.append(
+            f"You returned {n} requirements but the contract requires at least "
+            f"{gen['min_requirements']}. ADD {need} or more genuinely new requirements, "
+            f"continuing the existing numbering. Keep every requirement you already "
+            f"wrote exactly as it is. Draw the new ones from parts of the evidence you "
+            f"have not yet covered — prescription content and dosage, allergy and "
+            f"interaction checking, prescriber authentication and signing, "
+            f"controlled-substance handling, transmission to the pharmacy, audit "
+            f"logging, access control, and record retention. Do not pad the set with "
+            f"restatements of requirements you have already written."
+        )
+    elif n > gen["max_requirements"]:
+        lines.append(
+            f"You returned {n} requirements but the contract allows at most "
+            f"{gen['max_requirements']}. Merge or remove the weakest ones."
+        )
+
+    if n_fr < gen.get("min_frs", 0):
+        lines.append(
+            f"Only {n_fr} of your requirements are functional (type FR); at least "
+            f"{gen['min_frs']} are required. The functionality has many distinct "
+            f"functional steps — specify them as FRs rather than expressing "
+            f"everything as a quality attribute."
+        )
+    if n_nfr < gen["min_nfrs"]:
+        lines.append(
+            f"Only {n_nfr} of your requirements are non-functional (type NFR); at "
+            f"least {gen['min_nfrs']} are required."
+        )
+
+    if not lines:
+        return (
+            "Do not add new requirements and do not remove any — the set is the right "
+            "size. Repair the fields the errors identify."
+        )
+    return "\n\n".join(lines)
+
+
 def guard_write(path: Path) -> Path:
     if os.environ.get("PROTECT_OUTPUTS") == "1" and path.exists():
         raise FileExistsError(
@@ -149,6 +204,10 @@ def validate_payload(
     n_nfr = sum(1 for r in reqs if isinstance(r, dict) and r.get("type") == "NFR")
     if n_nfr < gen["min_nfrs"]:
         errors.append(f"only {n_nfr} NFRs; contract requires at least {gen['min_nfrs']}")
+
+    n_fr = len(reqs) - n_nfr
+    if n_fr < gen.get("min_frs", 0):
+        errors.append(f"only {n_fr} FRs; contract requires at least {gen['min_frs']}")
 
     seen: set[str] = set()
     records: list[dict[str, Any]] = []
@@ -280,6 +339,7 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
         MIN_REQS=str(gen["min_requirements"]),
         MAX_REQS=str(gen["max_requirements"]),
         MIN_NFRS=str(gen["min_nfrs"]),
+        MIN_FRS=str(gen.get("min_frs", 0)),
     )
 
     if dry_run:
@@ -301,8 +361,10 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
     )
     guard_write(out_dir / "raw_p1_response.txt").write_text(resp.text, encoding="utf-8")
 
+    payload: Any = {}
     try:
-        records, errors = validate_payload(resp.json(), valid_ids, cfg)
+        payload = resp.json()
+        records, errors = validate_payload(payload, valid_ids, cfg)
     except ValueError as exc:
         records, errors = [], [f"response was not parseable JSON: {exc}"]
 
@@ -311,10 +373,13 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
         for e in errors[:10]:
             print(f"        - {e}")
 
+        directive = repair_directive(payload, cfg)
+        print(f"[part1] repair directive: {directive.splitlines()[0][:96]}...")
         repair = render(
             load_prompt("p1_repair.txt"),
             ERRORS="\n".join(f"- {e}" for e in errors),
             PREVIOUS=resp.text,
+            DIRECTIVE=directive,
         )
         resp2 = client.generate(
             model_key,

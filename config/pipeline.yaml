@@ -129,6 +129,11 @@ generation:
   min_requirements: 18
   max_requirements: 25
   min_nfrs: 8
+  # An FR floor as well as an NFR floor. The first run returned 2 FRs and 11 NFRs:
+  # asking only for "at least 8 NFRs" steers a small model into expressing the whole
+  # feature as quality attributes, which leaves the SDLC input in Part 2 with almost
+  # no functional surface to reason about.
+  min_frs: 8
   min_traceability_rate: 0.70   # fraction citing >=1 real chunk_id
 
 sdlc:
