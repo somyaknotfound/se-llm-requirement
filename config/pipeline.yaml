@@ -1,0 +1,197 @@
+# Pipeline configuration. Every value here is a reproducibility claim — if you
+# change one, the outputs/ directory is stale and must be regenerated wholesale.
+
+paths:
+  corpus_raw: corpus/raw
+  corpus_processed: corpus/processed
+  manifest: corpus/MANIFEST.csv
+  chunks: corpus/chunks.jsonl
+  index_dir: corpus/index
+  outputs: outputs
+  logs: logs/llm_calls.jsonl
+  figures: figures
+
+chunking:
+  target_tokens: 800
+  overlap_tokens: 120
+  tokenizer: cl100k_base       # proxy tokenizer; documented as such in the report
+  split_on_headings: true
+  min_chunk_tokens: 60         # drop fragments below this — they are heading noise
+
+retrieval:
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  # Inner product over L2-normalised vectors == cosine similarity, and ranks
+  # identically to flat L2. Chosen over flat_l2 only so the score is a bounded,
+  # reportable number instead of an unbounded distance.
+  index_type: flat_ip
+  top_k: 16
+  normalize_embeddings: true
+  # Hard ceiling on retrieved context. num_ctx must hold prompt + response, so
+  # top_k alone is not a safe budget: 16 x 800 tokens would overflow the window
+  # and silently truncate the evidence the model is meant to cite.
+  max_context_tokens: 7000
+
+  # Retrieval strategy: `single` embeds one query built from the functionality
+  # description plus the whole keyword list; `faceted` embeds one query per facet
+  # below and interleaves the results round-robin.
+  #
+  # `single` was measured and rejected. One centroid vector over 26 mixed keywords
+  # lands in the controlled-substance region, where D06 alone holds 45 chunks, and
+  # returns evidence from only D05 and D06 — leaving allergy checking, access
+  # control and audit ungrounded even though the corpus documents all three. That
+  # is a retrieval artifact, not a property of the corpus, and reporting it as a
+  # finding would be reporting a bug. Both modes are kept so the report can show
+  # the comparison; §Threats to Validity discusses the residual bias.
+  strategy: faceted
+  per_facet: 3
+  facets:
+    - id: order_content
+      query: >-
+        Structure and required data elements of a medication order or
+        prescription resource: medication, dosage instruction, route, quantity,
+        prescriber, subject, authored date, substitution and refill authorisation.
+    - id: allergy_interaction
+      query: >-
+        Recording patient allergies and intolerances, and checking drug-drug
+        interaction and contraindication alerts through clinical decision support
+        at the point of computerised provider order entry.
+    - id: security_audit
+      query: >-
+        Audit logging, provenance, digital signature, access control and
+        authorisation for clinical records, including recording who accessed or
+        modified data and when.
+    - id: hipaa_safeguards
+      query: >-
+        Administrative, physical and technical safeguards for electronic
+        protected health information: access control, audit controls, integrity,
+        person authentication, transmission security and risk analysis.
+    - id: controlled_substance
+      query: >-
+        Electronic prescriptions for controlled substances: identity proofing,
+        two-factor authentication, hard tokens, digital certificates, signing and
+        practitioner responsibilities.
+    - id: certification_criteria
+      query: >-
+        Health IT certification criteria for electronic prescribing, computerised
+        provider order entry for medications, drug formulary checks and audit
+        report generation.
+    - id: lifecycle_transmission
+      query: >-
+        Transmitting a prescription to a pharmacy, and cancelling, changing,
+        renewing or refilling a prescription, including record retention.
+
+# --- The functionality under analysis ------------------------------------
+# Chosen for NFR density: safety, auditability, consent, latency and regulatory
+# constraints all bind on this one feature. A CRUD feature like "patient login"
+# would not exercise the requirement-classification surface.
+target:
+  id: e-prescription
+  name: Electronic Prescription (e-Rx) Issuance
+  description: >-
+    Issuance of an electronic prescription by an authorised prescriber, including
+    real-time drug-drug interaction and allergy contraindication checking at the
+    point of ordering, and the additional identity-proofing, two-factor signing and
+    audit obligations that attach to controlled-substance prescriptions before the
+    order is transmitted to a pharmacy.
+
+  # Query expansion for retrieval. The raw description alone under-retrieves —
+  # source documents use regulatory vocabulary, not feature vocabulary.
+  keywords:
+    - electronic prescribing
+    - e-prescribing
+    - computerised provider order entry
+    - CPOE
+    - MedicationRequest
+    - medication order
+    - drug-drug interaction check
+    - drug interaction alert
+    - allergy intolerance
+    - contraindication
+    - clinical decision support
+    - controlled substance
+    - EPCS
+    - two-factor authentication
+    - identity proofing
+    - electronic signature
+    - prescriber authentication
+    - audit log
+    - audit trail
+    - provenance
+    - access control
+    - patient consent
+    - transmission to pharmacy
+    - medication reconciliation
+    - formulary
+    - dosage
+    - prescription cancellation
+
+generation:
+  min_requirements: 18
+  max_requirements: 25
+  min_nfrs: 8
+  min_traceability_rate: 0.70   # fraction citing >=1 real chunk_id
+
+sdlc:
+  framings: [neutral, agile_primed, plan_primed]
+  trials: 3
+  models: [primary, secondary]  # 3 x 3 x 2 = 18 data points
+  criteria:
+    - requirement_volatility
+    - regulatory_audit_burden
+    - safety_criticality
+    - cost_of_late_defect
+    - user_domain_expert_availability
+    - team_size_and_distribution
+    - schedule_rigidity
+    - legacy_integration_complexity
+
+validation:
+  attributes:
+    - necessary
+    - unambiguous
+    - complete
+    - singular
+    - feasible
+    - verifiable
+    - conforming
+    - traceable
+  weak_words:
+    - fast
+    - quick
+    - quickly
+    - user-friendly
+    - efficient
+    - efficiently
+    - appropriate
+    - appropriately
+    - as needed
+    - as required
+    - adequate
+    - adequately
+    - sufficient
+    - sufficiently
+    - reasonable
+    - robust
+    - flexible
+    - seamless
+    - intuitive
+    - easy
+    - easily
+    - minimal
+    - optimal
+    - state-of-the-art
+    - support
+    - handle
+    - process
+    - manage
+    - etc
+    - and/or
+    - if possible
+    - where applicable
+    - as appropriate
+    - timely
+    - relevant
+    - various
+    - several
+    - normal
+    - typical

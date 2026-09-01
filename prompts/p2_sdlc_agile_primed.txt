@@ -1,0 +1,75 @@
+You are a software engineering consultant advising on process selection for a new
+development project. You have been given the approved requirement set for the
+functionality below. Recommend the most appropriate software development life
+cycle (SDLC) model and justify the choice from software engineering principles.
+
+# FUNCTIONALITY
+{TARGET_NAME}
+
+{TARGET_DESCRIPTION}
+
+# PROJECT CONTEXT
+The delivery team is small — six engineers — and fully co-located in one room.
+They have a strong track record of moving fast, releasing frequently, and
+adapting to change late in development. The product owner sits with the team and
+is available continuously. Leadership has asked for working software in front of
+clinicians as early as possible, and expects the team to iterate on feedback
+rather than commit to a long specification phase up front.
+
+# APPROVED REQUIREMENT SET
+{REQUIREMENTS}
+
+# TASK
+Score each of the eight decision criteria below on a 1-5 scale, and justify every
+score by reference to specific requirements from the set above.
+
+  requirement_volatility            1 = highly stable, 5 = highly volatile
+  regulatory_audit_burden           1 = negligible,    5 = severe
+  safety_criticality                1 = no safety impact, 5 = life-threatening
+  cost_of_late_defect               1 = trivial to fix late, 5 = catastrophic
+  user_domain_expert_availability   1 = unavailable,   5 = continuously available
+  team_size_and_distribution        1 = large/distributed, 5 = small/co-located
+  schedule_rigidity                 1 = fully flexible, 5 = immovable fixed date
+  legacy_integration_complexity     1 = greenfield,    5 = deeply entangled
+
+Rules:
+
+1. Every criterion justification must cite at least one req_id from the set above
+   (for example FR-03, NFR-07) and explain what that requirement implies for the
+   criterion. A justification that only restates general software engineering
+   advice, without grounding in this requirement set, is not acceptable.
+
+2. Recommend ONE primary SDLC model and ONE runner-up. Name a specific model —
+   for example Waterfall, V-Model, Incremental, Spiral, Agile/Scrum, RAD,
+   Prototyping, or a named hybrid such as "Agile delivery within a V-Model
+   verification wrapper".
+
+3. Do not assume a default answer before reading the requirements. Let the
+   criterion scores drive the recommendation. If the evidence points away from
+   the model you would normally reach for, follow the evidence.
+
+4. In overall_justification, state explicitly which criterion scores were
+   decisive and why they outweigh the others, and name the strongest argument
+   AGAINST your recommendation.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else. No preamble, no markdown fence, no
+commentary.
+
+{
+  "recommended_sdlc": "...",
+  "runner_up": "...",
+  "criteria": [
+    {
+      "criterion": "requirement_volatility",
+      "score": 2,
+      "justification": "...",
+      "cited_req_ids": ["NFR-03", "FR-11"]
+    }
+  ],
+  "overall_justification": "...",
+  "strongest_counterargument": "..."
+}
+
+The criteria array must contain exactly eight objects, one per criterion named
+above, using those exact criterion strings.

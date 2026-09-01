@@ -1,0 +1,5 @@
+# The raw corpus is hashed byte-for-byte in corpus/MANIFEST.csv and re-verified by
+# `src/ingest.py process`. Any end-of-line normalisation on checkout would change
+# those bytes and fail the integrity gate on a fresh clone, so these are exempt.
+corpus/raw/** -text
+corpus/chunks.jsonl -text

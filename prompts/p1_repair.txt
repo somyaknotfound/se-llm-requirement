@@ -1,0 +1,29 @@
+Your previous response did not satisfy the required output contract.
+
+# VALIDATION ERRORS
+{ERRORS}
+
+# YOUR PREVIOUS RESPONSE
+{PREVIOUS}
+
+# TASK
+Return a corrected version of the SAME requirement set. Fix only what the errors
+above identify. Do not add new requirements, do not renumber existing ones, and
+do not silently drop a requirement to make an error go away — if a requirement is
+faulty, repair its fields.
+
+Reminders on the constraints that were violated most often:
+
+- source_chunk_ids must contain chunk_ids that appear verbatim in the evidence
+  you were given. If you cannot support a requirement with a real chunk_id, set
+  "derived": true rather than inventing an identifier.
+- A statement contains exactly one "shall" and exactly one obligation.
+- evidence_quote must be copied verbatim from a chunk you cited, or be "".
+- nfr_category is "none" for every FR, and a real category for every NFR.
+
+Return ONE JSON object and nothing else. No preamble, no markdown fence, no
+commentary.
+
+{
+  "requirements": [ ... ]
+}

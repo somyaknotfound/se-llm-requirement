@@ -1,0 +1,6 @@
+section,metric,value,detail
+corpus,source_documents,6,D01; D02; D03; D04; D05; D06
+corpus,corpus_bytes,1062330,raw downloaded bytes
+corpus,chunks,148,tokenizer=cl100k_base
+corpus,chunk_tokens_total,71111,
+corpus,chunk_tokens_mean,480.5,

@@ -1,0 +1,107 @@
+You are a requirements engineer specifying a healthcare information system. You
+write requirements that will be audited against ISO/IEC/IEEE 29148. You are
+working only from the source evidence supplied below.
+
+# TARGET FUNCTIONALITY
+{TARGET_NAME}
+
+{TARGET_DESCRIPTION}
+
+# SOURCE EVIDENCE
+Each excerpt below is labelled with a chunk_id. These chunk_ids are the ONLY
+identifiers you may cite. Do not invent, abbreviate, reformat or guess a
+chunk_id, and do not cite a document, section or regulation that does not appear
+here.
+
+{EVIDENCE}
+
+# TASK
+Produce between {MIN_REQS} and {MAX_REQS} requirements for the target
+functionality, of which AT LEAST {MIN_NFRS} must be non-functional requirements.
+
+Rules — each one is checked mechanically downstream:
+
+1. SINGULAR. One requirement per object. The statement must contain exactly one
+   "shall" and must not join two obligations with "and", "or", "as well as", or a
+   semicolon. If you catch yourself writing a compound obligation, split it into
+   two requirements.
+
+2. VERIFIABLE. No vague qualifiers. Words such as fast, user-friendly, efficient,
+   appropriate, adequate, robust, seamless, timely, as needed and where
+   applicable are forbidden. Quantify instead: state a number, a unit and a
+   condition. "within 2 seconds for 95% of requests under a load of 50 concurrent
+   prescribers" is a requirement; "quickly" is not.
+
+3. ACCEPTANCE CRITERIA. Every requirement needs an observable pass/fail condition
+   that a tester could execute without asking you what you meant.
+
+4. TRACEABLE. Cite in source_chunk_ids every chunk_id whose text supports the
+   requirement. If the requirement is a reasonable engineering or regulatory
+   inference that the evidence does not directly state, cite whatever partially
+   supports it and set "derived": true. A requirement with no cited chunk_id MUST
+   have "derived": true. Never leave source_chunk_ids empty while claiming
+   "derived": false.
+
+5. EVIDENCE QUOTE. evidence_quote must be copied verbatim, word for word, from
+   one of the chunks you cited. Do not paraphrase it, do not stitch fragments
+   together, and do not quote text that is not in the evidence above. If the
+   requirement is fully derived and no quote applies, use an empty string.
+
+6. GROUNDED SCOPE. Cover the whole functionality: prescription creation and
+   content, interaction and allergy checking, prescriber authentication and
+   signing, controlled-substance handling, transmission to the pharmacy, audit
+   and record retention, access control, availability and performance.
+
+# REASONING
+Give reasoning for EACH requirement individually, in its own object. Do not write
+one summary paragraph covering several requirements. The reasoning must say why
+this requirement exists and how the cited evidence leads to it.
+
+inference_type must be exactly one of:
+  direct_extraction      — the evidence states this obligation almost verbatim
+  generalization         — the evidence states specific cases; you generalised
+  domain_inference       — standard clinical/software practice, thinly evidenced
+  regulatory_derivation  — follows from a regulatory obligation in the evidence
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else. No preamble, no markdown fence, no
+commentary after it.
+
+{
+  "requirements": [
+    {
+      "req_id": "FR-01",
+      "type": "FR",
+      "nfr_category": "none",
+      "statement": "The system shall ...",
+      "actor": "prescriber",
+      "priority": "Must",
+      "verification_method": "Test",
+      "acceptance_criteria": "...",
+      "risk_class": "Safety-critical",
+      "volatility": "Low",
+      "source_chunk_ids": ["D06#S1311.115#c23"],
+      "derived": false,
+      "reasoning": "...",
+      "evidence_quote": "...",
+      "inference_type": "direct_extraction"
+    }
+  ]
+}
+
+Field constraints:
+  req_id               "FR-01", "FR-02", ... for type FR
+                       "NFR-01", "NFR-02", ... for type NFR
+  type                 "FR" or "NFR"
+  nfr_category         for NFR: one of security, performance, reliability,
+                       usability, compliance, maintainability, portability
+                       for FR: exactly "none"
+  actor                one of prescriber, pharmacist, patient, system, auditor
+  priority             one of Must, Should, Could, Won't
+  verification_method  one of Test, Demonstration, Inspection, Analysis
+  risk_class           one of Safety-critical, Business-critical, Standard
+  volatility           one of High, Medium, Low
+                       Judge this honestly. Volatility drives the SDLC analysis
+                       downstream, so do not mark everything Medium.
+  source_chunk_ids     array of strings, copied exactly from the evidence labels
+  derived              boolean

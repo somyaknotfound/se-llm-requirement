@@ -1,0 +1,43 @@
+# Model roster. Both models must be pulled locally before any driver runs:
+#   ollama pull qwen2.5:7b-instruct
+#   ollama pull llama3.1:8b
+#
+# `primary` generates the requirement set (Part 1) and is scorer for validation.
+# `secondary` exists so Part 2 can measure cross-model agreement — a single-model
+# recommendation is an anecdote, not a finding.
+
+host: http://127.0.0.1:11434
+
+defaults: &defaults
+  temperature: 0.1
+  seed: 42
+  top_p: 0.9
+  # num_ctx must cover prompt AND response. Part 1 sends ~6k tokens of retrieved
+  # evidence plus ~1.2k of template, and asks for 20-25 requirements with
+  # per-requirement reasoning — comfortably over 8k in total. At 8192 Ollama
+  # silently drops the oldest tokens, which would truncate the very chunks the
+  # model is supposed to cite and quietly wreck traceability.
+  num_ctx: 16384
+  num_predict: 6144
+  repeat_penalty: 1.05
+
+models:
+  primary:
+    id: qwen2.5:7b-instruct
+    <<: *defaults
+  secondary:
+    id: llama3.1:8b
+    <<: *defaults
+
+# Declared fallbacks. If a roster model is absent from `ollama list`, the driver
+# hard-fails and names the substitute rather than silently swapping — the report
+# must state which weights actually produced the numbers.
+fallbacks:
+  - phi4-mini
+  - mistral:7b-instruct
+
+# Transport behaviour
+request:
+  timeout_s: 600
+  max_retries: 3
+  backoff_s: 4
