@@ -9,6 +9,22 @@ and then audits everything the model produced against ISO/IEC/IEEE 29148.
 
 ---
 
+## Run it on Colab (recommended)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/somyaknotfound/se-llm-requirement/blob/main/notebooks/run_on_colab.ipynb)
+
+`notebooks/run_on_colab.ipynb` installs Ollama, pulls both models, and runs every
+stage on a free T4. The whole pipeline takes roughly 25-35 minutes there against
+well over an hour on CPU, because the Part 2 matrix is 18 generation runs.
+
+Set `Runtime -> Change runtime type -> T4 GPU` before running the cells, and
+download the results zip at the end - Colab destroys `/content` when the runtime
+ends.
+
+The rest of this README covers running locally.
+
+---
+
 ## Prerequisites
 
 - **Python 3.11+** (developed on 3.12.5, Windows 11)
