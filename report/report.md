@@ -1,493 +1,567 @@
-# LLM-Assisted Requirements Engineering and SDLC Selection for Electronic Prescription Issuance
+# An Agentic LLM System for Requirement Gathering, Analysis and SDLC Identification — Healthcare e-Prescribing
 
 **Course:** Software Engineering — Individual Project
 **Artifact repository:** `se-llm-requirements/`
 
-> **Status of this document.** Methodology (§2), the independent SDLC argument
-> (§4.1), and threats to validity (§7) are complete and were written from the
-> built pipeline. Sections marked `[PENDING RUN]` are wired to their generating
-> CSV or figure and fill in once the pipeline has been executed against a local
-> Ollama daemon. Every number in this report must come from `outputs/`, never
-> retyped by hand — regenerate with `python -m src.metrics && python -m src.report`.
+> **Status of this document.** The problem framing (§1), system design (§2),
+> methodology (§3), evaluation design (§4), the independent SDLC argument (§6.2) and
+> threats to validity (§9) are complete and were written from the built system.
+> Sections marked `[PENDING RUN]` fill in from the generated CSVs once the pipeline has
+> run on a GPU (`notebooks/run_on_colab.ipynb`). Every number must come from
+> `outputs/`, never retyped by hand — regenerate with `python -m src.metrics &&
+> python -m src.report`.
 
 ---
 
-## 1. Introduction and Scope
+## 1. Problem and Scope
 
-### 1.1 Domain and functionality
+### 1.1 The problem
 
-This study grounds a local large language model on real healthcare requirement
-sources and evaluates its usefulness as an instrument in two requirements
-engineering tasks: generating a traceable requirement set, and selecting a
-software development life cycle model for that requirement set.
+Requirements for regulated, security-sensitive software come from many parties —
+clinicians, pharmacists, patients, compliance and security officers, architects,
+auditors, regulators, legacy systems and policy documents — and arrive as unstructured
+natural language. Gathering and analysing them by hand is slow and prone to ambiguity,
+inconsistency, regulatory omissions and weak stakeholder alignment, which leads to wrong
+scope, an unsuitable development process, compliance gaps and rework.
 
-The chosen functionality is **electronic prescription (e-Rx) issuance**, including
-real-time drug–drug interaction and allergy contraindication checking at the point
-of ordering, and the additional identity-proofing, two-factor signing and audit
-obligations that attach to controlled-substance prescriptions before the order is
-transmitted to a pharmacy.
+This project designs and builds an **agentic LLM system** that interviews stakeholders,
+analyses their statements and the project documents, asks clarification questions,
+detects incomplete and conflicting requirements, turns validated input into structured
+functional and non-functional requirements with traceability, maps them to regulations
+and controls, and recommends a justified, project-specific SDLC — with evidence, audit
+trails and human approval at every point where a decision carries accountability.
 
-### 1.2 Why this functionality
+### 1.2 Domain
 
-The functionality was selected for **non-functional requirement density**. A CRUD
-feature such as patient login exercises almost none of the requirement
-classification surface: it produces a handful of functional requirements and one
-or two security NFRs. Electronic prescribing binds simultaneously on:
+The problem statement is written for the financial sector. This project applies it to
+**healthcare e-prescribing**, which has the same defining properties — heavy regulation
+(HIPAA Security Rule, ONC certification, DEA controlled-substance rules), sensitive
+personal data (protected health information), security threats, legacy integration, and
+severe consequences of failure (patient harm) — and for which openly licensed,
+machine-readable regulation and interoperability standards exist.
 
-| Concern | Why it binds here |
+### 1.3 Case studies
+
+| Case | Functionality | Character |
+|---|---|---|
+| `erx_issuance` | E-prescription issuance with drug-drug and drug-allergy checking | Safety-critical, heavily regulated, low volatility |
+| `epcs_signing` | Controlled-substance prescribing: identity proofing, two-factor signing, access control, audit | Regulation- and security-dominated, fixed audit date |
+| `refill_reminders` | Patient app: refill reminders and renewal requests | Lower clinical risk, UX-driven, volatile, continuously delivered |
+
+The three differ in the characteristics that drive SDLC selection, so the SDLC engine is
+tested on cases whose right answers are not all the same.
+
+### 1.4 What is and is not the contribution
+
+The LLMs are instruments. The contribution is the requirements-engineering system around
+them: a multi-agent process that mirrors RE practice, grounding in a provenance-tracked
+knowledge base, chunk- and statement-level traceability, a 29148 quality audit with two
+independent scorers, a hallucination audit, a transparent SDLC decision engine, security
+controls around the model, human approval gates — and an evaluation that measures all of
+it against gold standards and a single-prompt baseline.
+
+---
+
+## 2. System Design
+
+The design follows the problem statement's twenty points; `BUILD.md` Part B maps each
+point to its code.
+
+### 2.1 Outputs
+
+Per case: a Software Requirements Specification, user stories with Gherkin acceptance
+scenarios, use cases and a process workflow, data and interface requirements, a
+compliance-control matrix, a threat register and a risk register, a requirements
+traceability matrix, an assumptions and dependencies register, an open-issues list, and
+a ranked SDLC recommendation with a tailored workflow.
+
+### 2.2 Stakeholders and interview templates
+
+Ten roles — prescriber, pharmacist, patient, clinical safety officer, compliance officer,
+security officer, architect, product owner, operations, auditor — each with a
+role-specific interview template (`config/stakeholders.yaml`) covering the thirteen topic
+areas the brief lists: objectives, users and roles, the current workflow, inputs, outputs
+and rules, exceptions, data collection and retention, authentication and authorisation,
+prescribing limits, audit, performance and availability, integration, regulatory and
+security constraints, schedule and budget.
+
+### 2.3 Inputs and data protection
+
+Interviews and documents — meeting notes, emails, policies, legacy interface
+specifications and incident reports. Before any agent sees them, every text is
+**masked** (patient names, MRNs, dates of birth, DEA numbers and NPIs confirmed by check
+digit, phone numbers, e-mail addresses) and **screened for prompt injection**; the
+original identifiers go to a vault that is encrypted at rest and can be re-identified
+only by the privacy or compliance officer role.
+
+### 2.4 Multi-agent architecture
+
+| Agent | Responsibility |
 |---|---|
-| Safety | An unflagged interaction or allergy contraindication can kill a patient |
-| Security | Prescriber credentials are a controlled-substance diversion target |
-| Auditability | DEA and HIPAA both require tamper-evident, retained audit trails |
-| Regulatory compliance | 21 CFR 1311, 45 CFR 164 subpart C, 45 CFR 170.315 all apply |
-| Performance | An interaction check that is slow at the point of order is bypassed |
-| Usability | Alert fatigue is a documented cause of clinicians ignoring real alerts |
+| Coordinator | Execution order, shared state, approval gates, checkpoints |
+| Stakeholder interaction | Adaptive interviews; follow-ups on weak answers |
+| Requirement extraction | Structured requirements from statements, grounded in retrieved evidence |
+| Clarification | Returns failing requirements to their stakeholders |
+| Classification | Multi-label classification into 13 categories |
+| Conflict detection | Duplicates and contradictions |
+| Compliance | Control mappings, gaps, gap proposals |
+| Security and privacy | STRIDE threats; requirements for unmitigated threats |
+| Risk analysis | Risk register |
+| SDLC selection | Decision factors → rules + MCDA → workflow |
+| Documentation | SRS and artefacts |
+| Validation | 29148 audit, hallucination audit, confidence |
+| Human approval | Routes decisions to authorised roles |
 
-That spread is what makes the requirement set a meaningful input to an SDLC
-selection question in §5 — a low-volatility, safety-critical, heavily audited
-requirement set is precisely the case where the reflex answer is most likely to be
-wrong.
+The coordinator runs fourteen steps — intake, interviews, extraction, classification,
+conflicts, first-draft quality, clarification, compliance, security and privacy, risk,
+validation, SDLC, documentation, approval — over a shared **blackboard**. Each agent
+reads and writes only the keys its permissions name (`config/pipeline.yaml`); anything
+else raises and is logged as a security event. The blackboard is checkpointed after
+every step, so an interrupted run resumes where it stopped.
 
-### 1.3 What is and is not the contribution
+### 2.5 Knowledge base
 
-The LLM is the **instrument**, not the contribution. The contribution is the
-requirements engineering methodology around it: a provenance-tracked corpus,
-chunk-level traceability, and an ISO/IEC/IEEE 29148 quality audit with two
-independent scorers and a hallucination audit of every regulatory citation the
-model produced.
+The authorised knowledge base is version-controlled and every item carries its source,
+jurisdiction, effective date, version and applicability: six source documents
+(`corpus/MANIFEST.csv`, with SHA-256), a catalogue of 45 compliance and security
+controls each resolved to a section of those documents (`config/controls.yaml`), the SDLC
+factors, rules, profiles and workflow templates (`config/sdlc.yaml`), and the interview
+templates. Each run records a fingerprint of all of it.
+
+### 2.6 Retrieval-grounded generation
+
+Extraction retrieves evidence from the case's allowlisted sources with faceted queries
+(§3.3); a requirement cites the chunks that support it and copies a verbatim evidence
+quote. Citations to chunks the model was not shown are recorded as invalid. Each
+requirement gets a confidence score from its evidential support and its 29148 quality;
+unsupported and low-confidence requirements are escalated for human review.
+
+### 2.7 Adaptive interviews
+
+Round one asks role-specific questions adapted to the case. Round two follows up on
+answers that are vague, incomplete or inconsistent: rule checks flag weak wording and
+missing numbers on quantitative topics, and every flagged answer gets a follow-up.
+
+### 2.8 Requirement structure
+
+Id (`FR-ERX-001`), statement, categories, source stakeholder statements, business
+justification, priority, dependencies, assumptions, acceptance criteria, verification
+method, applicable regulations and controls, risk level, confidence, approval status,
+version and origin.
+
+### 2.9 Classification
+
+Multi-label, over business, stakeholder, functional, security, privacy, regulatory,
+performance, availability and reliability, usability, data management, integration,
+audit and reporting, and operational requirements. A deterministic keyword classifier
+backs the model up and its labels are kept for comparison.
+
+### 2.10 Quality analysis and clarification
+
+The 29148 rule scorer checks each requirement for ambiguity, incompleteness,
+non-singularity, untestability, missing source, infeasibility, duplication and
+non-conformance; an acronym check flags undefined terminology; the conflict agent flags
+contradictions; the compliance agent flags security, privacy or regulatory requirements
+with no control. Requirements with clarifiable findings go back to their stakeholders
+for up to two rounds, and the extraction agent revises them from the answers. Quality is
+recorded before and after clarification.
+
+### 2.11 Compliance and security analysis
+
+The compliance agent proposes, for each requirement, the controls it satisfies, each
+backed by evidence from the control's own section; it then lists the applicable controls
+nothing covers and proposes a requirement for each. It never makes a legal
+determination: every mapping and proposal is queued for the compliance officer. The
+security and privacy agent threat-models the functionality with STRIDE and proposes
+requirements for unmitigated threats.
+
+### 2.12 SDLC decision factors and engine
+
+Two models score the brief's thirteen factors — requirement instability, regulatory
+criticality, security risk, complexity, size, legacy dependence, change frequency, need
+for continuous delivery, stakeholder availability, documentation and testing
+requirements, budget and schedule constraints, need for formal verification, and
+consequences of failure — citing requirement ids. The median scores go to a
+deterministic engine:
+
+- **MCDA:** simple additive weighting over directional profiles for Waterfall, V-Model,
+  Spiral, Agile, DevSecOps and a Hybrid (Agile–V-Model), giving every model a
+  suitability percentage.
+- **Rules:** the brief's condition table (stable requirements and extensive approvals →
+  Waterfall; strict verification and validation → V-Model; high uncertainty or technical
+  risk → Spiral; frequently changing requirements → Agile; continuous secure deployment
+  → DevSecOps; high regulation with evolving requirements → Hybrid).
+- **Cautions:** an adaptive model topping a regulated, safety-critical project; a
+  plan-driven model under high change.
+
+The profiles come from the brief's table, Boehm & Turner's home grounds, Boehm's spiral
+model and the Agile Manifesto, and were fixed before any results existed. The model then
+explains the engine's ranking without being able to change it. The recommendation is
+escalated when no rule supports the top model, a caution fires, the top two are within
+five points, or the two models disagree by two or more points on a factor.
+
+### 2.13 Project-specific workflow
+
+The top model's workflow template is instantiated with overlays: security activities
+(threat modelling, SAST, DAST, penetration testing) scaled by the security-risk score;
+compliance checkpoints for each regulatory source the requirements trace to (HIPAA risk
+analysis, ONC certification testing, the DEA third-party audit and daily audit-trail
+analysis); clinical-safety activities when any requirement is safety-critical; human
+approval gates; and a traceability check at every gate. The model adds
+project-specific activities per phase.
+
+### 2.14 Human in the loop
+
+The approval agent routes to the role with authority: the requirement baseline to the
+product owner, regulatory interpretations to the compliance officer, security
+requirements to the security officer, safety-critical requirements to the clinical
+safety officer, conflicts to the product owner, architecture-critical requirements to
+the architect, the SDLC recommendation to the project manager, architect, security and
+compliance officers, quarantined injections to the security officer, and production
+readiness to all four. Reviewers accept, reject, modify or request regeneration, through
+the CLI or the web UI; routine items can be accepted in bulk with a note, escalated
+items only one by one.
+
+### 2.15 Platform security
+
+Role-based access control and two-factor sign-in (PBKDF2 passwords, RFC 6238 TOTP) for
+reviewers; PHI masking with an encrypted vault; prompt-injection defences
+(pattern-based quarantine, delimiting of untrusted text with a content-bound marker, an
+instruction in every agent prompt); PHI leak checks on model output; least-privilege
+agent permissions; retrieval-source allowlists; session isolation (every call is a fresh
+context; every case run its own directory and database); audit logs of every model call,
+agent action and human decision; and versioning of the models (digests) and the
+knowledge base (fingerprint) in every run manifest. Encryption in transit and data
+retention are deployment concerns: the web UI is served over HTTPS when shared.
+
+### 2.16 Prototype stack
+
+Ollama (qwen2.5:7b-instruct for the agents, llama3.1:8b for simulated stakeholders and
+second-opinion factor scoring), a plain-Python coordinator, FAISS with MiniLM
+embeddings, SQLite as the requirements store of record, the rule engines in Python and
+YAML, Gradio for the web interface, and Markdown/CSV artefacts.
 
 ---
 
-## 2. Methodology
+## 3. Methodology
 
-### 2.1 Corpus
+### 3.1 Corpus
 
-Six openly licensed source documents were acquired programmatically. Provenance is
-recorded in `corpus/MANIFEST.csv`, including the SHA-256 of the exact bytes parsed,
-so the corpus can be re-fetched and shown not to have been curated after the fact.
+| doc_id | Title | Publisher | Licence | Jurisdiction | Effective / version |
+|---|---|---|---|---|---|
+| D01 | HL7 FHIR R4 — MedicationRequest | HL7 International | CC0-1.0 | International | 2019-10-30, v4.0.1 |
+| D02 | HL7 FHIR R4 — AllergyIntolerance | HL7 International | CC0-1.0 | International | 2019-10-30, v4.0.1 |
+| D03 | HL7 FHIR R4 — Security and Privacy | HL7 International | CC0-1.0 | International | 2019-10-30, v4.0.1 |
+| D04 | HIPAA Security Rule — 45 CFR 164 Subpart C | eCFR | Public domain | US-Federal | eCFR 2025-01-01 |
+| D05 | ONC Certification Criteria — 45 CFR 170.315 | eCFR | Public domain | US-Federal | eCFR 2025-01-01 |
+| D06 | DEA EPCS — 21 CFR Part 1311 | eCFR | Public domain | US-Federal | eCFR 2025-01-01 |
 
-| doc_id | Title | Publisher | Licence | Type |
-|---|---|---|---|---|
-| D01 | HL7 FHIR R4 — MedicationRequest Resource | HL7 International | CC0-1.0 | Interoperability standard |
-| D02 | HL7 FHIR R4 — AllergyIntolerance Resource | HL7 International | CC0-1.0 | Interoperability standard |
-| D03 | HL7 FHIR R4 — Security and Privacy Module | HL7 International | CC0-1.0 | Interoperability standard |
-| D04 | HIPAA Security Rule — 45 CFR 164 Subpart C | US Federal Register (eCFR) | Public domain | Regulation |
-| D05 | ONC Certification Criteria — 45 CFR 170.315 | US Federal Register (eCFR) | Public domain | Regulation |
-| D06 | DEA EPCS — 21 CFR Part 1311 | US Federal Register (eCFR) | Public domain | Regulation |
-
-The corpus is deliberately split between interoperability standards (what the
-prescription artifact *is*) and binding regulation (what the system must
-*guarantee*). A corpus of FHIR pages alone would systematically under-generate
-security, audit and compliance requirements.
-
-**Corpus statistics** (from `outputs/metrics_summary.csv`):
-1,062,330 raw bytes across 6 documents → 148 chunks → 71,111 tokens,
-mean 480 tokens per chunk.
+1,062,330 raw bytes → 148 chunks → 71,111 tokens (mean 480 per chunk).
 
 ![Corpus composition](../figures/corpus_composition.png)
 
-### 2.2 Ingestion and chunk identity
+### 3.2 Ingestion and chunk identity
 
-Documents were parsed structurally rather than as flat text, because **section
-identity is the backbone of every traceability claim in this report**:
+eCFR XML is parsed by section (`DIV8/@N`), with large sections subdivided on their
+top-level paragraph designators so a citation resolves to `170.315(b)` rather than the
+whole of §170.315; FHIR HTML keeps its numbered headings. Chunks are windowed at 800
+tokens with 120 tokens of overlap on section boundaries, with ids such as
+`D06#S1311.115#c23`, verified unique and round-tripping. Token counts use `cl100k_base`
+as a proxy tokenizer.
 
-- **eCFR XML** exposes real CFR section numbers on `DIV8/@N`. Large sections are
-  further subdivided on their top-level `(a)/(b)/(c)` paragraph designators, so a
-  citation resolves to `170.315(b)` — the e-prescribing criterion — rather than to
-  the whole of §170.315. Designator detection validates that each letter is the
-  next in sequence, which prevents nested roman numerals such as `(ii)` from being
-  mistaken for section subdivisions.
-- **FHIR HTML** carries numeric heading prefixes (`11.1.3 Resource Content`) which
-  become the section id.
+### 3.3 Retrieval
 
-Chunks are windowed at a target of 800 tokens with 120 tokens of overlap, split on
-section boundaries. Chunk ids have the form `D06#S1311.115#c23` and are verified to
-be unique and to round-trip back to `(doc_id, section)` before indexing.
+MiniLM embeddings, L2-normalised, in a FAISS inner-product index. A single query built
+from the functionality description and 26 keywords retrieved evidence from only D05 and
+D06; **faceted retrieval** — one query per sub-concern, interleaved round-robin — reaches
+five of six documents. Each case study defines its own facets and knowledge-source
+allowlist, and each agent retrieves only from the sources its permissions allow.
 
-Token counts use `tiktoken` `cl100k_base` as a **proxy tokenizer**. It is not the
-tokenizer of either generation model; it is used only as a stable, reproducible
-unit for chunk sizing, and is declared as such rather than presented as exact.
-
-### 2.3 Retrieval
-
-Embeddings: `sentence-transformers/all-MiniLM-L6-v2`, L2-normalised, indexed with
-FAISS inner product (equivalent in ranking to flat L2 on normalised vectors, but
-yielding an interpretable cosine score).
-
-**A single-query strategy was measured and rejected.** Embedding one query built
-from the functionality description plus all 26 expansion keywords produces a single
-centroid vector that lands in the controlled-substance region of the space. Because
-D06 alone contributes 45 of 148 chunks, the top-12 result was drawn **entirely from
-D05 and D06**, leaving allergy checking, prescription content and access control
-ungrounded even though the corpus documents all three.
-
-The pipeline therefore uses **faceted retrieval**: seven facet queries derived from
-the functionality's own sub-concerns, each contributing its best hits, interleaved
-round-robin rather than merged by score. Merging by score would reintroduce the
-same imbalance, since the highest scores cluster in whichever document is largest.
-
-| Strategy | Documents represented in evidence |
-|---|---|
-| Single query (rejected) | D05, D06 |
-| Faceted, round-robin (used) | D01, D02, D04, D05, D06 |
-
-D03 is retrieved by no facet and is discussed as a finding in §6.3.
-
-Retrieval was inspected manually before use. Three probe queries returned
-§1311.140 (signing a controlled substance prescription), §170.315(a) (CPOE —
-medications) and the FHIR Audit Logging section respectively, confirming the index
-resolves domain vocabulary to the intended sources.
-
-### 2.4 Models and parameters
+### 3.4 Models and parameters
 
 | Setting | Value |
 |---|---|
-| Host | Ollama, local (`http://127.0.0.1:11434`) |
-| Primary model | `qwen2.5:7b-instruct` |
-| Secondary model | `llama3.1:8b` |
-| Temperature | 0.1 |
-| Base seed | 42 (Part 2 trials use 43, 44, 45) |
-| `top_p` | 0.9 |
-| `num_ctx` | 16384 |
-| `num_predict` | 6144 |
-| Retrieved-context ceiling | 7000 tokens |
+| Host | Ollama, local |
+| Agents | `qwen2.5:7b-instruct` (Q4_K_M) |
+| Simulated stakeholders, second-opinion SDLC scoring | `llama3.1:8b` (Q4_K_M) |
+| Temperature / top_p | 0.1 / 0.9 |
+| Seed | 42 (Part 2 trials 43–45) |
+| `num_ctx` | 16384 (Part 1 calls 32768) |
 
-No hosted frontier API is used at any point in the pipeline. Evidence of local
-execution: `ollama list` output, and `logs/llm_calls.jsonl`, which records the
-model id, every sampling parameter, the full prompt, the raw response, token counts
-and wall-clock latency for **every** call including failed attempts.
+Every model call is logged with the model id, every parameter, the full prompt, the raw
+response, token counts and latency; every run manifest records the model digests.
 
-### 2.5 Reproducibility statement
+### 3.5 Reproducibility
 
-- Every generation parameter is in `config/models.yaml`; every pipeline parameter
-  is in `config/pipeline.yaml`. Changing either invalidates `outputs/` wholesale.
-- Every LLM call is logged to `logs/llm_calls.jsonl` before any parsing occurs.
-- Raw model responses are written verbatim to `outputs/raw_p1_*.txt` and are never
-  hand-edited. Corrections, if any, are tracked separately with a diff.
-- `PROTECT_OUTPUTS=1` makes the drivers refuse to overwrite an existing artifact.
-
-**One deviation from strict determinism is intentional.** Part 2 varies the *seed*
-across trials while holding temperature fixed at 0.1. At a fixed seed and this
-temperature every trial would be byte-identical and the stability analysis would
-measure nothing; raising the temperature instead would confound sampling noise with
-framing sensitivity. Stepping the seed isolates sampling variance, which is the
-quantity §5.3 needs.
+All parameters are in `config/`; changing them invalidates `outputs/`. Raw responses are
+never edited. `PROTECT_OUTPUTS=1` refuses to overwrite artefacts. The offline test suite
+(`python -m pytest`) runs the entire multi-agent pipeline with a scripted model.
 
 ---
 
-## 3. Part 1 — Requirement Generation
+## 4. Evaluation Design
 
-### 3.1 Procedure
+### 4.1 Gold standards and seeded defects
 
-Faceted retrieval supplies 16 labelled chunks (~7,000 tokens) as evidence. The
-prompt (`prompts/p1_requirements.txt`, reproduced in Appendix A) requires 18–25
-requirements with at least 8 NFRs, one obligation per statement, quantified
-acceptance criteria, and per-requirement reasoning with a verbatim evidence quote.
+Each case has a gold standard (`cases/<case>/gold.yaml`): the requirements a careful
+analyst would derive from the case (28–45 per case) with their categories and the
+controls they satisfy; the seeded ambiguities (facts a persona states vaguely until
+followed up); the seeded conflicts (pairs of facts from different stakeholders that
+cannot both hold); the seeded prompt injections with the patterns that would show one
+succeeded; and the expert SDLC decision, which is recorded by a human.
 
-The driver enforces the **output contract** — enum validity, req_id format, real
-chunk_ids, and the integrity rule that no requirement may have an empty citation
-list while claiming `derived=false`. A single repair attempt is made against
-`prompts/p1_repair.txt`; a second failure aborts loudly rather than degrading
-silently.
+Simulated stakeholders answer only from hidden fact sheets. Their answers carry the fact
+ids they used, which are stripped before any agent reads them and used only for scoring.
 
-Requirement **quality** is deliberately *not* repaired at generation time. Weak
-words, compound obligations and unverifiable acceptance criteria are left intact so
-that the 29148 audit in §5 has something real to measure. Repairing quality here
-would launder the model's output and make the audit a formality.
+### 4.2 Metrics
 
-### 3.2 Results
+| Metric | Definition |
+|---|---|
+| Precision / recall / F1 | One-to-one matching of generated to gold requirements at cosine ≥ 0.6 (MiniLM); human-verified matches replace the automatic count when recorded |
+| Completeness | Recall |
+| Precision (elicited) | Precision over stakeholder- and document-sourced requirements only |
+| Category agreement | Mean Jaccard of multi-label categories on matched pairs |
+| Ambiguity-detection recall | Seeded vague facts that received a follow-up or clarification |
+| Conflict-detection recall / precision | Seeded conflicts flagged; flagged conflicts that are seeded |
+| Regulatory-control coverage | Applicable controls with at least one mapped requirement |
+| Hallucination rate | (fabricated + misattributed) / citations checked |
+| Citation correctness | Evidence quotes found verbatim in the cited chunk |
+| 29148 quality | Mean rule pass rate, first draft and final |
+| Traceability coverage | Requirements traceable to a statement or a corpus chunk |
+| SDLC accuracy | Engine top-1 and top-2 against the expert choice |
+| Human correction rate | (modify + reject + regenerate) / requirement decisions |
+| Processing time vs manual | Pipeline minutes against the author's manual effort |
+| Stakeholder satisfaction | System Usability Scale from the web UI survey |
+| Injection attack success | Seeded injections replayed with and without defences |
 
-`[PENDING RUN]` — populated from `outputs/requirements.csv` and
-`outputs/metrics_summary.csv`.
+### 4.3 Baselines
 
-| Metric | Target | Observed |
-|---|---|---|
-| Requirements total | 18–25 | |
-| NFRs | ≥ 8 | |
-| Traceability rate (cites ≥1 real chunk) | ≥ 70% | |
-| Integrity violations (no citation, `derived=false`) | 0 | |
-| Repair attempts needed | 0–1 | |
-
-Full requirement table: `report/tables.md` → *Requirements*.
-
-### 3.3 Traceability
-
-![Traceability matrix](../figures/traceability_matrix.png)
-![Per-document coverage](../figures/document_coverage.png)
-
-`[PENDING RUN]` — per-document coverage, and discussion of any source document
-that attracted no citations.
-
-### 3.4 Reasoning samples
-
-`[PENDING RUN]` — select 3 requirements spanning `direct_extraction`,
-`regulatory_derivation` and `domain_inference`, and comment on whether the stated
-reasoning actually supports the requirement or merely restates it.
+1. **Single-prompt LLM** — the Part 1 generator (§6.1) on each case: one prompt, document
+   evidence only, no stakeholders, no clarification, no conflict detection.
+2. **Conventional manual RE** — the author's own analysis of each case: the gold standard
+   itself, and the time it took.
 
 ---
 
-## 4. Part 2 — SDLC Selection
+## 5. Results
 
-### 4.1 The defensible answer, argued independently
+### 5.1 Requirement gathering
 
-This argument is made **before** examining the model's output, so that §4.3
-assesses the model against an independent position rather than rationalising
-whatever it produced.
+`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv`: precision, recall and F1
+for both systems per case; the precision on elicited requirements; category agreement.
 
-**Reading the requirement set on its merits:**
+![Evaluation](../figures/evaluation_comparison.png)
+
+### 5.2 Ambiguity and conflict detection
+
+`[PENDING RUN]` — seeded ambiguities and conflicts found per case, and which were missed.
+
+### 5.3 Compliance, security and traceability
+
+`[PENDING RUN]` — control coverage (and gold-control coverage), open gaps and gap
+proposals, unmitigated threats, traceability coverage, hallucination rate and citation
+correctness for both systems.
+
+### 5.4 Requirement quality
+
+`[PENDING RUN]` — 29148 pass rate per attribute, first draft vs final, for the multi-agent
+system and the baseline; scorer agreement.
+
+### 5.5 SDLC recommendations
+
+`[PENDING RUN]` — the ranking per case (`report/tables.md`), fired rules, cautions,
+escalations; accuracy against the expert choices; contested factors.
+
+### 5.6 Security
+
+`[PENDING RUN]` — identifiers masked per case; injections quarantined; attack success
+with and without defences (`outputs/evaluation/injection_replay.csv`).
+
+### 5.7 Human oversight, time and satisfaction
+
+`[PENDING RUN]` — approval items by type and priority; human correction rate; processing
+time against manual effort; SUS.
+
+---
+
+## 6. Part A Experiments
+
+### 6.1 Single-prompt generation (the baseline)
+
+The original Part 1 generator grounds one prompt in faceted evidence and asks for 18–25
+requirements with per-requirement reasoning and verbatim evidence quotes. It enforces an
+output contract with one repair attempt. Two first-run failures shaped it:
+
+- The first Colab run returned 13 requirements; the repair prompt forbade adding any, so
+  it returned the same 13. The repair now receives a directive naming the edit needed.
+- The second returned 16; the repair added two but invented a chunk id
+  (`D05#S170.315(c)#c14`, which does not exist) — because the repair prompt did not
+  contain the evidence, and each Ollama call is stateless. The repair prompt now carries
+  the evidence. Citation-integrity failures are recorded in `invalid_chunk_ids`, counted
+  by the hallucination audit and escalated, instead of aborting the run.
+
+`[PENDING RUN]` — requirement count, traceability rate, integrity flags, repair outcome
+(`outputs/part1_contract.json`), 29148 results.
+
+### 6.2 SDLC selection — the defensible answer, argued independently
+
+This argument was made before examining any model output, for `erx_issuance`.
 
 | Criterion | Assessment | Why |
 |---|---|---|
-| Requirement volatility | **Low** | The obligations derive from 21 CFR 1311, 45 CFR 164 and 45 CFR 170.315. Regulation changes on multi-year notice-and-comment cycles, not sprint boundaries |
-| Regulatory / audit burden | **Severe** | Certification requires documented evidence of requirement → design → test traceability |
+| Requirement volatility | **Low** | The obligations derive from 21 CFR 1311, 45 CFR 164 and 45 CFR 170.315, which change on multi-year cycles |
+| Regulatory / audit burden | **Severe** | Certification requires requirement → design → test traceability |
 | Safety criticality | **Maximum** | A missed interaction or allergy contraindication is a patient-harm event |
-| Cost of late defect | **Catastrophic** | Decertification, DEA enforcement, patient harm, mandatory disclosure |
-| Domain expert availability | **Intermittent** | Prescribing clinicians are available at scheduled reviews, not continuously |
-| Team size / distribution | *Context-dependent* | Deliberately varied by the framings |
-| Schedule rigidity | **High** | Certification audit dates are externally fixed |
-| Integration complexity | **High** | EHR, pharmacy networks, DEA CSOS certificate infrastructure, formulary services |
+| Cost of late defect | **Catastrophic** | Decertification, DEA enforcement, patient harm |
+| Domain expert availability | **Intermittent** | Clinicians are available at scheduled reviews |
+| Schedule rigidity | **High** | Certification dates are externally fixed |
+| Integration complexity | **High** | EHR, pharmacy networks, certificate infrastructure |
 
-**The dominant forces are verification rigor and traceability, not adaptability.**
-That points away from a pure adaptive process. But two considerations point away
-from pure Waterfall as well:
+The dominant forces are verification rigour and traceability, not adaptability — which
+points away from a pure adaptive process. Two considerations point away from pure
+Waterfall: alert fatigue is a genuine design unknown that needs iteration with
+clinicians, and integration behaviour is learned by building against real systems.
 
-1. **Alert fatigue is a genuine design unknown.** How aggressively to surface
-   interaction warnings cannot be resolved by specification; it needs empirical
-   iteration with clinicians. Over-alerting causes clinicians to dismiss real
-   warnings — a safety regression produced by a "correct" implementation.
-2. **Integration discovery is empirical.** Behaviour of pharmacy networks and
-   certificate infrastructure is learned by building against them.
+**Position:** a **hybrid — incremental delivery inside a V-Model verification and
+compliance wrapper**, with Spiral-style prototyping confined to alerting UX. Pure V-Model
+is a defensible second choice. Unqualified Agile/Scrum is not defensible for this
+requirement set.
 
-**Position taken:** the most defensible model is a **hybrid — incremental delivery
-inside a V-Model verification and compliance wrapper**, with risk-driven
-(Spiral-style) prototyping confined to the interaction-alerting user experience.
+### 6.3 SDLC framing robustness
 
-- The **V-Model spine** supplies the requirement-to-test traceability the auditor
-  demands: each specification level has a matching verification level.
-- **Incremental delivery** inside that spine allows integration risk to be retired
-  early rather than at a big-bang integration phase.
-- **Spiral prototyping**, scoped to alerting UX only, addresses the one area where
-  the requirement genuinely cannot be settled on paper.
-
-Pure **V-Model** is a defensible second choice. Pure **Waterfall** is defensible
-only if alert design is treated as settled. **Agile/Scrum unqualified is not
-defensible** for this requirement set — not because Agile cannot produce safe
-software, but because the ceremony as usually practised does not by itself yield
-the traceability artifacts certification requires, and the requirement set's
-volatility is low enough that Agile's central advantage does not apply.
-
-### 4.2 Experimental design
-
-Only `requirements.csv` (statement, type, priority, risk_class, volatility) is fed
-back. `requirements_reasoning.csv` is **withheld**: handing the model its own prior
-narrative would have it re-read its earlier justification rather than reason from
-the specification.
-
-| run_id | Framing | Priming |
-|---|---|---|
-| R1 | `neutral` | none |
-| R2 | `agile_primed` | small co-located team, moving fast, PO embedded |
-| R3 | `plan_primed` | regulated hospital network, fixed external audit date |
-
-3 framings × 3 trials × 2 models = **18 data points**. Malformed runs are recorded,
-never silently re-rolled — re-rolling until the output parses would bias the very
-stability statistic being measured.
-
-### 4.3 Results
-
-`[PENDING RUN]` — from `outputs/sdlc_runs.csv` and `outputs/sdlc_analysis.csv`.
+The multi-agent e-prescribing requirement set is scored on the thirteen factors under
+three framings (neutral; agile-primed — small co-located team, product owner embedded;
+plan-primed — regulated network, fixed audit date), three trials and two models: 18 runs.
+Trials vary the seed at a fixed temperature, so sampling variance is isolated from
+framing. Malformed runs are recorded, never re-rolled.
 
 ![SDLC recommendation by framing](../figures/sdlc_by_framing.png)
 ![Criterion scores by framing](../figures/sdlc_criteria.png)
 
-| Analysis | Value |
-|---|---|
-| Modal recommendation | |
-| Modal share | |
-| Framing flip rate | |
-| Cross-model agreement | |
-| Grounding rate (justifications citing a real req_id) | |
-
-**Questions this section must answer, not merely report:**
-
-1. Did the recommendation flip under framing? A model whose answer tracks the
-   priming rather than the requirement set is pattern-matching on context, not
-   reasoning about process suitability.
-2. Did the model default to Agile/Scrum? For a low-volatility, safety-critical,
-   heavily audited requirement set this is the **expected reflex** and should be
-   interrogated rather than accepted.
-3. Where the model did reach a defensible answer, *why*? A correct recommendation
-   supported only by generic platitudes is not evidence of reasoning. The grounding
-   rate — the share of criterion justifications citing specific `req_id`s — is the
-   strongest available discriminator between reasoning and retrieval of a stock
-   answer.
+`[PENDING RUN]` — modal recommendation, flip rate, cross-model agreement, grounding rate,
+and the engine consistency rate (`outputs/sdlc_consistency.csv`): the share of runs whose
+named model is the one their own factor scores imply.
 
 ---
 
-## 5. Validation
+## 7. Validation Layer
 
-### 5.1 ISO/IEC/IEEE 29148 quality audit
+### 7.1 ISO/IEC/IEEE 29148 quality audit
 
-Every requirement is scored 0/1 on eight attributes — necessary, unambiguous,
-complete, singular, feasible, verifiable, conforming, traceable — by two
-independent scorers:
-
-1. **Rule-based** (`src/validate.py`): weak-word detection against a 38-term list,
-   multiple-`shall` and compound-obligation detection, missing acceptance criteria,
-   placeholder tokens, absent or unresolvable traceability, absolute-guarantee
-   claims, and near-duplicate detection by token Jaccard.
-2. **LLM-as-critic** (`prompts/p3_critic.txt`): each requirement judged in its own
-   call on a fresh context. Batching was rejected — a batched critic anchors on its
-   earlier verdicts and drifts toward a uniform score.
-
-**Two attributes are only weakly decidable by rule.** `necessary` and `feasible`
-require domain judgement that regex cannot supply; the rule scorer approximates
-them (near-duplicate detection and absolute-claim detection respectively) and every
-such row is tagged `[rule weakly decidable]` in `validation_29148.csv`. That
-asymmetry is a finding in its own right: it marks exactly where a human requirements
-engineer is still doing the work.
+Every requirement is scored 0/1 on necessary, unambiguous, complete, singular, feasible,
+verifiable, conforming and traceable by two independent scorers: a rule scorer (38 weak
+words, compound-obligation and multiple-`shall` detection, missing acceptance criteria,
+placeholders, citation integrity, absolute claims, near-duplicates) and an LLM critic
+that judges each requirement in its own call on a fresh context. `necessary` and
+`feasible` are only weakly decidable by rule, and are tagged as such. Disagreements are
+adjudicated by hand.
 
 ![29148 pass rate](../figures/validation_29148.png)
 ![Scorer agreement](../figures/scorer_agreement.png)
 
-`[PENDING RUN]` — pass rate per attribute, agreement rate, and manual adjudication
-of the ~10 conflicts listed in `outputs/adjudication_worksheet.csv`. The
-`human_adjudication` column is intentionally left blank by the tooling; filling it
-programmatically would fabricate a human judgement.
+### 7.2 Hallucination audit
 
-### 5.2 Hallucination audit
+Every CFR section, FHIR resource, standard, chunk id and evidence quote a requirement
+cites is checked against the corpus: **verified**, **misattributed** (present but not in
+the cited chunk), **fabricated** (a section that does not exist in a part the corpus
+holds, an invented resource, a chunk id never shown or nonexistent, a quote found
+nowhere), or **unverifiable** (outside the corpus). The detection logic was validated on
+a seeded fixture; the test suite covers it.
 
-Every regulatory and standards citation the model produced is verified against the
-corpus. Verdicts are assigned mechanically:
-
-| Verdict | Assigned when |
-|---|---|
-| `verified` | The cited entity is present in the corpus text |
-| `misattributed` | Present in the corpus, but not in the chunk the model cited |
-| `fabricated` | A CFR section inside a part we hold that does not exist in it; a chunk_id that is not in the index; a quote absent from the whole corpus; a non-existent FHIR resource asserted in a FHIR context |
-| `unverifiable` | Outside the corpus and not refutable from what we hold (e.g. a paywalled IEEE clause) |
-
-The strongest single signal is the **evidence quote check**: the prompt requires
-`evidence_quote` to be copied verbatim from a cited chunk, so a quote absent from
-that chunk is a fabricated attribution rather than a paraphrase.
-
-The audit's detection logic was validated against a seeded fixture containing a
-fabricated chunk_id, a non-existent CFR section (`45 CFR 164.999`), an invented FHIR
-resource, and a fabricated quote. All four were caught at the correct severity.
-
-`[PENDING RUN]` — counts by verdict and severity from
-`outputs/hallucination_audit.csv`.
-
-> **Fabricated regulatory citations in a healthcare context are a safety argument,
-> not a nitpick.** A requirement that cites a non-existent CFR section will pass
-> casual review, enter a specification, and be discovered — if at all — at
-> certification. §6 leads with this.
-
-### 5.3 Metrics summary
-
-`[PENDING RUN]` — `outputs/metrics_summary.csv`, rendered in `report/tables.md`.
+> Fabricated regulatory citations in a healthcare context are a safety argument, not a
+> nitpick: a requirement citing a non-existent section passes casual review and may only
+> be caught at certification.
 
 ---
 
-## 6. Discussion
+## 8. Discussion
 
-### 6.1 Where the LLM added value
+### 8.1 Where the agents added value
 
-`[PENDING RUN]`. Candidate observations to verify against results: breadth of NFR
-coverage relative to time spent; consistent application of the requirement schema;
-surfacing of obligations from regulation the author had not read closely.
+`[PENDING RUN]` — compare against the baseline: what interviews and clarification found
+that documents alone did not; what the conflict, compliance and security agents caught.
 
-### 6.2 Where it failed
+### 8.2 Where they failed
 
-`[PENDING RUN]`. Lead with the hallucination audit. Then: quality attributes with
-the lowest pass rates; whether the model quantified acceptance criteria or hedged;
-whether stated reasoning justified requirements or merely restated them.
+`[PENDING RUN]` — lead with the hallucination audit; then the weakest 29148 attributes,
+missed ambiguities and conflicts, schema failures, and escalations.
 
-### 6.3 The uncited source document
+### 8.3 What a requirements engineer still must do
 
-D03 (FHIR Security and Privacy) was retrieved by no facet and cited by no
-requirement. This is reported rather than engineered away. The honest reading is
-that D03 is architectural guidance rather than a source of binding obligations, and
-competes poorly against CFR text that states obligations directly. A facet could
-have been added to force its inclusion — that was deliberately not done, since
-tuning retrieval per document to guarantee coverage would make the coverage metric
-meaningless.
-
-### 6.4 What a requirements engineer still must do
-
-`[PENDING RUN]`. Anchor to the two weakly-decidable attributes, to the adjudicated
-disagreements, and to §7.1.
+`[PENDING RUN]` — anchor to the weakly decidable attributes, the adjudicated
+disagreements, the escalated items and the human correction rate, and to §9.1.
 
 ---
 
-## 7. Threats to Validity
+## 9. Threats to Validity
 
-### 7.1 The LLM cannot elicit
+### 9.1 Simulated stakeholders are not stakeholders
 
-**This is the central limitation and it is not incidental.** Every requirement in
-this study was derived from documents that already existed. Requirements
-engineering in practice is dominated by *elicitation* — surfacing tacit knowledge
-that no document contains: the workaround a ward uses when the formulary service is
-down, the reason prescribers dismiss a particular alert, the political constraint
-that one department will not accept a shared credential.
+The personas answer from fact sheets written in advance. They cannot surface tacit
+knowledge nobody wrote down — the workaround a ward uses when the formulary service is
+down, the political reason a department rejects a shared credential. Detection of seeded
+ambiguities and conflicts shows the mechanics work; it does not show the system would
+elicit what real stakeholders leave unsaid. The live-interview tab exists to test that
+with people.
 
-An LLM grounded on a document corpus is structurally incapable of this. It can only
-recombine what was written down. Nothing in this study's results should be read as
-evidence that the model could replace stakeholder elicitation; the study design
-excludes the question by construction.
+### 9.2 Synthetic case materials and gold standards
 
-### 7.2 Corpus limitations
+The personas, documents and gold standards were drafted with AI assistance and reviewed
+by the author. A gold standard written by the same hand as the cases may favour phrasings
+the system also produces; the matching threshold was fixed in advance and automatic
+matches are verified by hand to limit this.
 
-Six documents, one jurisdiction (US federal), one domain. US-specific instruments
-(DEA EPCS, ONC certification) do not generalise to other regulatory regimes. No
-ground-truth SRS exists for this functionality, so requirement *recall* cannot be
-measured — only the internal quality of what was produced.
+### 9.3 Same-family judging
 
-### 7.3 Retrieval bias
+The LLM critic is the same model as the generator, and the SDLC explanation is written by
+the model whose scores feed the engine. Shared blind spots inflate agreement. The rule
+scorer, the deterministic engine and human adjudication are the independent reference
+points.
 
-Faceted retrieval fixed a severe imbalance but the facets are author-written and
-therefore encode the author's model of the functionality. A requirement area not
-represented by a facet is unlikely to be grounded. Evidence is capped at 7,000
-tokens, so 132 of 148 chunks were never seen by the model in Part 1.
+### 9.4 Corpus and jurisdiction
 
-### 7.4 Model scale
+Six documents, US federal regulation and HL7 standards, one domain. US instruments (DEA
+EPCS, ONC certification) do not generalise to other regimes.
 
-7–8B parameter models at 4-bit quantisation. Instruction-following and JSON
-conformance are materially weaker than frontier models; the schema-repair path
-exists precisely because of this. Findings about *these* models' reasoning should
-not be generalised to LLMs as a class.
+### 9.5 Retrieval bias
 
-### 7.5 Scorer independence
+Facets are author-written, so a requirement area no facet covers is unlikely to be
+grounded; evidence per extraction call is capped.
 
-The LLM critic is the same model family that generated the requirements. Shared
-blind spots would inflate the agreement rate. The rule-based scorer is genuinely
-independent but mechanical, and two of its eight attributes are weak. Manual
-adjudication is the only true reference point in the design, and it covers a sample.
+### 9.6 Model scale
 
-### 7.6 Proxy tokenizer
+7–8B models at 4-bit quantisation follow instructions and JSON schemas less reliably than
+frontier models; the repair paths exist because of this, and findings should not be
+generalised to LLMs as a class.
 
-Chunk sizes are measured in `cl100k_base` tokens, which is not the tokenizer of
-either generation model. Chunk sizes are therefore approximate in terms of the
-models' actual context consumption.
+### 9.7 Engine design
 
----
+The MCDA profiles and rules encode published characterisations of each life-cycle model;
+different defensible profiles would rank differently. They were fixed before any results
+and are reported in full so the ranking can be recomputed under other weights.
 
-## 8. Conclusion
+### 9.8 Confidence is uncalibrated
 
-`[PENDING RUN]` — must state plainly: (a) whether the generated requirement set
-would be usable as a first draft by a requirements engineer, subject to which
-corrections; (b) whether the model's SDLC recommendation was defensible and whether
-its *justification* was; (c) what the validation layer caught that casual review
-would not.
+The confidence score is a transparent heuristic over support and quality, not a
+probability; there is no ground truth to calibrate it against.
 
 ---
 
-## 9. Appendices
+## 10. Conclusion
 
-- **Appendix A** — Full prompts: `prompts/p1_requirements.txt`,
-  `p1_repair.txt`, `p2_sdlc_neutral.txt`, `p2_sdlc_agile_primed.txt`,
-  `p2_sdlc_plan_primed.txt`, `p3_critic.txt`
-- **Appendix B** — Sample raw responses: `outputs/raw_p1_response.txt`
-- **Appendix C** — Corpus manifest: `corpus/MANIFEST.csv`
-- **Appendix D** — Complete call log: `logs/llm_calls.jsonl`
-- **Appendix E** — Generated tables: `report/tables.md`
+`[PENDING RUN]` — state plainly: (a) whether the requirement sets are usable first drafts
+and with which corrections, compared with the single-prompt baseline and with manual
+analysis; (b) whether the SDLC recommendations were defensible and whether their
+justifications were; (c) what the validation, compliance and security layers caught that
+casual review would not; (d) what the human reviewers changed.
+
+---
+
+## 11. Appendices
+
+- **A** — Prompts: `prompts/p1_*.txt`, `prompts/p2_*.txt`, `prompts/p3_critic.txt`, `prompts/agents/*.txt`
+- **B** — Case studies: `cases/<case>/case.yaml`, `documents/`, `gold.yaml`
+- **C** — Knowledge base: `corpus/MANIFEST.csv`, `config/controls.yaml`, `config/sdlc.yaml`, `config/stakeholders.yaml`
+- **D** — Per-case artefacts: `outputs/cases/<case>/artifacts/`
+- **E** — Logs: `logs/llm_calls.jsonl`, `outputs/cases/<case>/agent_log.jsonl`, `decisions.jsonl`
+- **F** — Generated tables: `report/tables.md`

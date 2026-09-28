@@ -1,0 +1,99 @@
+# Role-specific interview templates (brief points 2 and 7).
+#
+# The stakeholder-interaction agent does not read these out as a fixed
+# questionnaire. It picks the topics relevant to a role, phrases questions for the
+# case's functionality, and asks follow-ups when an answer is vague, incomplete or
+# inconsistent. The seed questions show the intent of each topic.
+#
+# `quantitative` topics need a number, unit or threshold in the answer; an answer
+# without one always gets a follow-up asking for it.
+
+topics:
+  business_objectives:
+    label: Business and clinical objectives
+    seed: What problem should this functionality solve, and how will you know it has?
+  users_roles:
+    label: Users and roles
+    seed: Who uses this, in which role, and what may each role do or not do?
+  existing_workflow:
+    label: Existing workflow
+    seed: Walk me through how this is done today, step by step.
+  inputs_outputs_rules:
+    label: Inputs, outputs and business rules
+    seed: What information goes in, what must come out, and which rules decide the outcome?
+  exceptions:
+    label: Exceptional conditions
+    seed: What happens when something goes wrong or an unusual case arrives?
+  data_retention:
+    label: Data collection and retention
+    seed: Which data do you collect, who may see it, and how long must it be kept?
+    quantitative: true
+  authn_authz:
+    label: Authentication and authorisation
+    seed: How must users prove who they are, and how is access granted and revoked?
+  prescribing_limits:
+    label: Prescribing and transaction limits
+    seed: Which limits apply — quantities, refills, schedules, overrides — and who may exceed them?
+    quantitative: true
+  audit_reporting:
+    label: Audit and reporting
+    seed: Which actions must be recorded, who reviews the records, and how often?
+  performance_availability:
+    label: Performance and availability
+    seed: How fast must it respond and how available must it be, in numbers?
+    quantitative: true
+  integration:
+    label: Integration with existing systems
+    seed: Which existing systems must this exchange data with, and in what format?
+  regulatory_security:
+    label: Regulatory and security constraints
+    seed: Which regulations, policies or security rules constrain this functionality?
+  schedule_budget:
+    label: Schedule and budget
+    seed: What deadlines, release cadence and budget constraints apply?
+    quantitative: true
+
+roles:
+  prescriber:
+    label: Prescribing clinician
+    topics: [business_objectives, existing_workflow, inputs_outputs_rules, exceptions,
+             performance_availability, prescribing_limits]
+  pharmacist:
+    label: Pharmacist
+    topics: [existing_workflow, inputs_outputs_rules, exceptions, integration, prescribing_limits]
+  patient:
+    label: Patient
+    topics: [business_objectives, users_roles, data_retention, authn_authz, performance_availability]
+  clinical_safety_officer:
+    label: Clinical safety officer
+    topics: [business_objectives, exceptions, inputs_outputs_rules, audit_reporting, prescribing_limits]
+  compliance_officer:
+    label: Compliance and privacy officer
+    topics: [regulatory_security, data_retention, audit_reporting, users_roles]
+  security_officer:
+    label: Information security officer
+    topics: [authn_authz, regulatory_security, audit_reporting, exceptions]
+  architect:
+    label: Software architect
+    topics: [integration, performance_availability, existing_workflow, exceptions]
+  product_owner:
+    label: Product owner
+    topics: [business_objectives, users_roles, schedule_budget, performance_availability]
+  operations:
+    label: Operations and support lead
+    topics: [performance_availability, exceptions, audit_reporting, schedule_budget]
+  auditor:
+    label: Internal auditor
+    topics: [audit_reporting, data_retention, regulatory_security]
+
+# Approval authority (brief point 16): which role decides which kind of item.
+approval_authority:
+  requirement_baseline: product_owner
+  regulatory_interpretation: compliance_officer
+  security_requirement: security_officer
+  clinical_safety: clinical_safety_officer
+  conflict: product_owner
+  architecture_critical: architect
+  sdlc_selection: [project_manager, architect, security_officer, compliance_officer]
+  injection_quarantine: security_officer
+  production_readiness: [project_manager, clinical_safety_officer, security_officer, compliance_officer]

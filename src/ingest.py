@@ -130,7 +130,27 @@ MANIFEST_COLUMNS = [
     "bytes",
     "n_sections",
     "n_chunks",
+    # Knowledge-base metadata (brief point 5): every item carries its jurisdiction,
+    # authority, effective date, version and the case studies it applies to.
+    "jurisdiction",
+    "authority",
+    "effective_date",
+    "version",
+    "applicability",
 ]
+
+KB_METADATA = {
+    "D01": ("International (HL7)", "standard", "2019-10-30", "FHIR R4 v4.0.1", "erx_issuance; refill_reminders"),
+    "D02": ("International (HL7)", "standard", "2019-10-30", "FHIR R4 v4.0.1", "erx_issuance"),
+    "D03": ("International (HL7)", "standard", "2019-10-30", "FHIR R4 v4.0.1",
+            "erx_issuance; epcs_signing; refill_reminders"),
+    "D04": ("US-Federal", "regulation (HHS)", "2025-01-01", "eCFR point-in-time 2025-01-01",
+            "erx_issuance; epcs_signing; refill_reminders"),
+    "D05": ("US-Federal", "regulation (HHS ONC)", "2025-01-01", "eCFR point-in-time 2025-01-01",
+            "erx_issuance; epcs_signing; refill_reminders"),
+    "D06": ("US-Federal", "regulation (DEA)", "2025-01-01", "eCFR point-in-time 2025-01-01",
+            "erx_issuance; epcs_signing"),
+}
 
 SECTION_MARKER = "### "
 
@@ -193,6 +213,8 @@ def fetch() -> None:
                 "bytes": len(resp.content),
                 "n_sections": "",
                 "n_chunks": "",
+                **dict(zip(["jurisdiction", "authority", "effective_date", "version", "applicability"],
+                           KB_METADATA.get(src["doc_id"], ("", "", "", "", "")))),
             }
         )
         print(f"         -> {dest.name}  {len(resp.content):,} bytes  sha256={sha[:16]}...")

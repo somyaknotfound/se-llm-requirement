@@ -135,22 +135,129 @@ generation:
   # no functional surface to reason about.
   min_frs: 8
   min_traceability_rate: 0.70   # fraction citing >=1 real chunk_id
+  # Part 1's two calls override the model defaults: 25 requirements with reasoning
+  # approach 6k output tokens, and the repair prompt carries the evidence AND the
+  # previous response. qwen2.5 supports a 32k window natively.
+  num_ctx: 32768
+  num_predict: 8192
 
 sdlc:
   framings: [neutral, agile_primed, plan_primed]
   trials: 3
   models: [primary, secondary]  # 3 x 3 x 2 = 18 data points
-  criteria:
-    - requirement_volatility
-    - regulatory_audit_burden
-    - safety_criticality
-    - cost_of_late_defect
-    - user_domain_expert_availability
-    - team_size_and_distribution
-    - schedule_rigidity
-    - legacy_integration_complexity
+  # The decision factors, MCDA profiles, rules and workflow templates live in
+  # config/sdlc.yaml — the brief's 13 factors replaced the original 8 criteria.
+
+# Knowledge-base version. Every run manifest records it with the corpus manifest
+# hash, config/controls.yaml and config/sdlc.yaml versions, and the model digests.
+kb_version: "2026-09-28"
+
+# --- Multi-agent system ----------------------------------------------------
+agents:
+  # The system runs on the primary model; simulated stakeholders are played by the
+  # secondary model so the system is never interviewing itself.
+  model: primary
+  persona_model: secondary
+  interview_rounds: 2           # questions, then follow-ups on vague or incomplete answers
+  questions_per_role: 6
+  clarification_rounds: 2       # bounded loop for requirements that fail quality checks
+  batch_size: 6                 # requirements per call for classification, risk, stories
+  evidence_tokens: 2500         # retrieved-evidence budget per extraction call
+  threats: 8                    # STRIDE threats the security agent is asked for
+  use_cases: 4
+  duplicate_similarity: 0.86    # embedding cosine at or above which a pair is a duplicate candidate
+  conflict_similarity: 0.55     # same-subject threshold for conflict candidates
+  max_conflict_pairs: 24
+  critic: true                  # LLM critic on the final set (one call per requirement)
+
+  # Least-privilege permissions, enforced by the blackboard. `retrieval` is the
+  # knowledge-source allowlist: `case` = the case's knowledge_sources, [] = none.
+  permissions:
+    stakeholder_interaction:
+      reads: [statements, interview_log]
+      writes: [statements, interview_log]
+      retrieval: []
+    extraction:
+      reads: [statements, requirements, requirement_history]
+      writes: [requirements, requirement_history]
+      retrieval: case
+    conflict_detection:
+      reads: [requirements, statements, requirement_history, conflicts, findings]
+      writes: [requirements, requirement_history, conflicts, findings]
+      retrieval: []
+    clarification:
+      reads: [requirements, findings, conflicts, statements, clarifications]
+      writes: [clarifications, statements, findings]
+      retrieval: []
+    classification:
+      reads: [requirements]
+      writes: [requirements]
+      retrieval: []
+    compliance:
+      reads: [requirements, compliance, gaps, findings]
+      writes: [compliance, gaps, requirements, findings]
+      retrieval: case
+    security_privacy:
+      reads: [requirements, compliance, threats]
+      writes: [threats, requirements]
+      retrieval: case
+    risk_analysis:
+      reads: [requirements, threats, compliance, risks]
+      writes: [risks, requirements]
+      retrieval: []
+    validation:
+      reads: [requirements, statements, findings, conflicts, compliance, validation,
+              confidence, hallucination]
+      writes: [validation, confidence, findings, hallucination, requirements]
+      retrieval: []
+    sdlc_selection:
+      reads: [requirements, risks, compliance, threats, sdlc]
+      writes: [sdlc]
+      retrieval: []
+    documentation:
+      reads: [requirements, statements, compliance, gaps, risks, threats, findings, conflicts,
+              confidence, sdlc, clarifications, validation, hallucination, artifacts,
+              requirement_history, security_events, approvals, out_of_scope]
+      writes: [artifacts]
+      retrieval: []
+    human_approval:
+      reads: [requirements, confidence, findings, compliance, threats, sdlc, conflicts,
+              security_events, risks, approvals]
+      writes: [approvals]
+      retrieval: []
+
+evaluation:
+  # A generated requirement matches a gold requirement at or above this cosine
+  # similarity (all-MiniLM-L6-v2). Fixed before any results existed; matches are
+  # written out for human verification, which replaces the automatic count.
+  match_threshold: 0.6
+
+# Multi-label requirement categories (brief point 9).
+categories:
+  - business
+  - stakeholder
+  - functional
+  - security
+  - privacy
+  - regulatory
+  - performance
+  - availability_reliability
+  - usability
+  - data_management
+  - integration
+  - audit_reporting
+  - operational
 
 validation:
+  # Requirements scoring below this confidence are escalated for human review.
+  confidence_threshold: 0.7
+  # Defined terms for the undefined-terminology check (brief point 10): an acronym
+  # a requirement uses that is not listed here is flagged for clarification.
+  glossary: [API, ATNA, CDS, CFR, CPOE, CSOS, CSV, DAST, DEA, EHR, EPCS, ePHI, FHIR,
+             FIPS, HHS, HIPAA, HL7, HTTP, HTTPS, IAL, ID, IHE, IT, JSON, KB, MFA, MLLP,
+             MRN, NCPDP, NIST, NPI, OAuth, OIDC, ONC, OTP, PDF, PHI, PIN, RBAC, ABAC,
+             REST, RTM, SAST, SCRIPT, SLA, SMART, SQL, SRS, SSO, TLS, UI, UX, XML, US,
+             "2FA", "A/B", "P&T", "4G", GPS, iOS, OS, URL, UTC, IR]
   attributes:
     - necessary
     - unambiguous

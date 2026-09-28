@@ -133,6 +133,19 @@ class OllamaClient:
             ) from exc
         return [m["name"] for m in r.json().get("models", [])]
 
+    def model_digests(self) -> dict[str, str]:
+        """name -> content digest of every local model, for the run manifest.
+
+        A tag like qwen2.5:7b-instruct can be re-pushed with different weights; the
+        digest is what identifies the exact model that produced a result.
+        """
+        try:
+            r = requests.get(f"{self.host}/api/tags", timeout=15)
+            r.raise_for_status()
+        except requests.RequestException:
+            return {}
+        return {m["name"]: m.get("digest", "") for m in r.json().get("models", [])}
+
     def resolve_model(self, model_key: str) -> tuple[str, dict[str, Any]]:
         """Map a roster key ('primary') to a concrete model id and its params."""
         spec = self.config["models"].get(model_key)

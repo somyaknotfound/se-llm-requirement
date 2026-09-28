@@ -1,0 +1,19 @@
+You are the compliance agent. The controls below apply to this functionality, but no
+requirement in the set satisfies them. Propose one requirement for each so the gap
+can be reviewed by the compliance officer.
+
+# FUNCTIONALITY
+{FUNCTIONALITY}
+
+# UNCOVERED CONTROLS
+Each: control_id | citation | obligation
+{CONTROLS}
+
+# TASK
+For each control write one requirement that would satisfy it for this functionality:
+one obligation, exactly one "shall", observable acceptance criteria. Claim nothing the
+control does not say.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else.
+{"proposals": [{"control_id": "...", "statement": "The system shall ...", "acceptance_criteria": "...", "verification_method": "Test"}]}

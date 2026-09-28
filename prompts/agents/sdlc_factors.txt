@@ -1,0 +1,26 @@
+You are the SDLC selection agent. Score this project on each decision factor from its
+requirement set and project context. You are NOT choosing a life-cycle model here;
+your scores feed a decision engine.
+
+# FUNCTIONALITY
+{FUNCTIONALITY}
+
+# PROJECT CONTEXT
+{CONTEXT}
+
+# REQUIREMENT SET
+req_id | type | categories | risk | volatility | priority | statement
+{REQUIREMENTS}
+
+# FACTORS (1 = low, 5 = high)
+{FACTORS}
+
+# RULES
+1. Score every factor with an integer from 1 to 5.
+2. Justify each score in one or two sentences citing specific req_ids, or the project
+   context where the requirements say nothing.
+3. Score what this evidence shows, not what is typical for software projects.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else, with exactly {N_FACTORS} entries.
+{"factors": [{"factor": "change_frequency", "score": 2, "justification": "...", "cited_req_ids": ["FR-..."]}]}

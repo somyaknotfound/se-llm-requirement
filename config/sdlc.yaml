@@ -1,0 +1,252 @@
+# SDLC selection knowledge base (brief points 13-15).
+#
+# Written before any pipeline results existed and not to be tuned against them:
+# tuning profiles until the engine agrees with an expected answer would make the
+# SDLC-accuracy metric meaningless. Every profile cell names its source.
+#
+# Sources:
+#   brief   — the problem statement's own condition table (point 14)
+#   BT      — Boehm & Turner (2003), Balancing Agility and Discipline: plan-driven
+#             home ground = large size, high criticality, low dynamism; agile home
+#             ground = small size, low criticality, high dynamism
+#   B88     — Boehm (1988), A Spiral Model of Software Development and Enhancement:
+#             risk-driven iteration for high-risk, uncertain projects
+#   AM      — Agile Manifesto principles: deliver working software frequently (3),
+#             business people and developers work together daily (4), working
+#             software over comprehensive documentation (values)
+
+version: "2026-09-28"
+
+# All factors are intensities: 1 = low, 5 = high.
+factors:
+  requirement_instability:
+    label: Requirement instability
+    low: Requirements are settled and well understood
+    high: Requirements are unclear or still being discovered
+  regulatory_criticality:
+    label: Regulatory criticality
+    low: No regulatory oversight of the software
+    high: Certification or a regulator's audit gates the release
+  security_risk:
+    label: Security risk
+    low: No sensitive data; a low-value target
+    high: High-value target; a breach causes severe harm
+  project_complexity:
+    label: Project complexity
+    low: A simple, well-understood solution
+    high: Novel, with many interacting parts
+  system_size:
+    label: System and team size
+    low: Small feature built by a small co-located team (6 or fewer)
+    high: Large system or a large or distributed team
+  legacy_dependence:
+    label: Legacy-system dependence
+    low: Greenfield
+    high: Deeply dependent on legacy systems that cannot change
+  change_frequency:
+    label: Expected frequency of change
+    low: Requirements rarely change after the baseline
+    high: Requirements change weekly or monthly
+  continuous_delivery_need:
+    label: Need for continuous delivery
+    low: Infrequent, planned releases are acceptable
+    high: Continuous deployment is expected
+  stakeholder_availability:
+    label: Stakeholder availability
+    low: Stakeholders are rarely available
+    high: Stakeholders are available continuously
+  documentation_rigour:
+    label: Testing and documentation requirements
+    low: Minimal documentation is acceptable
+    high: Extensive documentation and test evidence is mandatory
+  schedule_budget_rigidity:
+    label: Budget and schedule constraints
+    low: Flexible dates and budget
+    high: A fixed date and budget that cannot move
+  formal_verification_need:
+    label: Need for formal verification
+    low: Informal testing is acceptable
+    high: Formal verification and validation is required
+  failure_consequence:
+    label: Consequences of system failure
+    low: Minor inconvenience
+    high: Patient harm, legal liability or regulatory sanction
+
+# MCDA: simple additive weighting over directional profiles. For each model, a
+# factor marked +1 is satisfied by a high score, -1 by a low score; unmarked
+# factors do not count for that model. fit(f) = (score-1)/4 for +1 and
+# (5-score)/4 for -1; suitability = weighted mean fit over the model's factors.
+weights: {}   # empty = every factor weighted 1.0
+
+profiles:
+  Waterfall:
+    requirement_instability: {dir: -1, source: brief (stable requirements)}
+    change_frequency: {dir: -1, source: BT (low dynamism)}
+    regulatory_criticality: {dir: +1, source: brief (extensive approvals)}
+    documentation_rigour: {dir: +1, source: brief (extensive approvals)}
+    continuous_delivery_need: {dir: -1, source: sequential single release}
+    system_size: {dir: +1, source: BT (large size)}
+  V-Model:
+    formal_verification_need: {dir: +1, source: brief (strict verification and validation)}
+    failure_consequence: {dir: +1, source: BT (high criticality)}
+    documentation_rigour: {dir: +1, source: brief (strict V&V needs test evidence)}
+    change_frequency: {dir: -1, source: BT (low dynamism)}
+    system_size: {dir: +1, source: BT (large size)}
+  Spiral:
+    requirement_instability: {dir: +1, source: brief (high uncertainty)}
+    project_complexity: {dir: +1, source: brief (technical risk)}
+    legacy_dependence: {dir: +1, source: brief (technical risk)}
+    failure_consequence: {dir: +1, source: B88 (risk-driven for high stakes)}
+    security_risk: {dir: +1, source: B88 (risk-driven)}
+  Agile:
+    change_frequency: {dir: +1, source: brief (frequently changing requirements)}
+    stakeholder_availability: {dir: +1, source: AM principle 4}
+    continuous_delivery_need: {dir: +1, source: AM principle 3}
+    system_size: {dir: -1, source: BT (small size)}
+    failure_consequence: {dir: -1, source: BT (low criticality)}
+    documentation_rigour: {dir: -1, source: AM (working software over documentation)}
+  DevSecOps:
+    continuous_delivery_need: {dir: +1, source: brief (continuous deployment)}
+    security_risk: {dir: +1, source: brief (secure deployment)}
+    change_frequency: {dir: +1, source: brief (continuous change)}
+  Hybrid:
+    regulatory_criticality: {dir: +1, source: brief (high regulation)}
+    change_frequency: {dir: +1, source: brief (evolving requirements)}
+    formal_verification_need: {dir: +1, source: V-Model wrapper}
+    documentation_rigour: {dir: +1, source: V-Model wrapper}
+
+# Deterministic rules: the brief's condition table, transcribed. A rule firing is
+# auditable support for a model; the MCDA gives the graded ranking. If the top
+# MCDA model has no supporting rule, the recommendation is escalated.
+thresholds: {high: 4, low: 2}
+rules:
+  - id: R-WF
+    model: Waterfall
+    brief_condition: Stable requirements and extensive approvals
+    when:
+      all:
+        - requirement_instability <= 2
+        - change_frequency <= 2
+        - any: [regulatory_criticality >= 4, documentation_rigour >= 4]
+  - id: R-V
+    model: V-Model
+    brief_condition: Strict verification and validation
+    when:
+      any:
+        - formal_verification_need >= 4
+        - all: [failure_consequence >= 4, documentation_rigour >= 4]
+  - id: R-SP
+    model: Spiral
+    brief_condition: High uncertainty or technical risk
+    when:
+      any: [requirement_instability >= 4, project_complexity >= 4, legacy_dependence >= 4]
+  - id: R-AG
+    model: Agile
+    brief_condition: Frequently changing requirements
+    when:
+      all: [change_frequency >= 4]
+  - id: R-DSO
+    model: DevSecOps
+    brief_condition: Continuous secure deployment
+    when:
+      all: [continuous_delivery_need >= 4, security_risk >= 4]
+  - id: R-HY
+    model: Hybrid
+    brief_condition: High regulation with evolving requirements
+    when:
+      all: [regulatory_criticality >= 4, change_frequency >= 3]
+
+cautions:
+  - models: [Agile, DevSecOps]
+    when: {any: [regulatory_criticality >= 4, failure_consequence >= 4]}
+    text: >-
+      The top model is adaptive but the project is highly regulated or safety-critical;
+      without a verification and compliance wrapper it will not produce the evidence
+      certification needs. Consider the Hybrid model.
+  - models: [Waterfall, V-Model]
+    when: {all: [change_frequency >= 4]}
+    text: >-
+      The top model is plan-driven but requirements are expected to change often; late
+      change will be expensive rework.
+
+# Workflow templates (brief point 15). `kind` lets overlays attach to phases.
+workflows:
+  Waterfall:
+    - {name: Initiation, kind: initiation, activities: [Define scope and objectives, Select SDLC and plan], roles: [project_manager, product_owner], deliverables: [Project charter, SDLC decision record], exit: Charter and SDLC decision approved}
+    - {name: Requirements, kind: requirements, activities: [Elicit and analyse requirements, Baseline the SRS], roles: [business_analyst, product_owner, compliance_officer], deliverables: [SRS baseline, Traceability matrix], exit: SRS baselined}
+    - {name: Design, kind: design, activities: [Architecture and detailed design], roles: [architect], deliverables: [Design specification], exit: Design approved}
+    - {name: Implementation, kind: implementation, activities: [Build to the design, Unit test], roles: [developer], deliverables: [Code, Unit test results], exit: Code complete}
+    - {name: Verification, kind: verification, activities: [Integration and system test against the SRS], roles: [tester], deliverables: [Test report], exit: All requirements verified}
+    - {name: Deployment, kind: release, activities: [Release and hand-over], roles: [operations, project_manager], deliverables: [Release notes], exit: Accepted into service}
+    - {name: Maintenance, kind: operations, activities: [Corrective maintenance, Change control], roles: [operations], deliverables: [Change log], exit: Retirement}
+  V-Model:
+    - {name: Concept and regulatory analysis, kind: initiation, activities: [Define intended use, Identify applicable regulations and standards, Select SDLC], roles: [project_manager, compliance_officer], deliverables: [Concept of operations, Regulatory applicability statement, SDLC decision record], exit: Concept approved}
+    - {name: Requirements baseline, kind: requirements, activities: [Analyse and baseline requirements, Plan acceptance validation], roles: [business_analyst, product_owner, compliance_officer], deliverables: [SRS baseline, Acceptance test plan, Traceability matrix], exit: SRS baselined with a validation plan}
+    - {name: System and architecture design, kind: design, activities: [Architecture design, Plan system verification], roles: [architect], deliverables: [Architecture specification, System test plan], exit: Architecture approved}
+    - {name: Detailed design, kind: design, activities: [Component design, Plan integration and unit verification], roles: [architect, developer], deliverables: [Component designs, Integration and unit test plans], exit: Designs reviewed}
+    - {name: Implementation, kind: implementation, activities: [Code components], roles: [developer], deliverables: [Code], exit: Code reviewed}
+    - {name: Unit and integration verification, kind: verification, activities: [Execute unit and integration test plans], roles: [developer, tester], deliverables: [Unit and integration test reports], exit: Components verified against design}
+    - {name: System verification, kind: verification, activities: [Execute system test plan against architecture and requirements], roles: [tester], deliverables: [System test report], exit: System verified}
+    - {name: Acceptance validation, kind: validation, activities: [Validate with end users against the acceptance plan], roles: [product_owner, end_users], deliverables: [Validation report], exit: Intended use validated}
+    - {name: Release and certification, kind: release, activities: [Certification and release readiness review], roles: [project_manager, compliance_officer], deliverables: [Certification evidence, Release approval], exit: Released}
+    - {name: Operations, kind: operations, activities: [Monitoring, Controlled change], roles: [operations], deliverables: [Operations reports], exit: Retirement}
+  Spiral:
+    - {name: Objectives and constraints, kind: initiation, activities: [Set cycle objectives, Identify alternatives and constraints, Select SDLC], roles: [project_manager, product_owner], deliverables: [Cycle plan, SDLC decision record], exit: Cycle plan agreed}
+    - {name: Risk analysis and prototyping, kind: design, activities: [Rank risks, Prototype the highest risks], roles: [architect, developer], deliverables: [Risk register, Prototypes], exit: Top risks resolved or accepted}
+    - {name: Develop and verify increment, kind: implementation, activities: [Build the cycle's increment, Verify it], roles: [developer, tester], deliverables: [Increment, Test report], exit: Increment verified}
+    - {name: Stakeholder evaluation and next-cycle planning, kind: validation, activities: [Evaluate with stakeholders, Plan the next cycle], roles: [product_owner, end_users], deliverables: [Evaluation record, Next cycle plan], exit: Continue or release decision}
+    - {name: Release, kind: release, activities: [Release readiness review], roles: [project_manager], deliverables: [Release approval], exit: Released}
+    - {name: Operations, kind: operations, activities: [Monitoring, Risk review], roles: [operations], deliverables: [Operations reports], exit: Retirement}
+  Agile:
+    - {name: Inception, kind: initiation, activities: [Product vision, Initial backlog, Select SDLC], roles: [product_owner, team], deliverables: [Product vision, Initial backlog, SDLC decision record], exit: Vision agreed}
+    - {name: Backlog refinement, kind: requirements, activities: [Write and refine user stories with acceptance criteria], roles: [product_owner, team], deliverables: [Ready backlog items], exit: Stories meet definition of ready}
+    - {name: Sprint, kind: implementation, activities: ["Design, build and test stories"], roles: [team], deliverables: [Potentially shippable increment], exit: Definition of done met}
+    - {name: Sprint review, kind: validation, activities: [Demonstrate to stakeholders, Adapt the backlog], roles: [product_owner, stakeholders], deliverables: [Review notes, Updated backlog], exit: Increment accepted}
+    - {name: Release, kind: release, activities: [Release accepted increments], roles: [product_owner, operations], deliverables: [Release notes], exit: Released}
+    - {name: Operations and feedback, kind: operations, activities: [Monitor usage, Collect feedback into the backlog], roles: [operations, product_owner], deliverables: [Usage and feedback reports], exit: Continuous}
+  DevSecOps:
+    - {name: Plan, kind: requirements, activities: [Backlog with security and compliance stories, Select SDLC], roles: [product_owner, security_officer], deliverables: [Backlog, SDLC decision record], exit: Iteration planned}
+    - {name: Code, kind: implementation, activities: [Build with peer review], roles: [team], deliverables: [Reviewed code], exit: Merged}
+    - {name: Build and test pipeline, kind: verification, activities: ["Automated unit, integration and policy-as-code tests"], roles: [team], deliverables: [Pipeline results], exit: Pipeline green}
+    - {name: Release, kind: release, activities: [Automated release with approval gate], roles: [operations, security_officer], deliverables: [Signed release artefact], exit: Released}
+    - {name: Operate and monitor, kind: operations, activities: [Runtime monitoring, Incident response], roles: [operations], deliverables: [Monitoring dashboards], exit: Continuous}
+    - {name: Feedback, kind: validation, activities: [Feed telemetry and user feedback into planning], roles: [product_owner], deliverables: [Feedback items], exit: Continuous}
+  Hybrid:
+    - {name: Concept and regulatory analysis, kind: initiation, activities: [Define intended use, Identify applicable regulations, Select SDLC], roles: [project_manager, compliance_officer], deliverables: [Regulatory applicability statement, SDLC decision record], exit: Concept approved}
+    - {name: Requirements baseline, kind: requirements, activities: [Baseline regulated requirements, Keep a backlog for evolving requirements, Plan validation], roles: [business_analyst, product_owner, compliance_officer], deliverables: [SRS baseline, Backlog, Validation plan, Traceability matrix], exit: Regulated baseline approved}
+    - {name: Architecture and verification planning, kind: design, activities: [Architecture design, System verification plan], roles: [architect], deliverables: [Architecture specification, System test plan], exit: Architecture approved}
+    - {name: Increment planning, kind: requirements, activities: [Select backlog items for the increment, Update traceability], roles: [product_owner, team], deliverables: [Increment plan], exit: Increment scope agreed}
+    - {name: Build and verify increment, kind: implementation, activities: ["Design, build, unit and integration test"], roles: [team], deliverables: [Verified increment, Test reports], exit: Increment verified against its requirements}
+    - {name: Increment review, kind: validation, activities: [Review with clinicians and stakeholders, Adapt the backlog], roles: [product_owner, end_users], deliverables: [Review record], exit: Continue or proceed to system verification}
+    - {name: System verification, kind: verification, activities: [Execute the system test plan on the integrated increments], roles: [tester], deliverables: [System test report], exit: System verified}
+    - {name: Acceptance validation, kind: validation, activities: [Validate intended use with end users], roles: [product_owner, end_users], deliverables: [Validation report], exit: Intended use validated}
+    - {name: Certification and release, kind: release, activities: [Compliance evidence review, Release readiness], roles: [project_manager, compliance_officer], deliverables: [Certification evidence, Release approval], exit: Released}
+    - {name: Operations, kind: operations, activities: [Monitoring, Controlled change feeding the backlog], roles: [operations], deliverables: [Operations reports], exit: Retirement}
+
+overlays:
+  security:
+    design: [Threat modelling (STRIDE) of the functionality, Security requirements review]
+    implementation: [Static application security testing on every build, Dependency and secret scanning]
+    verification: [Dynamic application security testing, Penetration test before release]
+    release: [Security sign-off]
+    operations: [Security monitoring and incident response, Vulnerability patching to an agreed timescale]
+  compliance_by_source:
+    D04:
+      - {kind: requirements, checkpoint: "HIPAA risk analysis completed and approved (45 CFR 164.308(a)(1)(ii)(A))"}
+      - {kind: operations, checkpoint: "Security documentation retained for 6 years (45 CFR 164.316(b)(2)(i))"}
+    D05:
+      - {kind: release, checkpoint: "ONC certification testing passed for the applicable 45 CFR 170.315 criteria"}
+    D06:
+      - {kind: release, checkpoint: "Third-party EPCS audit or certification passed before use (21 CFR 1311.300)"}
+      - {kind: operations, checkpoint: "Daily audit-trail analysis with incident reporting within one business day (21 CFR 1311.150)"}
+      - {kind: operations, checkpoint: "Re-audit when signing functionality changes or every two years (21 CFR 1311.300)"}
+  clinical_safety:
+    requirements: [Clinical hazard identification]
+    validation: [Clinical validation of alerts and workflows with prescribers]
+    release: [Clinical safety case approved]
+  gates:
+    initiation: [project_manager, architect, security_officer, compliance_officer]
+    requirements: [product_owner, compliance_officer]
+    design: [architect, security_officer]
+    release: [project_manager, clinical_safety_officer, security_officer, compliance_officer]
+  traceability: Requirements traceability matrix updated and checked at this gate

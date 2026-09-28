@@ -10,6 +10,7 @@ this can be run at any point during the build.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import matplotlib
@@ -164,6 +165,55 @@ def fig_sdlc(out_dir: Path, fig_dir: Path) -> None:
             _save(fig, fig_dir / "sdlc_criteria.png")
 
 
+EVAL_METRICS = ["precision", "recall", "f1", "control_coverage", "traceability_coverage",
+                "quality_final", "hallucination_rate"]
+
+
+def fig_evaluation(out_dir: Path, fig_dir: Path) -> None:
+    path = out_dir / "evaluation" / "summary.csv"
+    if not path.exists():
+        return
+    ev = pd.read_csv(path)
+    ev = ev[ev["metric"].isin(EVAL_METRICS)]
+    ev["value"] = pd.to_numeric(ev["value"], errors="coerce")
+    ev = ev.dropna(subset=["value"])
+    if ev.empty:
+        return
+    cases = sorted(ev["case"].unique())
+    fig, axes = plt.subplots(1, len(cases), figsize=(5.2 * len(cases), 4.2), sharey=True, squeeze=False)
+    for ax, case in zip(axes[0], cases):
+        pivot = ev[ev["case"] == case].pivot_table(index="metric", columns="system", values="value", aggfunc="first")
+        pivot = pivot.reindex([m for m in EVAL_METRICS if m in pivot.index])
+        pivot.plot(kind="bar", ax=ax, color=[PALETTE["accent"], PALETTE["rule"]][: len(pivot.columns)])
+        ax.set_title(case)
+        ax.set_xlabel("")
+        ax.set_ylim(0, 1.05)
+        ax.grid(axis="y", alpha=0.3)
+        plt.setp(ax.get_xticklabels(), rotation=35, ha="right")
+    axes[0][0].set_ylabel("score (0-1)")
+    fig.suptitle("Multi-agent system vs single-prompt baseline against the gold standard")
+    _save(fig, fig_dir / "evaluation_comparison.png")
+
+
+def _case_sdlc_tables() -> list[str]:
+    from .cases import case_ids, case_out_dir
+
+    parts: list[str] = []
+    for cid in case_ids():
+        state_path = case_out_dir(cid) / "state.json"
+        if not state_path.exists():
+            continue
+        rec =(json.loads(state_path.read_text(encoding="utf-8")).get("sdlc") or {}).get("recommendation")
+        if not rec:
+            continue
+        rows = pd.DataFrame([{"model": r["model"], "suitability_pct": r["pct"],
+                              "supporting_rules": ", ".join(r["rule_support"]) or "-"} for r in rec["ranking"]])
+        parts += [f"## SDLC ranking — {cid}", "", _md_table(rows), ""]
+        if rec.get("escalate"):
+            parts += [f"Escalated: {'; '.join(rec['escalation_reasons'])}", ""]
+    return parts
+
+
 def _md_table(df: pd.DataFrame, max_rows: int | None = None) -> str:
     if max_rows and len(df) > max_rows:
         df = df.head(max_rows)
@@ -195,6 +245,9 @@ def write_tables(cfg, out_dir: Path) -> None:
          ["req_id", "cited_entity", "entity_type", "verdict", "severity"], None),
         ("SDLC runs", "sdlc_runs.csv",
          ["run_id", "model", "framing", "trial", "recommended_sdlc", "recommended_canonical"], None),
+        ("SDLC engine consistency (does each run's pick follow from its own scores?)", "sdlc_consistency.csv",
+         ["run_id", "model", "framing", "trial", "llm_recommendation", "engine_top", "engine_top_pct",
+          "consistent"], None),
     ]:
         path = out_dir / name
         if not path.exists():
@@ -219,6 +272,12 @@ def write_tables(cfg, out_dir: Path) -> None:
                 "",
             ]
 
+    wide_path = out_dir / "evaluation" / "summary_wide.csv"
+    if wide_path.exists():
+        parts += ["## Case-study evaluation (multi-agent vs baseline)", "",
+                  _md_table(pd.read_csv(wide_path).fillna("")), ""]
+    parts += _case_sdlc_tables()
+
     report_dir = ensure_dir(resolve("report"))
     (report_dir / "tables.md").write_text("\n".join(parts), encoding="utf-8")
     print(f"[report] {report_dir / 'tables.md'}")
@@ -233,6 +292,7 @@ def main() -> int:
     fig_traceability(out_dir, fig_dir)
     fig_validation(out_dir, fig_dir)
     fig_sdlc(out_dir, fig_dir)
+    fig_evaluation(out_dir, fig_dir)
     write_tables(cfg, out_dir)
 
     produced = sorted(p.name for p in fig_dir.glob("*.png"))

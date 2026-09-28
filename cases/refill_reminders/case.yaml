@@ -1,0 +1,142 @@
+# Case study 3 — patient medication refill reminders and renewal requests.
+#
+# SYNTHETIC. Drafted with AI assistance for evaluation. Deliberately different in
+# character from the other two cases: patient-facing, UX-driven, lower clinical
+# risk, frequent releases.
+
+title: Patient refill reminders and renewal requests in the mobile app
+provenance: synthetic, drafted with AI assistance; see gold.yaml for review status
+
+functionality:
+  name: Medication Refill Reminders and Renewal Requests
+  description: >-
+    A feature in the hospital network's patient mobile app that reminds patients
+    before their medication supply runs out, lets them request a prescription
+    renewal that is routed to their prescriber for approval, notifies them when the
+    pharmacy has the medication ready, and lets a caregiver act on the patient's
+    behalf with the patient's consent. The app does not make prescribing decisions.
+
+jurisdiction: US-Federal
+knowledge_sources: [D01, D03, D04, D05]
+id_prefix: REF
+
+facets:
+  - id: supply_refills
+    query: >-
+      Medication request dispense information: quantity, expected supply duration,
+      number of refills authorized, and the prior prescription being renewed.
+  - id: renewal_transactions
+    query: >-
+      Electronic prescribing renewal request and response transactions and fill
+      status notifications between prescriber and pharmacy.
+  - id: patient_access
+    query: >-
+      Patients and authorized representatives viewing, downloading and transmitting
+      their health information through internet-based technology.
+  - id: app_security
+    query: >-
+      Client application authentication with OAuth and OpenID Connect, access control,
+      consent, and audit logging of access to patient data.
+  - id: device_privacy
+    query: >-
+      Encryption of health information stored on end-user devices, automatic session
+      time-out, transmission security for electronic protected health information.
+
+project_context: >-
+  Consumer mobile app team: 5 engineers and a designer, co-located, with the product
+  owner sitting in the team every day. The app ships to the app stores weekly. The
+  feature is expected to change often as patient feedback arrives; the reminder
+  timing, wording and flows will be tuned for months after launch. Clinical risk is
+  low because renewals are still approved by prescribers in the EHR, but the app
+  handles protected health information on personal phones. Integration uses the
+  existing FHIR API gateway.
+
+stakeholders:
+  - id: PAT
+    role: patient
+    name: Ruth Alvarez
+    persona: 67-year-old patient taking five long-term medications.
+    style: Friendly, talks about her routine rather than features.
+    facts:
+      - id: F-PAT-01
+        text: I want a reminder 7 days before any of my medications runs out.
+        vague: The reminder should come early enough.
+      - id: F-PAT-02
+        text: The reminder should name the medication so I know which one to reorder.
+      - id: F-PAT-03
+        text: I want to request a renewal with one tap from the reminder.
+      - id: F-PAT-04
+        text: I want to be told when the pharmacy has my medication ready to collect.
+      - id: F-PAT-05
+        text: The text must be readable at large font sizes; I use the largest setting on my phone.
+
+  - id: CARE
+    role: patient
+    name: Tom Alvarez
+    persona: Ruth's son, who manages her medications.
+    style: Practical; worried about privacy of his mother's information.
+    facts:
+      - id: F-CARE-01
+        text: I need to see my mother's reminders and request renewals for her, but only if she has given consent in the app.
+        vague: I should be able to help my mother with her medicines.
+      - id: F-CARE-02
+        text: My mother must be able to withdraw my access at any time, and it must stop immediately.
+
+  - id: PO
+    role: product_owner
+    name: Aisha Bello
+    persona: Product owner for the patient app.
+    style: Data-driven; measures adoption weekly.
+    facts:
+      - id: F-PO-01
+        text: When a patient's supply runs out, the app should submit the renewal request automatically without asking the patient.
+      - id: F-PO-02
+        text: Every screen of the feature must load within 1 second on a mid-range phone over 4G.
+        vague: The app has to feel fast.
+      - id: F-PO-03
+        text: We release weekly and will change reminder timing and wording based on patient feedback; the feature must support A/B testing of reminder wording.
+      - id: F-PO-04
+        text: Success means 30% of eligible patients using renewal requests within six months.
+
+  - id: PRES
+    role: prescriber
+    name: Dr. Meera Rao
+    persona: Hospitalist who receives renewal requests in the EHR.
+    style: Short answers; protective of her inbox.
+    facts:
+      - id: F-PRES-01
+        text: A renewal request must only be sent after the patient confirms they are still taking the medication.
+      - id: F-PRES-02
+        text: Renewal requests must arrive in my existing EHR renewal queue, not as a separate message stream.
+      - id: F-PRES-03
+        text: The app must never tell a patient a renewal is approved until I have approved it in the EHR.
+
+  - id: SEC
+    role: security_officer
+    name: Victor Hale
+    persona: Information security officer.
+    style: Concise; focused on phones being lost.
+    facts:
+      - id: F-SEC-01
+        text: Lock-screen notifications must not show medication names or any other health information.
+      - id: F-SEC-02
+        text: The app must not keep health information on the phone after the user logs out, and anything cached while logged in must be encrypted.
+        vague: Store as little as possible on the phone.
+      - id: F-SEC-03
+        text: Patients sign in through the network's OpenID Connect provider, with multi-factor authentication at enrolment on a new device.
+      - id: F-SEC-04
+        text: The app must lock after 5 minutes in the background and require biometric or PIN unlock.
+
+documents:
+  - id: DOC-SURVEY
+    type: questionnaire
+    path: documents/patient_survey_summary.md
+  - id: DOC-REVIEWS
+    type: feedback
+    path: documents/app_store_reviews.md
+  - id: DOC-API
+    type: legacy_system_spec
+    path: documents/fhir_gateway_api.md
+  - id: DOC-PROXY
+    type: policy
+    path: documents/proxy_access_policy.md

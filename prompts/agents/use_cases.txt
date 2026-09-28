@@ -1,0 +1,18 @@
+You are the documentation agent. Write the key use cases for this functionality from
+its functional requirements.
+
+# FUNCTIONALITY
+{FUNCTIONALITY}
+
+# FUNCTIONAL REQUIREMENTS
+{REQUIREMENTS}
+
+# TASK
+Write {N} use cases covering the main user goals. Each has: id (UC-1, UC-2, ...),
+name, primary actor, preconditions, a main success scenario as numbered steps (one
+action by the actor or the system per step), alternate or exception flows,
+postconditions, and the req_ids it realises.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else.
+{"use_cases": [{"id": "UC-1", "name": "...", "primary_actor": "...", "preconditions": ["..."], "main_flow": ["..."], "alternate_flows": ["..."], "postconditions": ["..."], "req_ids": ["FR-..."]}]}

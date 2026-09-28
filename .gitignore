@@ -3,6 +3,12 @@ __pycache__/
 *.pyc
 .env
 
+# Reviewer accounts (password hashes and TOTP secrets) and the encrypted PHI vault
+# never leave the machine that created them.
+config/users.local.yaml
+outputs/cases/*/vault.enc
+.pytest_cache/
+
 # Embedding index and cached vectors are derived artifacts — rebuild with
 # `python -m src.index build`. Everything else under corpus/ IS committed:
 # raw sources and chunks are the evidence base for traceability claims.

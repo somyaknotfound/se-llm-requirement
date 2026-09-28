@@ -1,0 +1,186 @@
+# Case study 1 — electronic prescription issuance.
+#
+# SYNTHETIC. Personas, facts and documents were drafted with AI assistance for
+# evaluation and describe no real hospital, patient or clinician. Identifiers in
+# the documents are fabricated test values chosen to pass their check digits, so
+# the masking layer has something real to catch.
+#
+# Agents never see `stakeholders[*].facts`. The persona simulator answers from
+# them; the evaluator scores against them.
+
+title: Electronic prescription issuance with interaction and allergy checking
+provenance: synthetic, drafted with AI assistance; see gold.yaml for review status
+
+functionality:
+  name: Electronic Prescription (e-Rx) Issuance
+  description: >-
+    Issuance of an electronic prescription by an authorised prescriber in a hospital
+    network's EHR, including real-time drug-drug interaction and allergy
+    contraindication checking at the point of ordering, formulary checking, and
+    transmission, change and cancellation of the prescription with community
+    pharmacies through the e-prescribing intermediary. Controlled substances are
+    handled by a separate project.
+
+jurisdiction: US-Federal
+knowledge_sources: [D01, D02, D03, D04, D05, D06]
+id_prefix: ERX
+
+project_context: >-
+  Four-hospital network replacing paper and faxed outpatient prescriptions with an
+  e-prescribing module inside the existing EHR. 18 engineers across two sites.
+  Clinical subject-matter experts are available at a monthly clinical safety board
+  and fortnightly design reviews. The module must be ONC-certified before a go-live
+  date fixed by the network's regulatory calendar. After go-live, change control
+  permits quarterly releases. The EHR exchanges orders over legacy HL7 v2 interfaces
+  and pharmacy traffic goes through an existing e-prescribing intermediary.
+
+stakeholders:
+  - id: PRES
+    role: prescriber
+    name: Dr. Meera Rao
+    persona: >-
+      Hospitalist, 12 years of practice, writes 60-80 prescriptions a day. Impatient
+      with software that slows her down; has overridden many alerts she considered
+      noise.
+    style: Short, practical answers. Uses words like "quick" and "too many" unless pressed for specifics.
+    facts:
+      - id: F-PRES-01
+        text: Interaction and allergy alerts must appear before I can sign the order, not after it has gone to the pharmacy.
+      - id: F-PRES-02
+        text: The interaction and allergy check must come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.
+        vague: Alerts should come up quickly — I can't sit there waiting.
+      - id: F-PRES-03
+        text: I want to override a moderate-severity interaction alert with one click, without having to type a reason.
+      - id: F-PRES-04
+        text: The patient's active medication list and recorded allergies must be visible on the same screen as the order I am writing.
+      - id: F-PRES-05
+        text: If transmission to the pharmacy fails I need to be told within 60 seconds, and be able to resend or pick another pharmacy.
+      - id: F-PRES-06
+        text: Only high-severity interactions should interrupt ordering; moderate ones should show as a non-blocking notice.
+        vague: There are far too many alerts — something has to change.
+      - id: F-PRES-07
+        text: I need to change or cancel a prescription that has already been sent, and the pharmacy must be notified electronically.
+      - id: F-PRES-08
+        text: I do not want to log in again in the middle of a ward round; my session should last my whole shift.
+
+  - id: PHARM
+    role: pharmacist
+    name: Daniel Okafor
+    persona: Outpatient pharmacy manager who receives e-prescriptions from the hospital network.
+    style: Precise about data fields; explains problems through recent examples.
+    facts:
+      - id: F-PHARM-01
+        text: Every prescription must arrive with drug name, strength, dose form, quantity, directions for use and the number of refills authorised.
+      - id: F-PHARM-02
+        text: When a prescriber overrides an interaction alert, the override reason must travel with the prescription so we can decide whether to call them.
+      - id: F-PHARM-03
+        text: Cancellations must reach the pharmacy as an electronic CancelRx message and the pharmacy's response must be shown to the prescriber.
+      - id: F-PHARM-04
+        text: Each prescription must state explicitly whether generic substitution is permitted.
+        vague: Substitution information should be clear.
+      - id: F-PHARM-05
+        text: Oral liquid medications must be prescribed in millilitres only.
+
+  - id: CSO
+    role: clinical_safety_officer
+    name: Dr. Helen Park
+    persona: Chairs the medication safety committee; investigates adverse drug events.
+    style: Careful, cites incidents, prefers controls over training.
+    facts:
+      - id: F-CSO-01
+        text: A drug-allergy match against an allergy recorded with high criticality must block signing until the prescriber acknowledges it.
+      - id: F-CSO-02
+        text: Every override of an interaction or allergy alert must record a reason chosen from a coded list, plus free text for high-severity alerts.
+      - id: F-CSO-03
+        text: Only administrators appointed by the pharmacy and therapeutics committee may change interaction severity levels.
+      - id: F-CSO-04
+        text: A monthly report of all alert overrides, broken down by prescriber and drug pair, must be produced for the safety committee.
+        vague: We need to keep an eye on overrides.
+      - id: F-CSO-05
+        text: The interaction knowledge base must be updated at least monthly, and its version must be shown on every alert.
+      - id: F-CSO-06
+        text: No renewal request may be approved without a prescriber reviewing it.
+
+  - id: COMP
+    role: compliance_officer
+    name: Laura Mendes
+    persona: Compliance and privacy officer for the network.
+    style: Formal; refers to "the rules" before naming them.
+    facts:
+      - id: F-COMP-01
+        text: The module must be certified against the ONC criteria for CPOE medications, drug-drug and drug-allergy interaction checks, and electronic prescribing before go-live.
+      - id: F-COMP-02
+        text: Audit logs and security documentation must be retained for at least 6 years.
+        vague: Records have to be kept for the required period.
+      - id: F-COMP-03
+        text: Access to a patient's medication data is limited to the patient's care team; any access outside it must be logged and reviewed.
+      - id: F-COMP-04
+        text: Controlled-substance prescriptions are out of scope for this release and are handled by the EPCS project.
+
+  - id: SEC
+    role: security_officer
+    name: Victor Hale
+    persona: Information security officer.
+    style: Speaks in policies; firm on authentication.
+    facts:
+      - id: F-SEC-01
+        text: Every user must have a unique account; shared logins are prohibited.
+      - id: F-SEC-02
+        text: Sessions must lock after 15 minutes of inactivity and require re-authentication to resume.
+        vague: Sessions shouldn't stay open.
+      - id: F-SEC-03
+        text: All prescription traffic to the pharmacy intermediary must be encrypted with TLS 1.2 or higher and integrity-protected.
+      - id: F-SEC-04
+        text: Audit records must be tamper-evident and no application user may delete them.
+      - id: F-SEC-05
+        text: Emergency break-glass access must be available to on-call clinicians, and every use must be reviewed within 24 hours.
+
+  - id: ARCH
+    role: architect
+    name: Priya Nair
+    persona: Lead architect for the EHR integration layer.
+    style: Structured; thinks in interfaces and failure modes.
+    facts:
+      - id: F-ARCH-01
+        text: The EHR exchanges orders over HL7 v2; the new module must publish each order as a FHIR R4 MedicationRequest through an adapter.
+      - id: F-ARCH-02
+        text: Pharmacy transmission goes through the existing intermediary using NCPDP SCRIPT NewRx, RxChangeRequest, CancelRx and RxRenewalRequest messages.
+      - id: F-ARCH-03
+        text: Availability must be at least 99.9% per month, with planned maintenance only on Sundays between 02:00 and 04:00.
+        vague: It has to be up all the time.
+      - id: F-ARCH-04
+        text: Formulary checks call the payer formulary service; if it does not answer within 3 seconds, ordering continues with a "formulary unavailable" notice.
+      - id: F-ARCH-05
+        text: Peak load is 1,200 orders per hour across the network.
+
+  - id: PO
+    role: product_owner
+    name: Samuel Ortiz
+    persona: Product owner for clinical ordering.
+    style: Outcome-focused; talks about adoption and deadlines.
+    facts:
+      - id: F-PO-01
+        text: The goal is to eliminate faxed and paper outpatient prescriptions at all four hospitals within 12 months of go-live.
+      - id: F-PO-02
+        text: Go-live is fixed by the certification calendar; after go-live, releases happen quarterly through change control.
+      - id: F-PO-03
+        text: A prescriber must be able to complete a routine prescription in under 90 seconds.
+      - id: F-PO-04
+        text: Refill renewal requests from pharmacies should be approved automatically when the patient was seen in the last 12 months.
+
+documents:
+  - id: DOC-KICKOFF
+    type: meeting_notes
+    path: documents/kickoff_meeting.md
+  - id: DOC-POLICY
+    type: policy
+    path: documents/medication_ordering_policy.md
+  - id: DOC-EMAIL
+    type: email
+    path: documents/pharmacy_email_thread.md
+  - id: DOC-INTERFACE
+    type: legacy_system_spec
+    path: documents/legacy_interface_spec.md
+  - id: DOC-INCIDENT
+    type: incident_report
+    path: documents/incident_report.md

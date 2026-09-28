@@ -68,17 +68,27 @@ class Retriever:
         self._index = index
         self._chunks = chunks
         self._model_name = model_name
+        self._by_id = {c["chunk_id"]: c for c in chunks}
 
-    def search(self, query: str, k: int) -> list[Hit]:
+    def search(self, query: str, k: int, allowed_docs: set[str] | None = None) -> list[Hit]:
+        """Top-k chunks for a query, optionally restricted to an allowlist of documents.
+
+        The allowlist is how an agent is limited to authorised sources: a chunk from
+        a document outside it is never returned, so it can never be shown or cited.
+        At 148 vectors the whole index is scored and filtered afterwards.
+        """
         model = _embedder(self._model_name)
         vec = model.encode([query], normalize_embeddings=True).astype("float32")
-        scores, idxs = self._index.search(vec, min(k, len(self._chunks)))
+        depth = len(self._chunks) if allowed_docs else min(k, len(self._chunks))
+        scores, idxs = self._index.search(vec, depth)
 
         hits: list[Hit] = []
-        for rank, (i, s) in enumerate(zip(idxs[0], scores[0]), start=1):
+        for i, s in zip(idxs[0], scores[0]):
             if i < 0:
                 continue
             c = self._chunks[int(i)]
+            if allowed_docs and c["doc_id"] not in allowed_docs:
+                continue
             hits.append(
                 Hit(
                     chunk_id=c["chunk_id"],
@@ -88,10 +98,19 @@ class Retriever:
                     text=c["text"],
                     token_count=c["token_count"],
                     score=float(s),
-                    rank=rank,
+                    rank=len(hits) + 1,
                 )
             )
+            if len(hits) >= k:
+                break
         return hits
+
+    def chunk(self, chunk_id: str) -> dict[str, Any] | None:
+        return self._by_id.get(chunk_id)
+
+    def section_chunks(self, doc_id: str, section: str) -> list[dict[str, Any]]:
+        """Every chunk of one section of one document — a control's evidence pool."""
+        return [c for c in self._chunks if c["doc_id"] == doc_id and c["section"] == section]
 
     @property
     def chunk_ids(self) -> set[str]:
@@ -170,7 +189,12 @@ def load() -> Retriever:
     return Retriever(index, chunks, meta["embedding_model"])
 
 
-def retrieve_evidence(retriever: Retriever | None = None) -> list[Hit]:
+def retrieve_evidence(
+    retriever: Retriever | None = None,
+    facets: list[dict[str, str]] | None = None,
+    allowed_docs: set[str] | None = None,
+    top_k: int | None = None,
+) -> list[Hit]:
     """Retrieve evidence for the target functionality using the configured strategy.
 
     Faceted mode interleaves each facet's results round-robin rather than sorting
@@ -178,19 +202,22 @@ def retrieve_evidence(retriever: Retriever | None = None) -> list[Hit]:
     scores cluster in whichever document is largest, which is exactly the
     imbalance the facets exist to correct. Round-robin guarantees every facet
     contributes its best hit before any facet contributes its second.
+
+    A case study passes its own facets and its knowledge-source allowlist; the
+    defaults are the pipeline's e-prescribing facets over the whole corpus.
     """
     cfg = load_pipeline()
     r = cfg["retrieval"]
     retriever = retriever or load()
-    top_k = r["top_k"]
+    top_k = top_k or r["top_k"]
 
-    if r.get("strategy", "single") == "single":
-        return retriever.search(build_query(), top_k)
+    if r.get("strategy", "single") == "single" and facets is None:
+        return retriever.search(build_query(), top_k, allowed_docs)
 
     per_facet = r.get("per_facet", 3)
     facet_hits: list[list[Hit]] = []
-    for facet in r["facets"]:
-        hits = retriever.search(" ".join(facet["query"].split()), per_facet)
+    for facet in facets or r["facets"]:
+        hits = retriever.search(" ".join(facet["query"].split()), per_facet, allowed_docs)
         for h in hits:
             h.facet = facet["id"]
         facet_hits.append(hits)

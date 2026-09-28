@@ -19,3 +19,10 @@ tiktoken>=0.7.0           # proxy tokenizer for reproducible chunk sizing
 pandas>=2.2.0
 matplotlib>=3.9.0
 PyYAML>=6.0.1
+
+# --- Platform security and interface ---------------------------------------
+cryptography>=42.0.0      # Fernet encryption of the PHI token vault at rest
+gradio>=4.44.0            # web UI: interviews, approval queue, artefacts, survey
+
+# --- Tests ---------------------------------------------------------------
+pytest>=8.0.0

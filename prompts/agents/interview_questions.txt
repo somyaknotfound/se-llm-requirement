@@ -1,0 +1,22 @@
+You are the stakeholder-interaction agent of a requirements engineering system. You
+are preparing the first round of an interview.
+
+# FUNCTIONALITY UNDER ANALYSIS
+{FUNCTIONALITY}
+
+# STAKEHOLDER
+{STAKEHOLDER}
+
+# TOPICS TO COVER FOR THIS ROLE
+Each line: topic id | label | intent of a seed question.
+{TOPICS}
+
+# TASK
+Write {N} interview questions for this stakeholder that cover the topics above.
+Adapt each question to this functionality and this role — do not copy the seed
+questions. Ask one thing per question. Where a topic needs numbers (response times,
+limits, retention periods, dates), ask for the number.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else.
+{"questions": [{"topic": "<topic id>", "question": "..."}]}

@@ -1,0 +1,25 @@
+You are the security and privacy agent. Identify threats to this functionality with
+STRIDE and check whether the requirement set mitigates each one.
+
+# FUNCTIONALITY
+{FUNCTIONALITY}
+
+# REQUIREMENTS
+{REQUIREMENTS}
+
+# APPLICABLE SECURITY AND PRIVACY CONTROLS
+{CONTROLS}
+
+# TASK
+List the {N} most important threats. For each give the STRIDE category, the asset or
+data at risk, a one-sentence description, and the ids of the requirements that
+mitigate it (an empty list if none). Only when no requirement mitigates a threat,
+propose one requirement for it.
+
+STRIDE categories: Spoofing, Tampering, Repudiation, Information disclosure, Denial of
+service, Elevation of privilege.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else.
+{"threats": [{"stride": "Spoofing", "asset": "...", "description": "...", "mitigated_by": ["NFR-..."], "proposed_requirement": null}]}
+When a requirement is proposed: "proposed_requirement": {"statement": "The system shall ...", "acceptance_criteria": "..."}

@@ -1,7 +1,13 @@
 """PART 2 driver — SDLC model selection under three framings, two models, three trials.
 
     python -m src.select_sdlc
+    python -m src.select_sdlc --reqs outputs/cases/erx_issuance/requirements.csv
     python -m src.select_sdlc --dry-run --framing plan_primed
+
+This is the framing-robustness experiment for the SDLC selection agent. Each run
+scores the brief's 13 decision factors (config/sdlc.yaml) and names a model; the
+deterministic engine (src/sdlc_engine.py) then checks whether each run's own scores
+imply the model it named.
 
 The model is shown ONLY the requirement artifact (statement, type, priority,
 risk_class, volatility). requirements_reasoning.csv is deliberately withheld: if
@@ -27,6 +33,7 @@ import pandas as pd
 from . import load_pipeline, resolve
 from .generate_reqs import guard_write, load_prompt, render
 from .llm import LLMError, OllamaClient
+from .sdlc_engine import factor_names, load_sdlc
 
 FRAMING_PROMPTS = {
     "neutral": ("R1", "p2_sdlc_neutral.txt"),
@@ -71,6 +78,7 @@ RUN_COLUMNS = [
 # keeps its own family.
 _CANONICAL_PATTERNS: list[tuple[str, str]] = [
     (r"hybrid|wrapper|within a|combined|v-model.*agile|agile.*v-model", "Hybrid"),
+    (r"devsecops|dev-sec-ops|secdevops", "DevSecOps"),
     (r"\bv[- ]?model\b|verification and validation model", "V-Model"),
     (r"spiral", "Spiral"),
     (r"waterfall", "Waterfall"),
@@ -80,6 +88,26 @@ _CANONICAL_PATTERNS: list[tuple[str, str]] = [
     (r"prototyp", "Prototyping"),
     (r"devops|continuous delivery", "DevOps"),
 ]
+
+
+def factor_table() -> str:
+    """The factor list shown to the model, rendered from config/sdlc.yaml."""
+    width = max(len(f) for f in factor_names()) + 2
+    return "\n".join(
+        f"  {name:<{width}}1 = {spec['low']}; 5 = {spec['high']}"
+        for name, spec in load_sdlc()["factors"].items()
+    )
+
+
+def render_prompt(prompt_file: str, target: dict[str, Any], requirements_block: str) -> str:
+    return render(
+        load_prompt(prompt_file),
+        TARGET_NAME=target["name"],
+        TARGET_DESCRIPTION=target["description"].strip(),
+        REQUIREMENTS=requirements_block,
+        FACTORS=factor_table(),
+        N_FACTORS=str(len(factor_names())),
+    )
 
 
 def canonical_sdlc(name: str) -> str:
@@ -159,33 +187,30 @@ def parse_run(payload: Any, criteria: list[str]) -> tuple[dict[str, Any], list[d
     return header, rows, errors
 
 
-def run_matrix(dry_run: bool = False, only_framing: str | None = None) -> int:
+def run_matrix(
+    dry_run: bool = False, only_framing: str | None = None, reqs_path: str | None = None
+) -> int:
     cfg = load_pipeline()
     out_dir = resolve(cfg["paths"]["outputs"])
     target = cfg["target"]
     sdlc_cfg = cfg["sdlc"]
-    criteria = sdlc_cfg["criteria"]
+    criteria = factor_names()
 
-    req_path = out_dir / "requirements.csv"
+    req_path = resolve(reqs_path) if reqs_path else out_dir / "requirements.csv"
     if not req_path.exists():
         raise SystemExit(
             f"{req_path} missing — run `python -m src.generate_reqs` before Part 2."
         )
     reqs = pd.read_csv(req_path)
     requirements_block = render_requirements(reqs)
-    print(f"[part2] feeding {len(reqs)} requirements (reasoning withheld)")
+    print(f"[part2] feeding {len(reqs)} requirements from {req_path.name} (reasoning withheld)")
 
     framings = [only_framing] if only_framing else sdlc_cfg["framings"]
 
     if dry_run:
         framing = framings[0]
         _, prompt_file = FRAMING_PROMPTS[framing]
-        prompt = render(
-            load_prompt(prompt_file),
-            TARGET_NAME=target["name"],
-            TARGET_DESCRIPTION=target["description"].strip(),
-            REQUIREMENTS=requirements_block,
-        )
+        prompt = render_prompt(prompt_file, target, requirements_block)
         path = guard_write(out_dir / f"_dry_run_p2_{framing}_prompt.txt")
         path.write_text(prompt, encoding="utf-8")
         print(f"[part2] dry run — {framing} prompt ({len(prompt):,} chars) -> {path}")
@@ -201,12 +226,7 @@ def run_matrix(dry_run: bool = False, only_framing: str | None = None) -> int:
 
     for framing in framings:
         run_id, prompt_file = FRAMING_PROMPTS[framing]
-        prompt = render(
-            load_prompt(prompt_file),
-            TARGET_NAME=target["name"],
-            TARGET_DESCRIPTION=target["description"].strip(),
-            REQUIREMENTS=requirements_block,
-        )
+        prompt = render_prompt(prompt_file, target, requirements_block)
 
         for model_key in sdlc_cfg["models"]:
             base_seed = client.resolve_model(model_key)[1].get("seed", 42)
@@ -305,6 +325,18 @@ def run_matrix(dry_run: bool = False, only_framing: str | None = None) -> int:
             if sub:
                 print(f"[part2] {framing:<14} -> {pd.Series(sub).value_counts().to_dict()}")
     print("[part2] wrote sdlc_analysis.csv, sdlc_runs.csv")
+
+    # Does each run's named model follow from its own factor scores?
+    from .sdlc_engine import consistency_report
+
+    consistency = consistency_report()
+    pd.DataFrame(consistency).to_csv(
+        guard_write(out_dir / "sdlc_consistency.csv"), index=False, encoding="utf-8"
+    )
+    if consistency:
+        rate = sum(r["consistent"] for r in consistency) / len(consistency)
+        print(f"[part2] engine check: the named model matches what the run's own scores "
+              f"imply in {rate:.0%} of {len(consistency)} runs -> sdlc_consistency.csv")
     return 0
 
 
@@ -312,9 +344,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Part 2 — SDLC selection matrix")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--framing", choices=list(FRAMING_PROMPTS), default=None)
+    ap.add_argument("--reqs", default=None,
+                    help="requirement set to feed (default: the baseline outputs/requirements.csv)")
     args = ap.parse_args()
     try:
-        return run_matrix(args.dry_run, args.framing)
+        return run_matrix(args.dry_run, args.framing, args.reqs)
     except LLMError as exc:
         print(f"[part2] FAILED: {exc}")
         return 1

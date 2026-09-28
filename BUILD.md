@@ -315,3 +315,107 @@ Recorded here so the report can defend them. Each was a measured call, not an ov
 9. **`human_adjudication` is left blank by the tooling**, with the top conflicts
    pre-extracted to `outputs/adjudication_worksheet.csv`. Populating it
    programmatically would fabricate a human judgement.
+
+10. **Part 1's repair call now carries the evidence.** Ollama's `/api/generate` is
+    stateless, so the repair prompt only ever saw the errors and the previous
+    response. When the count directive asked it to "add requirements from evidence
+    you have not covered", it had no evidence and invented a chunk id
+    (`D05#S170.315(c)#c14`, which does not exist). The repair prompt now includes the
+    evidence block, and the repair call runs with a larger context window because it
+    carries both the evidence and the previous response.
+
+11. **Citation-integrity failures are recorded and escalated, not fatal.** Making a
+    fabricated chunk id abort the run meant the hallucination audit could never
+    observe one, and one bad citation discarded 17 good requirements. Part 1 now
+    aborts only on output it cannot use (unparseable JSON, broken schema, count or
+    FR/NFR floors). Invalid citations are kept verbatim in `invalid_chunk_ids`,
+    score 0 on `traceable`, are counted as fabricated by the hallucination audit, and
+    put the requirement in the human review queue.
+
+---
+
+# Part B — Alignment with the problem statement
+
+The grading brief is the *Agentic AI LLM system for automated requirement
+gathering, analysis and SDLC identification* problem statement. The brief is
+written for the financial sector; this project keeps the healthcare e-prescribing
+domain (the corpus, the regulatory depth and the Part 1/Part 2 experiments carry
+over) and adopts the brief's architecture, process and evaluation one-for-one.
+Everything in Part A remains: it becomes the single-prompt baseline and the
+framing-robustness experiment that the multi-agent system is compared against.
+
+## B.1 Mapping of the brief's twenty points
+
+| # | Brief point | Where it lives |
+|---|---|---|
+| 1 | System scope and expected outputs | Three healthcare case studies under `cases/`; outputs per case under `outputs/cases/<id>/` (SRS, user stories, use cases, acceptance criteria, compliance matrix, risk register, RTM, SDLC recommendation) |
+| 2 | Stakeholders and role-specific interview templates | `config/stakeholders.yaml` (topics and seed questions per role); personas per case in `cases/<id>/case.yaml` |
+| 3 | Structured and unstructured inputs, sensitive data protected before the LLM | `cases/<id>/documents/` (meeting notes, emails, policy, legacy interface spec, incident report); `src/security.py` masks PHI before any agent sees it |
+| 4 | Multi-agent architecture with a central orchestrator | `src/agents/` (13 agents) and `src/orchestrator.py` (coordinator, shared blackboard, execution order, approval gates) |
+| 5 | Authorised, version-controlled knowledge base with source, jurisdiction, effective date, version, applicability | `corpus/MANIFEST.csv` (new columns), `config/controls.yaml` (control catalogue, every control resolved to a corpus section), `config/sdlc.yaml` (selection rules and workflow templates), `kb_version` in `config/pipeline.yaml` |
+| 6 | Retrieval-grounded generation with citations, confidence and escalation | `src/agents/base.py` grounding helper; retrieval allowlist per agent; confidence scoring in `src/agents/validation.py`; low-confidence items go to the approval queue |
+| 7 | Adaptive interviews with follow-ups on vague, incomplete or inconsistent answers | `src/agents/interaction.py` (two interview rounds; rule and LLM vagueness checks drive follow-ups) |
+| 8 | Standard requirement structure | Requirement record: id, statement, categories, source stakeholder statements, business justification, priority, dependencies, assumptions, acceptance criteria, applicable regulations, risk level, confidence, approval status |
+| 9 | Multi-label classification over 13 categories | `src/agents/classification.py` |
+| 10 | Quality analysis; failures return to clarification | 29148 rules + ambiguity, testability, missing-source, undefined-term and missing-control checks; `src/agents/clarification.py` loops failing requirements back to their stakeholders (bounded rounds) |
+| 11 | Compliance and security analysis; no final legal determinations | `src/agents/compliance.py`, `src/agents/security_privacy.py`; every regulatory interpretation is queued for the compliance officer |
+| 12 | Requirement artefacts linked to stakeholder statements and documents | `src/agents/documentation.py` |
+| 13 | SDLC decision factors | The brief's 13 factors, scored by two models with requirement-cited justifications |
+| 14 | Hybrid SDLC engine: deterministic rules + MCDA + LLM explanation, ranked | `src/sdlc_engine.py`, `config/sdlc.yaml` |
+| 15 | Project-specific SDLC workflow | Workflow templates + security and compliance overlays in `config/sdlc.yaml`, tailored per case |
+| 16 | Human-in-the-loop controls: accept, reject, modify, regenerate | `src/agents/approval.py`, `src/approve.py` (CLI), approval tab in `src/app.py` |
+| 17 | Platform security | `src/security.py` (masking, encrypted vault, injection defences, output filtering, agent permissions, source allowlist), RBAC and TOTP MFA in the UI, audit logs, model and KB versioning in each run manifest |
+| 18 | Prototype stack | Ollama (LLM), plain-Python orchestrator, FAISS (vector store), SQLite (requirements store and approvals), rule engine, Gradio (web UI), Markdown documents |
+| 19 | Evaluation | `src/evaluate.py`: extraction P/R/F1, completeness, ambiguity- and conflict-detection accuracy, control coverage, hallucination rate, citation correctness, SDLC accuracy, human correction rate, processing time, traceability coverage, injection attack success, baseline comparison |
+| 20 | Advisory deployment, monitoring, re-evaluation | Every run writes a manifest (models with digests, KB version, config hash); all prompts, evidence, agent decisions and approvals are logged |
+
+## B.2 Case studies
+
+| Case | Functionality | Why it is in the set |
+|---|---|---|
+| `erx_issuance` | E-prescription issuance with drug-drug and drug-allergy checking | The original target: safety-critical, heavily regulated, low volatility |
+| `epcs_signing` | Controlled-substance prescribing: identity proofing, two-factor signing, logical access control, audit | Regulation-dominated and security-dominated; a fixed third-party audit date |
+| `refill_reminders` | Patient-facing medication refill reminders and renewal requests | Lower clinical risk, UX-driven and volatile, continuous delivery expected — a case where the right SDLC answer differs |
+
+The three cases share the corpus but differ in the project characteristics that
+drive SDLC selection, so the engine is tested on cases whose correct answers are
+not all the same.
+
+## B.3 What stays human
+
+The system is advisory. These are never generated, because generating them would
+fabricate the evidence the evaluation rests on:
+
+- Review of each case's gold standard (`cases/<id>/gold.yaml`, field `reviewed_by`).
+- The expert SDLC choice per case (`expert_sdlc` in the gold file).
+- Every approval decision (accept, reject, modify, regenerate).
+- The time a manual requirements analysis took (`manual_effort_minutes`).
+- Stakeholder-satisfaction survey responses.
+- The `human_adjudication` column from Part A.
+
+The case materials (personas, documents, gold requirements) are synthetic and were
+drafted with AI assistance. The report must say so, and the gold standards count
+only once the author has reviewed them.
+
+## B.4 Design decisions
+
+1. **Simulated stakeholders are played by the second model.** Agents run on
+   `qwen2.5:7b-instruct`, personas on `llama3.1:8b`, so the system is not
+   interviewing itself. Personas answer only from a hidden fact sheet; facts marked
+   `vague_first` are stated vaguely until the interviewer asks for specifics. That
+   is how ambiguity detection gets a ground truth.
+2. **Fact ids never reach the agents.** Persona answers carry the fact ids they used
+   for scoring, but the blackboard's permission layer hides them from every agent.
+3. **Quality is measured before and after clarification.** The clarification loop
+   repairs requirements through stakeholders, which is legitimate RE practice, but
+   the audit still reports the first-draft quality, so Part A's principle — measure,
+   do not launder — survives.
+4. **Deterministic rules and the MCDA are stated before any results exist.** The
+   engine's profiles come from the brief's own condition table plus cited
+   literature (Boehm & Turner 2003 home grounds, Boehm 1988, the Agile Manifesto
+   principles). They must not be tuned after seeing outputs.
+5. **Agents degrade instead of aborting.** Every agent validates its JSON, makes one
+   repair attempt with the errors, and on failure records the failure and escalates
+   the affected items. One malformed answer should not discard a whole case.
+6. **Defences are measured, not assumed.** Each seeded injection is replayed with
+   and without the defences to give an attack success rate for both.

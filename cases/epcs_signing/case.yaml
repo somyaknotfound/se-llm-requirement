@@ -1,0 +1,182 @@
+# Case study 2 — electronic prescribing of controlled substances (EPCS).
+#
+# SYNTHETIC. Drafted with AI assistance for evaluation. Identifiers in the documents
+# are fabricated test values that pass their check digits.
+
+title: Controlled-substance e-prescribing — identity, two-factor signing and audit
+provenance: synthetic, drafted with AI assistance; see gold.yaml for review status
+
+functionality:
+  name: Electronic Prescribing of Controlled Substances (EPCS)
+  description: >-
+    Extension of the hospital network's e-prescribing module to Schedule II-V
+    controlled substances: identity proofing and credential issuance for
+    practitioners, logical access control over the signing function managed by two
+    individuals, two-factor authentication at signing, digital signature and
+    archiving of the signed record, transmission to the pharmacy, an internal audit
+    trail with daily analysis and incident reporting, monthly prescription logs, and
+    a third-party audit before the application may be used.
+
+jurisdiction: US-Federal
+knowledge_sources: [D03, D04, D05, D06]
+id_prefix: EPCS
+
+facets:
+  - id: identity_credential
+    query: >-
+      Identity proofing of practitioners and issuance of two-factor authentication
+      credentials, credential service provider assurance level, institutional
+      credentialing office.
+  - id: two_factor_signing
+    query: >-
+      Two-factor authentication to sign a controlled substance prescription, hard
+      token, biometric factor, signing statement displayed, indication of readiness.
+  - id: access_control
+    query: >-
+      Logical access control for signing controlled substance prescriptions, two
+      individuals approve access, revocation when a token is lost or registration lapses.
+  - id: signature_archive
+    query: >-
+      Digital signature of the prescription, FIPS 140-2 cryptographic module, time
+      stamp, archive of the digitally signed record, no alteration after signing.
+  # The next three concerns are governed by HIPAA and ONC as well as the DEA rule, so
+  # they are phrased by concern rather than as "controlled substance" queries, which
+  # would all land in D06 and leave the rest of the case's sources unread.
+  - id: audit_incident
+    query: >-
+      Audit controls that record and examine system activity, protection of audit
+      records against alteration and deletion, audit reports, daily review of audit
+      records and reporting of security incidents.
+  - id: transmission
+    query: >-
+      Transmission security for health information sent over a network: encryption,
+      integrity protection, trusted connection, and handling of a failed transmission.
+  - id: recordkeeping_audit
+    query: >-
+      Retention periods for records and documentation, monthly prescription logs, and
+      third-party audit or certification of the application.
+
+project_context: >-
+  Extension of the live e-prescribing module to controlled substances. 8 engineers at
+  one site. The third-party EPCS audit is booked for a fixed date and the application
+  may not be used for controlled substances before it passes. Almost every
+  requirement is dictated by 21 CFR 1311 and changes only when the regulation does.
+  Hard tokens come from the network's existing token vendor; identity proofing is
+  done by the hospital credentialing office. The DEA registrant liaison and the
+  credentialing office are available on request; prescribers attend a monthly review.
+
+stakeholders:
+  - id: PRES
+    role: prescriber
+    name: Dr. Karim Haddad
+    persona: Pain-management physician who prescribes Schedule II opioids daily.
+    style: Frustrated by extra steps; wants signing to be fast.
+    facts:
+      - id: F-PRES-01
+        text: Signing a controlled prescription, including the two-factor step, must take no more than 20 seconds.
+        vague: Signing must not take long.
+      - id: F-PRES-02
+        text: I want to sign the controlled prescriptions for all my ward-round patients in one signing action.
+      - id: F-PRES-03
+        text: I will not use a fingerprint reader; I will use a password and a hard token.
+      - id: F-PRES-04
+        text: When I hold more than one DEA registration, I must be asked which one goes on the prescription.
+      - id: F-PRES-05
+        text: If the pharmacy does not receive the prescription, I need to be told and be able to print a manually signed replacement that says the electronic transmission failed.
+
+  - id: CRED
+    role: compliance_officer
+    name: Grace Whitfield
+    persona: Manager of the hospital credentialing office.
+    style: Process-minded; worried about workload.
+    facts:
+      - id: F-CRED-01
+        text: The credentialing office verifies government photo ID, state licence and DEA registration before a practitioner's credential is issued.
+      - id: F-CRED-02
+        text: To save time, the credentialing clerk alone should be able to grant signing access once identity proofing is done.
+      - id: F-CRED-03
+        text: Signing access must be revoked on the same day we learn a token is lost or a registration has lapsed.
+        vague: Revocations should happen promptly.
+      - id: F-CRED-04
+        text: We must keep a record of every identity proofing and every credential issued.
+
+  - id: SEC
+    role: security_officer
+    name: Victor Hale
+    persona: Information security officer.
+    style: Firm on authentication; prefers the strongest factor available.
+    facts:
+      - id: F-SEC-01
+        text: Hard tokens must be separate devices validated to at least FIPS 140-2 Security Level 1.
+        vague: Tokens must be secure.
+      - id: F-SEC-02
+        text: I would prefer every prescriber to use a biometric factor with the hard token.
+      - id: F-SEC-03
+        text: Each signing action must cover prescriptions for a single patient only.
+      - id: F-SEC-04
+        text: The private signing key must be stored encrypted in a FIPS 140-2 validated cryptographic module.
+      - id: F-SEC-05
+        text: Application time must stay within five minutes of the NIST time source.
+
+  - id: COMP
+    role: compliance_officer
+    name: Laura Mendes
+    persona: Compliance officer and DEA registrant liaison.
+    style: Quotes the regulation.
+    facts:
+      - id: F-COMP-01
+        text: Granting or revoking signing access must be entered by one designated person and approved by a second designated person who is a DEA registrant using two-factor authentication.
+      - id: F-COMP-02
+        text: The application may not be used for controlled substances until the third-party audit has passed, and it must be re-audited whenever signing functionality changes or every two years.
+      - id: F-COMP-03
+        text: Controlled-substance records must be retained electronically for two years and be readily retrievable.
+        vague: Records have to be kept as the DEA requires.
+      - id: F-COMP-04
+        text: The signing screen must show the DEA-required attestation statement while the prescription details are displayed.
+
+  - id: PHARM
+    role: pharmacist
+    name: Daniel Okafor
+    persona: Outpatient pharmacy manager.
+    style: Concerned with what arrives at the pharmacy.
+    facts:
+      - id: F-PHARM-01
+        text: Every controlled prescription must arrive with an indication that the prescribing practitioner signed it.
+        vague: We need to be able to trust the signature.
+      - id: F-PHARM-02
+        text: A prescription must never reach us as a fax converted from the electronic original.
+      - id: F-PHARM-03
+        text: Any change to the prescription content in transit must make it invalid.
+
+  - id: AUD
+    role: auditor
+    name: Olivia Grant
+    persona: Internal auditor responsible for the DEA readiness review.
+    style: Asks for evidence and frequency.
+    facts:
+      - id: F-AUD-01
+        text: The audit trail must be analysed every calendar day and an incident report produced for each auditable event.
+        vague: Someone should review the logs regularly.
+      - id: F-AUD-02
+        text: Suspected security incidents affecting prescription records must be reported to the DEA within one business day.
+      - id: F-AUD-03
+        text: Each practitioner must receive a log of the previous month's controlled prescriptions within seven days of month end, sortable by patient, drug and date.
+      - id: F-AUD-04
+        text: Audit records must record date and time, event type, the person acting and the outcome, and must not be modifiable.
+
+documents:
+  - id: DOC-KICKOFF
+    type: meeting_notes
+    path: documents/epcs_kickoff.md
+  - id: DOC-CRED
+    type: policy
+    path: documents/credentialing_procedure.md
+  - id: DOC-VENDOR
+    type: email
+    path: documents/token_vendor_email.md
+  - id: DOC-FINDING
+    type: audit_finding
+    path: documents/internal_audit_finding.md
+  - id: DOC-IDP
+    type: legacy_system_spec
+    path: documents/identity_provider_spec.md

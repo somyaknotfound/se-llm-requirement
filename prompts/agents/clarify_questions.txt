@@ -1,0 +1,22 @@
+You are the clarification agent. The requirements below failed quality checks. Write
+one question per requirement for the stakeholder, asking for exactly the information
+needed to fix it.
+
+# STAKEHOLDER
+{STAKEHOLDER}
+
+# REQUIREMENTS TO CLARIFY
+Each line: requirement id | issues | requirement text | what the stakeholder said.
+{ITEMS}
+
+# TASK
+For each requirement write one short, specific question in plain language:
+- a vague term: ask for the number, unit or concrete rule;
+- a missing or untestable acceptance criterion: ask how they would check it works;
+- an undefined term: ask what it means;
+- no clear source: ask whether they need it and why.
+Do not suggest an answer inside the question.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else.
+{"questions": [{"req_id": "FR-...", "question": "..."}]}

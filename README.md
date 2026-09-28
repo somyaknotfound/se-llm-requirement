@@ -1,11 +1,20 @@
-# LLM-Assisted Requirements Engineering & SDLC Selection
+# Agentic Requirements Engineering & SDLC Selection for e-Prescribing
 
-A local-only pipeline that grounds a small LLM on real healthcare requirement
-sources, generates a traceable requirement set for **electronic prescription (e-Rx)
-issuance**, feeds that set back to select an SDLC model under three prompt framings,
-and then audits everything the model produced against ISO/IEC/IEEE 29148.
+A local-LLM, multi-agent system that gathers and analyses requirements for healthcare
+e-prescribing functionality and recommends a software development life cycle, built to
+the *Agentic AI–based LLM system for automated requirement gathering, analysis and SDLC
+identification* problem statement (mapped point by point in [BUILD.md, Part B](BUILD.md)).
+
+Specialised agents interview stakeholders, extract requirements from conversations and
+documents, ask clarification questions, detect conflicts, classify requirements across
+13 categories, map them to HIPAA, ONC and DEA controls, threat-model them, assess risk,
+audit them against ISO/IEC/IEEE 29148, recommend an SDLC with a ranked, rule-backed
+justification and a project-specific workflow, generate the SRS and supporting artefacts,
+and route every decision that needs a person to the right approver.
 
 **No hosted LLM API is used anywhere.** All inference runs locally through Ollama.
+The system is advisory: requirement baselines, regulatory interpretations and SDLC
+adoption stay with authorised humans.
 
 ---
 
@@ -13,32 +22,51 @@ and then audits everything the model produced against ISO/IEC/IEEE 29148.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/somyaknotfound/se-llm-requirement/blob/main/notebooks/run_on_colab.ipynb)
 
-`notebooks/run_on_colab.ipynb` installs Ollama, pulls both models, and runs every
-stage on a free T4. The whole pipeline takes roughly 25-35 minutes there against
-well over an hour on CPU, because the Part 2 matrix is 18 generation runs.
-
-Set `Runtime -> Change runtime type -> T4 GPU` before running the cells, and
-download the results zip at the end - Colab destroys `/content` when the runtime
-ends.
-
-The rest of this README covers running locally.
+Set `Runtime -> Change runtime type -> T4 GPU`, then run the cells in order. Setup takes
+about 15 minutes, each case study 30–45 minutes, the SDLC framing matrix about 15.
+Download the results zip at the end — Colab destroys `/content` when the runtime ends.
 
 ---
 
-## Prerequisites
+## What is in the box
 
-- **Python 3.11+** (developed on 3.12.5, Windows 11)
-- **[Ollama](https://ollama.com/download)** installed and running locally
-- ~10 GB free disk (two models + torch + the embedding model)
+| Part | What it does | Code |
+|---|---|---|
+| Knowledge base | 6 openly licensed sources (HL7 FHIR R4, HIPAA Security Rule, ONC 170.315, DEA 21 CFR 1311) with jurisdiction, effective date, version and applicability; a 45-control catalogue tied to corpus sections; SDLC rules and workflow templates | `corpus/`, `config/controls.yaml`, `config/sdlc.yaml` |
+| Case studies | e-Rx issuance, controlled-substance signing (EPCS), patient refill reminders — personas, documents, seeded defects, gold standards | `cases/` |
+| Multi-agent system | 13 agents under a coordinator, with a permissioned blackboard | `src/agents/`, `src/orchestrator.py` |
+| Security | PHI masking with an encrypted vault, prompt-injection quarantine and delimiting, output leak checks, agent permissions, source allowlists, RBAC + TOTP two-factor sign-in | `src/security.py`, `src/approve.py` |
+| SDLC engine | The brief's 13 decision factors → deterministic rules + MCDA → ranked percentages → tailored workflow | `src/sdlc_engine.py` |
+| Human in the loop | Approval queue in SQLite; accept, reject, modify, regenerate; web UI | `src/store.py`, `src/approve.py`, `src/app.py` |
+| Baseline | The original single-prompt generator, now the comparison point | `src/generate_reqs.py` |
+| Evaluation | P/R/F1 against gold, ambiguity and conflict detection, control coverage, hallucination rate, SDLC accuracy, injection attack success, and more | `src/evaluate.py` |
+
+### The agents
+
+| Agent | Responsibility |
+|---|---|
+| Coordinator | Execution order, shared state, approval gates, checkpoints (`src/orchestrator.py`) |
+| Stakeholder interaction | Role-specific interviews; follow-ups on vague, incomplete or inconsistent answers |
+| Requirement extraction | Requirements from each stakeholder and document, grounded in retrieved evidence |
+| Clarification | Sends requirements that fail quality checks back to their stakeholder |
+| Classification | Multi-label classification into 13 categories |
+| Conflict detection | Duplicates (merged) and contradictions (flagged for a human) |
+| Compliance | Control mappings with evidence, compliance gaps, gap proposals |
+| Security and privacy | STRIDE threat analysis, requirements for unmitigated threats |
+| Risk analysis | Risk register with likelihood × impact banding |
+| Validation | 29148 audit (rules + LLM critic), hallucination audit, confidence, escalation |
+| SDLC selection | Factor scoring by two models → engine → explanation → workflow |
+| Documentation | SRS, user stories, use cases, RTM, compliance matrix, registers |
+| Human approval | Routes every decision that needs a person to the role with authority |
 
 ---
 
-## Setup
+## Running locally
 
-### 1. Install Ollama and pull both models
+### Prerequisites
 
-Both models are required: the second exists so Part 2 can measure cross-model
-agreement, which a single model cannot provide.
+- Python 3.11+ (developed on 3.12, Windows 11)
+- [Ollama](https://ollama.com/download) running locally, with both models pulled:
 
 ```bash
 ollama pull qwen2.5:7b-instruct
@@ -48,159 +76,65 @@ ollama pull qwen2.5:7b-instruct
 ollama pull llama3.1:8b
 ```
 
-Verify the daemon is up and both models are present (this output is also the
-evidence of local execution the report cites):
-
-```bash
-ollama list
-```
-
-If the daemon is not running, start it with `ollama serve`.
-
-### 2. Create the environment
+### Setup
 
 ```bash
 python -m venv .venv
 ```
 
-Windows (PowerShell):
-
 ```bash
-.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv/Scripts/python.exe -m pip install -r requirements.txt
 ```
 
-macOS / Linux:
+(`.venv/bin/python` on macOS/Linux.) The offline test suite needs no model:
 
 ```bash
-.venv/bin/python -m pip install -r requirements.txt
+python -m pytest -q
 ```
 
-### 3. Optional configuration
-
-```bash
-cp .env.example .env
-```
-
-Set `HF_HOME` if your user profile is on a small or cloud-synced drive — the
-embedding model caches ~90 MB. Set `PROTECT_OUTPUTS=1` to make the drivers refuse
-to overwrite existing artifacts.
-
----
-
-## Running the pipeline
-
-Each stage is independent and writes its own artifacts. Run them in order.
-
-### Stage 0 — smoke-test the transport
-
-Do this first; nothing else works if it is flaky.
+### The pipeline
 
 ```bash
 python -m src.llm --smoke
+python -m src.index build && python -m src.index sanity
 ```
 
-Expect a JSON round-trip from both models, with latency and token counts, plus a
-line appended to `logs/llm_calls.jsonl`.
-
-### Stage 1 — build the corpus
-
-```bash
-python -m src.ingest all
-```
-
-Downloads 6 source documents to `corpus/raw/`, records provenance and SHA-256 in
-`corpus/MANIFEST.csv`, cleans to `corpus/processed/`, and chunks to
-`corpus/chunks.jsonl`. Chunk ids are verified unique and round-tripping.
-
-*Requires network access. ~30 seconds.*
-
-### Stage 2 — build and sanity-check the index
-
-```bash
-python -m src.index build
-```
-
-```bash
-python -m src.index sanity
-```
-
-The sanity check runs three probe queries and prints the top hits. **Read the
-output.** The queries should surface §1311.140 (signing controlled substances),
-§170.315(a) (CPOE — medications) and the FHIR audit-logging section. If they do
-not, retrieval is miscalibrated and everything downstream inherits the fault.
-
-*First run downloads the embedding model (~90 MB). ~1 minute.*
-
-### Stage 3 — Part 1: generate requirements
+Baseline (single prompt), on the original target and on a case study:
 
 ```bash
 python -m src.generate_reqs
+python -m src.generate_reqs --case epcs_signing
+python -m src.validate all --case epcs_signing
 ```
 
-Inspect the assembled prompt without calling a model:
+The multi-agent system (one case, or all; `--resume` continues an interrupted run):
 
 ```bash
-python -m src.generate_reqs --dry-run
+python -m src.orchestrator --case erx_issuance
+python -m src.orchestrator --case all --resume
 ```
 
-Produces `outputs/requirements.csv`, `outputs/requirements_reasoning.csv`,
-`outputs/traceability_matrix.csv`, and the raw response at
-`outputs/raw_p1_response.txt`.
-
-The driver enforces the output contract and will make **one** repair attempt before
-aborting. It deliberately does *not* repair requirement quality — that is what
-Stage 5 measures.
-
-*~2–5 minutes on CPU.*
-
-### Stage 4 — Part 2: SDLC selection matrix
+Experiments:
 
 ```bash
-python -m src.select_sdlc
+python -m src.select_sdlc --reqs outputs/cases/erx_issuance/requirements.csv
+python -m src.evaluate --case all --injection-replay
+python -m src.metrics && python -m src.report
 ```
 
-3 framings × 3 trials × 2 models = 18 runs. Produces `outputs/sdlc_analysis.csv`
-(one row per criterion) and `outputs/sdlc_runs.csv` (one row per run).
-
-*~20–45 minutes on CPU. This is the long stage.*
-
-### Stage 5 — validation
+### Human review
 
 ```bash
-python -m src.validate all
+python -m src.approve add-user --user laura --role compliance_officer
+python -m src.app            # web UI: sign in, approval queue, artefacts, live interview, survey
+python -m src.approve list --case erx_issuance --user laura
+python -m src.approve decide --case erx_issuance --user laura APR-014 accept --note "mapping confirmed"
+python -m src.orchestrator --case erx_issuance --apply-decisions
 ```
 
-Runs the rule-based 29148 scorer, the LLM critic (one call per requirement on a
-fresh context), and the hallucination audit. Produces
-`outputs/validation_29148.csv`, `outputs/hallucination_audit.csv` and
-`outputs/adjudication_worksheet.csv`.
-
-The rule scorer alone needs no model:
-
-```bash
-python -m src.validate rules
-```
-
-**Manual step:** open `outputs/adjudication_worksheet.csv`, resolve ~10 conflicts by
-hand, and copy your verdicts into the `human_adjudication` column of
-`outputs/validation_29148.csv`. The tooling leaves this blank on purpose — filling
-it automatically would fabricate a human judgement.
-
-*~5–10 minutes.*
-
-### Stage 6 — metrics and figures
-
-```bash
-python -m src.metrics
-```
-
-```bash
-python -m src.report
-```
-
-Writes `outputs/metrics_summary.csv`, figures to `figures/`, and generated tables to
-`report/tables.md`. Both are safe to run at any point — stages whose inputs are
-missing are skipped.
+Sign-in needs the password and a six-digit code from an authenticator app (the secret is
+printed by `add-user`). Reviewer accounts live in `config/users.local.yaml`, which is
+never committed.
 
 ---
 
@@ -208,72 +142,75 @@ missing are skipped.
 
 | Path | Contents |
 |---|---|
-| `corpus/MANIFEST.csv` | Provenance: source URL, licence, SHA-256, retrieval date |
-| `corpus/chunks.jsonl` | Chunked corpus with `chunk_id`, section and token count |
-| `outputs/requirements.csv` | The requirement set (12-column schema) |
-| `outputs/requirements_reasoning.csv` | Per-requirement reasoning, evidence quote, inference type |
-| `outputs/traceability_matrix.csv` | Requirements × source documents (D / I / blank) |
-| `outputs/sdlc_analysis.csv` | Per-criterion scores across all 18 runs |
-| `outputs/sdlc_runs.csv` | One row per run: recommendation, runner-up, counterargument |
-| `outputs/validation_29148.csv` | Both scorers, agreement, adjudication column |
-| `outputs/hallucination_audit.csv` | Every citation with a verdict and severity |
-| `outputs/metrics_summary.csv` | All headline numbers |
-| `logs/llm_calls.jsonl` | Every call: params, full prompt, raw response, latency |
-| `figures/` | Traceability heatmap, pass rates, framing sensitivity |
-| `report/report.md` | The writeup |
+| `outputs/cases/<case>/artifacts/` | `srs.md`, `user_stories.md`, `use_cases.md`, `process_workflow.md`, `rtm.csv`, `compliance_matrix.csv`, `risk_register.csv`, `threat_register.csv`, `assumptions_dependencies.csv`, `open_issues.csv`, `data_requirements.md`, `interface_requirements.md`, `sdlc_recommendation.md` |
+| `outputs/cases/<case>/re.db` | SQLite store of record: requirements, statements, findings, conflicts, compliance, risks, approvals, decisions |
+| `outputs/cases/<case>/state.json` | The full blackboard, checkpointed after every step |
+| `outputs/cases/<case>/agent_log.jsonl` | Every agent action with its LLM call ids |
+| `outputs/cases/<case>/run_manifest.json` | Timings, model digests, knowledge-base fingerprint |
+| `outputs/cases/<case>/baseline/` | The single-prompt baseline for the case, validated |
+| `outputs/cases/<case>/matches_*.csv` | Automatic gold matches with an empty `human_verdict` column |
+| `outputs/evaluation/` | `summary.csv`, `summary_wide.csv`, `injection_replay.csv`, survey responses |
+| `outputs/` (root) | Part 1 baseline, Part 2 framing matrix, `sdlc_consistency.csv`, `metrics_summary.csv` |
+| `logs/llm_calls.jsonl` | Every model call: parameters, full prompt, raw response, latency |
+
+---
+
+## What stays human
+
+Generating any of these would fabricate the evidence the evaluation rests on, so the code
+never does:
+
+- reviewing each case's gold standard (`cases/<case>/gold.yaml` → `reviewed_by`)
+- the expert SDLC choice per case (`expert_sdlc`) and your manual-analysis time (`manual_effort_minutes`)
+- verifying automatic matches (`human_verdict` in `matches_*.csv`)
+- every approval decision, and the satisfaction survey
+- `human_adjudication` in the Part 1 validation worksheet
+
+The case materials are synthetic and were drafted with AI assistance; the report must say so.
 
 ---
 
 ## Design decisions worth knowing
 
-**Faceted retrieval, not a single query.** A single query built from the
-functionality description plus all keywords returns evidence from only two of six
-documents — the centroid lands in the largest document's region of the space. Seven
-facet queries interleaved round-robin span five. Both modes are in
-`config/pipeline.yaml`; the comparison is reported rather than hidden.
+**The model perceives, the engine decides.** Two models score the 13 decision factors;
+the SDLC choice is made by transparent rules and weighted scoring stated before any
+results existed; the model only explains it. Whether a model's own free-text pick
+follows from its own scores is itself measured.
 
-**Quality is measured, not repaired.** The Part 1 driver enforces schema and
-traceability integrity but leaves weak words and compound obligations intact. If
-generation repaired them, the 29148 audit would have nothing to find and would be
-theatre.
+**Quality is measured before and after clarification.** The clarification loop repairs
+requirements through their stakeholders, but the first-draft 29148 audit is reported
+too — the loop's effect is a result, not a way of hiding the model's first attempt.
 
-**Trials vary the seed, not the temperature.** At temperature 0.1 with a fixed seed,
-three trials would be byte-identical. Raising the temperature would confound
-sampling noise with framing sensitivity. Stepping the seed isolates it.
+**Simulated stakeholders run on the second model**, answer only from a hidden fact sheet,
+and state some facts vaguely until the system follows up. That gives ambiguity and
+conflict detection a ground truth. Fact ids are stripped before any agent sees a statement.
 
-**Two 29148 attributes are weakly decidable by rule.** `necessary` and `feasible`
-need judgement a regex cannot supply. Those rows are tagged in the CSV rather than
-being presented as measurements.
+**Integrity failures are recorded, not fatal.** A citation to a chunk the model was never
+shown is kept in `invalid_chunk_ids`, counted by the hallucination audit, and escalated.
+Only unusable output (unparseable, wrong schema, wrong count) aborts Part 1.
 
-**Malformed Part 2 runs are recorded, not re-rolled.** Re-rolling until the output
-parses would bias the stability statistic the matrix exists to measure.
+**Defences are measured.** Each seeded prompt injection is replayed with and without the
+quarantine-and-delimiting defences to give an attack success rate for both.
 
----
-
-## Summary of findings
-
-`[Populate once the pipeline has been run end-to-end.]` State the requirement
-count and traceability rate, the modal SDLC recommendation and its flip rate under
-framing, the 29148 pass rates and scorer agreement, and — first — the hallucination
-audit result, since fabricated regulatory citations in a healthcare context are a
-safety argument rather than a nitpick.
+**Faceted retrieval, not a single query.** One centroid query retrieved from 2 of 6
+documents; seven facet queries interleaved round-robin reach 5. Each case study defines
+its own facets and knowledge-source allowlist.
 
 ---
 
 ## Troubleshooting
 
-**`cannot reach Ollama at http://127.0.0.1:11434`** — the daemon is not running.
-Start it with `ollama serve`, then re-run `python -m src.llm --smoke`.
+**`cannot reach Ollama at http://127.0.0.1:11434`** — start the daemon with `ollama serve`.
 
-**`required models are not present in the local Ollama registry`** — run the
-`ollama pull` commands above. The driver refuses to silently substitute a fallback,
-because that would make the report's model attribution false. Declared fallbacks are
-listed in `config/models.yaml` and must be selected deliberately.
+**`required models are not present`** — pull both models; the code never substitutes a
+fallback silently.
 
-**`sha256 mismatch vs MANIFEST.csv`** — a source document changed upstream or was
-edited locally. Re-run `python -m src.ingest fetch` to re-record provenance, and note
-in the report that the corpus was re-acquired.
+**Part 1 aborts after repair** — the output was unusable twice (not parseable, wrong
+schema, or outside the 18–25 count). Read `raw_p1_repair_response.txt`; that is a
+reportable result about a 7B model, not something to loosen the contract for. Citation
+problems alone no longer abort: they are flagged in `invalid_chunk_ids` and escalated.
 
-**Part 1 aborts after repair** — read `outputs/raw_p1_repair_response.txt` and the
-printed violations. A 7B model failing the contract twice is itself a reportable
-result; do not loosen the contract to make it pass.
+**A case run was interrupted** — `python -m src.orchestrator --case <case> --resume`.
+
+**`sha256 mismatch vs MANIFEST.csv`** — a source changed upstream; re-fetch with
+`python -m src.ingest fetch` and note the re-acquisition in the report.

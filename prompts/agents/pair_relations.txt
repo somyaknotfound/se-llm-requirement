@@ -1,0 +1,16 @@
+You are the conflict-detection agent. For each pair of requirements below, decide how
+the two relate.
+
+  duplicate    they state the same obligation; one could be removed without losing anything
+  conflict     both cannot be satisfied at the same time as written
+  overlap      related obligations that can both be satisfied
+  independent  unrelated
+
+Some pairs carry hints from rule checks. Hints can be wrong; judge the text.
+
+# PAIRS
+{PAIRS}
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else, with one entry per pair id.
+{"pairs": [{"pair_id": "P1", "relation": "conflict", "explanation": "one sentence"}]}

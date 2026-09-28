@@ -1,9 +1,11 @@
-"""Validation layer — ISO/IEC/IEEE 29148 quality audit and hallucination audit.
+"""Validation layer — ISO/IEC/IEEE 29148 quality audit, hallucination audit, confidence.
 
     python -m src.validate rules          # rule-based scorer only (no model needed)
     python -m src.validate critic         # LLM-as-critic on a fresh context
     python -m src.validate hallucination  # citation verification against the corpus
+    python -m src.validate confidence     # per-requirement confidence + review queue
     python -m src.validate all
+    python -m src.validate all --case epcs_signing   # a case study's baseline set
 
 Two independent scorers disagree in interesting places, and the disagreements are
 the point. The rule-based scorer is mechanical and unforgiving; the LLM critic
@@ -15,21 +17,24 @@ Two of the eight attributes — `necessary` and `feasible` — are only weakly
 decidable by rule, and the heuristics here say so rather than quietly scoring 1.
 That asymmetry is itself a finding: it marks exactly where a requirements engineer
 is still doing the work.
+
+Every scorer takes DataFrames, so the multi-agent validation agent runs exactly the
+same checks on its requirement set as this driver runs on the baseline's.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import re
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
 from . import load_pipeline, resolve
-from .generate_reqs import guard_write, load_prompt, render
-from .ingest import SOURCES, load_chunks
+from .generate_reqs import guard_write, load_prompt, output_dir, render
+from .ingest import load_chunks
 from .llm import LLMError, OllamaClient
 
 VALIDATION_COLUMNS = [
@@ -50,6 +55,8 @@ HALLUCINATION_COLUMNS = [
     "evidence",
     "severity",
 ]
+
+CONFIDENCE_COLUMNS = ["req_id", "confidence", "support", "quality", "escalate", "reasons"]
 
 # Attributes a mechanical rule cannot honestly decide. Scored optimistically, but
 # flagged in the note so the report never presents them as measured.
@@ -107,9 +114,18 @@ FHIR_R4_RESOURCES = {
 }
 
 
+def _split(cell: Any) -> list[str]:
+    return [c.strip() for c in str(cell or "").split(";") if c.strip() and c.strip() != "nan"]
+
+
+def _is_true(cell: Any) -> bool:
+    return str(cell).strip().lower() in {"true", "1", "yes"}
+
+
 # --- corpus text for verification ----------------------------------------
 
 
+@lru_cache(maxsize=1)
 def _corpus_text() -> str:
     """Full processed corpus, normalised for substring checks.
 
@@ -120,6 +136,11 @@ def _corpus_text() -> str:
     proc_dir = resolve(load_pipeline()["paths"]["corpus_processed"])
     parts = [p.read_text(encoding="utf-8") for p in sorted(proc_dir.glob("*.txt"))]
     return _norm(" ".join(parts))
+
+
+@lru_cache(maxsize=1)
+def _chunks_by_id() -> dict[str, dict[str, Any]]:
+    return {c["chunk_id"]: c for c in load_chunks()}
 
 
 def _norm(text: str) -> str:
@@ -140,8 +161,9 @@ def rule_score_requirement(
     ac = str(req.get("acceptance_criteria", "") or "")
     low = statement.lower()
     low_ac = ac.lower()
-    cites = [c for c in str(req.get("source_chunk_ids", "") or "").split(";") if c]
-    derived = str(req.get("derived", "")).strip().lower() in {"true", "1", "yes"}
+    cites = _split(req.get("source_chunk_ids"))
+    invalid = _split(req.get("invalid_chunk_ids"))
+    derived = _is_true(req.get("derived", ""))
 
     out: dict[str, tuple[int, str]] = {}
 
@@ -202,14 +224,19 @@ def rule_score_requirement(
 
     # traceable
     unknown = [c for c in cites if c not in valid_chunk_ids]
-    if not cites and not derived:
-        out["traceable"] = (0, "no source_chunk_ids and derived=false")
+    stakeholder_sources = _split(req.get("source_statement_ids"))
+    if invalid:
+        out["traceable"] = (0, f"cites chunk_id(s) it was never shown: {', '.join(invalid[:3])}")
     elif unknown:
         out["traceable"] = (0, f"cites unknown chunk_id(s): {', '.join(unknown[:3])}")
-    elif not cites and derived:
+    elif cites:
+        out["traceable"] = (1, f"cites {len(cites)} corpus chunk(s)")
+    elif stakeholder_sources:
+        out["traceable"] = (1, f"traces to {len(stakeholder_sources)} stakeholder statement(s)")
+    elif derived:
         out["traceable"] = (1, "no citation but explicitly marked derived")
     else:
-        out["traceable"] = (1, f"cites {len(cites)} corpus chunk(s)")
+        out["traceable"] = (0, "no source_chunk_ids and derived=false")
 
     # necessary — weakly decidable
     others = [s for s in all_statements if s != statement]
@@ -243,11 +270,10 @@ def _near_duplicate(statement: str, others: list[str], threshold: float = 0.8) -
     return None
 
 
-def run_rules() -> pd.DataFrame:
+def score_rules(reqs: pd.DataFrame) -> pd.DataFrame:
     cfg = load_pipeline()
-    out_dir = resolve(cfg["paths"]["outputs"])
-    reqs = pd.read_csv(out_dir / "requirements.csv").fillna("")
-    valid_ids = {c["chunk_id"] for c in load_chunks()}
+    reqs = reqs.fillna("")
+    valid_ids = set(_chunks_by_id())
     statements = [str(s) for s in reqs["statement"].tolist()]
 
     rows = []
@@ -263,22 +289,21 @@ def run_rules() -> pd.DataFrame:
                     "rule_note": note,
                 }
             )
-    df = pd.DataFrame(rows)
-    print(f"[rules] scored {len(reqs)} requirements x {len(cfg['validation']['attributes'])} attributes")
-    return df
+    return pd.DataFrame(rows)
 
 
 # --- 6.1 LLM-as-critic ----------------------------------------------------
 
 
-def run_critic(model_key: str = "primary") -> pd.DataFrame:
+def score_critic(
+    reqs: pd.DataFrame, model_key: str = "primary", client: OllamaClient | None = None
+) -> pd.DataFrame:
     cfg = load_pipeline()
-    out_dir = resolve(cfg["paths"]["outputs"])
-    reqs = pd.read_csv(out_dir / "requirements.csv").fillna("")
+    reqs = reqs.fillna("")
     attributes = cfg["validation"]["attributes"]
     template = load_prompt("p3_critic.txt")
 
-    client = OllamaClient()
+    client = client or OllamaClient()
     client.require([model_key])
 
     rows = []
@@ -287,16 +312,16 @@ def run_critic(model_key: str = "primary") -> pd.DataFrame:
         prompt = render(
             template,
             REQ_ID=str(r["req_id"]),
-            TYPE=str(r["type"]),
+            TYPE=str(r.get("type", "")),
             STATEMENT=str(r["statement"]),
-            ACTOR=str(r["actor"]),
-            PRIORITY=str(r["priority"]),
-            VERIFICATION_METHOD=str(r["verification_method"]),
-            ACCEPTANCE_CRITERIA=str(r["acceptance_criteria"]),
-            RISK_CLASS=str(r["risk_class"]),
-            VOLATILITY=str(r["volatility"]),
-            SOURCE_CHUNK_IDS=str(r["source_chunk_ids"]) or "(none)",
-            DERIVED=str(r["derived"]),
+            ACTOR=str(r.get("actor", "")),
+            PRIORITY=str(r.get("priority", "")),
+            VERIFICATION_METHOD=str(r.get("verification_method", "")),
+            ACCEPTANCE_CRITERIA=str(r.get("acceptance_criteria", "")),
+            RISK_CLASS=str(r.get("risk_class", "")),
+            VOLATILITY=str(r.get("volatility", "")),
+            SOURCE_CHUNK_IDS=str(r.get("source_chunk_ids", "")) or "(none)",
+            DERIVED=str(r.get("derived", "")),
         )
         scores: dict[str, Any] = {}
         try:
@@ -410,20 +435,19 @@ def _severity(verdict: str, risk_class: str) -> str:
     return "none"
 
 
-def run_hallucination_audit() -> pd.DataFrame:
-    cfg = load_pipeline()
-    out_dir = resolve(cfg["paths"]["outputs"])
-    reqs = pd.read_csv(out_dir / "requirements.csv").fillna("")
-    reasoning_path = out_dir / "requirements_reasoning.csv"
-    reasoning = (
-        pd.read_csv(reasoning_path).fillna("") if reasoning_path.exists() else pd.DataFrame()
-    )
+def audit_hallucinations(reqs: pd.DataFrame, reasoning: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Verify every regulatory, standards and corpus citation a requirement makes.
+
+    `reasoning` is the baseline's separate reasoning file; the multi-agent set
+    carries `reasoning` and `evidence_quote` on the requirement itself.
+    """
+    reqs = reqs.fillna("")
     corpus = _corpus_text()
-    chunks = {c["chunk_id"]: c for c in load_chunks()}
+    chunks = _chunks_by_id()
 
     reasoning_by_id: dict[str, dict[str, str]] = {}
-    if not reasoning.empty:
-        for _, r in reasoning.iterrows():
+    if reasoning is not None and not reasoning.empty:
+        for _, r in reasoning.fillna("").iterrows():
             reasoning_by_id[str(r["req_id"])] = {
                 "reasoning": str(r.get("reasoning", "")),
                 "evidence_quote": str(r.get("evidence_quote", "")),
@@ -434,12 +458,16 @@ def run_hallucination_audit() -> pd.DataFrame:
     for _, r in reqs.iterrows():
         rid = str(r["req_id"])
         risk = str(r.get("risk_class", ""))
-        extra = reasoning_by_id.get(rid, {})
+        extra = reasoning_by_id.get(rid) or {
+            "reasoning": str(r.get("reasoning", "")),
+            "evidence_quote": str(r.get("evidence_quote", "")),
+        }
         haystack = " ".join(
             [
                 str(r.get("statement", "")),
                 str(r.get("acceptance_criteria", "")),
                 extra.get("reasoning", ""),
+                str(r.get("regulations", "")),
             ]
         )
 
@@ -526,7 +554,7 @@ def run_hallucination_audit() -> pd.DataFrame:
         # not in the cited text is a fabricated attribution, not a paraphrase.
         quote = extra.get("evidence_quote", "").strip()
         if quote:
-            cited = [c for c in str(r.get("source_chunk_ids", "")).split(";") if c]
+            cited = _split(r.get("source_chunk_ids"))
             cited_text = _norm(" ".join(chunks[c]["text"] for c in cited if c in chunks))
             nq = _norm(quote)
             if len(nq) < 12:
@@ -548,20 +576,33 @@ def run_hallucination_audit() -> pd.DataFrame:
                 }
             )
 
-        for cid in [c for c in str(r.get("source_chunk_ids", "")).split(";") if c]:
+        for cid in _split(r.get("source_chunk_ids")):
             if cid not in chunks:
-                rows.append(
-                    {
-                        "req_id": rid,
-                        "cited_entity": cid,
-                        "entity_type": "chunk_id",
-                        "verdict": "fabricated",
-                        "evidence": "chunk_id does not exist in the corpus index",
-                        "severity": _severity("fabricated", risk),
-                    }
-                )
+                rows.append(_fabricated_chunk(rid, cid, risk, "chunk_id does not exist in the corpus index"))
+
+        # Citations the driver rejected because the model was never shown them.
+        # They are either invented outright or guessed from the id pattern of
+        # chunks it did see; both are fabricated attributions.
+        for cid in _split(r.get("invalid_chunk_ids")):
+            detail = (
+                "exists in the corpus but was not among the evidence shown — the id was guessed"
+                if cid in chunks
+                else "chunk_id does not exist in the corpus index"
+            )
+            rows.append(_fabricated_chunk(rid, cid, risk, detail))
 
     return pd.DataFrame(rows, columns=HALLUCINATION_COLUMNS)
+
+
+def _fabricated_chunk(rid: str, cid: str, risk: str, detail: str) -> dict[str, Any]:
+    return {
+        "req_id": rid,
+        "cited_entity": cid,
+        "entity_type": "chunk_id",
+        "verdict": "fabricated",
+        "evidence": detail,
+        "severity": _severity("fabricated", risk),
+    }
 
 
 def _verdict_cfr(rid: str, entity: str, section: str, corpus: str, risk: str) -> dict[str, Any]:
@@ -589,26 +630,136 @@ def _verdict_cfr(rid: str, entity: str, section: str, corpus: str, risk: str) ->
     }
 
 
+# --- confidence and escalation --------------------------------------------
+
+
+def confidence_table(
+    reqs: pd.DataFrame,
+    merged: pd.DataFrame,
+    audit: pd.DataFrame,
+    conflicted: set[str] | None = None,
+) -> pd.DataFrame:
+    """Per-requirement confidence in [0, 1], with the reasons behind it.
+
+    confidence = 0.5 * support + 0.5 * quality, then capped:
+
+      support   1.0  evidence quote verified verbatim in a cited chunk, or the
+                     requirement is corroborated by two or more stakeholders
+                0.75 a valid citation or one stakeholder statement, quote unverified
+                0.5  derived (inferred) with no citation — stated as an inference
+                0.0  uncited and not derived
+      quality   mean rule pass rate over the eight 29148 attributes, averaged with
+                the critic's pass rate when the critic ran
+      caps      0.3  any fabricated or misattributed citation or quote
+                0.5  involved in an unresolved conflict or duplication
+
+    It is a transparent heuristic, not a calibrated probability: there is no
+    ground truth to calibrate against. Anything under the configured threshold,
+    capped, or unsupported is escalated for human review.
+    """
+    threshold = load_pipeline()["validation"].get("confidence_threshold", 0.7)
+    conflicted = conflicted or set()
+    reqs = reqs.fillna("")
+
+    bad_audit = audit[audit["verdict"].isin(["fabricated", "misattributed"])] if len(audit) else audit
+    bad_ids = set(bad_audit["req_id"].astype(str)) if len(bad_audit) else set()
+    verified_quote = set()
+    if len(audit):
+        vq = audit[(audit["entity_type"] == "evidence_quote") & (audit["verdict"] == "verified")]
+        verified_quote = set(vq["req_id"].astype(str))
+
+    rows = []
+    for _, r in reqs.iterrows():
+        rid = str(r["req_id"])
+        cites = _split(r.get("source_chunk_ids"))
+        stakeholders = {s.split("-")[1] if s.count("-") >= 2 else s
+                        for s in _split(r.get("source_statement_ids"))}
+        derived = _is_true(r.get("derived"))
+        reasons: list[str] = []
+
+        if rid in verified_quote or len(stakeholders) >= 2:
+            support = 1.0
+        elif cites or stakeholders:
+            support = 0.75
+        elif derived:
+            support = 0.5
+            reasons.append("derived with no citation or stakeholder source")
+        else:
+            support = 0.0
+            reasons.append("unsupported: no valid citation, no stakeholder source, not derived")
+
+        sub = merged[merged["req_id"].astype(str) == rid]
+        rule_q = float(sub["rule_score"].mean()) if len(sub) else 0.0
+        llm_scores = pd.to_numeric(sub["llm_score"], errors="coerce").dropna() if len(sub) else []
+        quality = (rule_q + float(llm_scores.mean())) / 2 if len(llm_scores) else rule_q
+        failed = sub[sub["rule_score"] == 0]["attribute"].tolist() if len(sub) else []
+        if failed:
+            reasons.append("29148 rule failures: " + ", ".join(failed))
+
+        conf = 0.5 * support + 0.5 * quality
+        if rid in bad_ids:
+            conf = min(conf, 0.3)
+            reasons.append("fabricated or misattributed citation")
+        if rid in conflicted:
+            conf = min(conf, 0.5)
+            reasons.append("unresolved conflict or duplication")
+        if _split(r.get("invalid_chunk_ids")):
+            conf = min(conf, 0.3)
+            reasons.append("cited evidence it was never shown")
+
+        escalate = conf < threshold or support == 0.0
+        rows.append(
+            {
+                "req_id": rid,
+                "confidence": round(conf, 3),
+                "support": support,
+                "quality": round(quality, 3),
+                "escalate": escalate,
+                "reasons": "; ".join(reasons),
+            }
+        )
+    return pd.DataFrame(rows, columns=CONFIDENCE_COLUMNS)
+
+
+def review_queue(conf: pd.DataFrame, reqs: pd.DataFrame) -> pd.DataFrame:
+    """Every requirement awaits human approval; escalated ones are listed first.
+
+    The decision columns are left blank. Accept, reject, modify and regenerate are
+    human actions and are recorded by the approval tooling, never filled here.
+    """
+    q = conf.merge(reqs[["req_id", "statement"]], on="req_id", how="left")
+    q["approval_status"] = "pending"
+    q["human_decision"] = ""
+    q["human_note"] = ""
+    return q.sort_values(["escalate", "confidence"], ascending=[False, True])
+
+
 # --- driver ---------------------------------------------------------------
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Validation layer")
-    ap.add_argument("stage", choices=["rules", "critic", "hallucination", "all"])
+    ap.add_argument("stage", choices=["rules", "critic", "hallucination", "confidence", "all"])
     ap.add_argument("--model", default="primary", choices=["primary", "secondary"])
+    ap.add_argument("--case", default=None, help="validate a case study's baseline set")
     args = ap.parse_args()
 
-    cfg = load_pipeline()
-    out_dir = resolve(cfg["paths"]["outputs"])
-    if not (out_dir / "requirements.csv").exists():
-        raise SystemExit("outputs/requirements.csv missing — run Part 1 first.")
+    out_dir = output_dir(args.case)
+    req_path = out_dir / "requirements.csv"
+    if not req_path.exists():
+        raise SystemExit(f"{req_path} missing — run Part 1 first.")
+    reqs = pd.read_csv(req_path).fillna("")
+    reasoning_path = out_dir / "requirements_reasoning.csv"
+    reasoning = pd.read_csv(reasoning_path).fillna("") if reasoning_path.exists() else None
 
+    merged = None
     if args.stage in ("rules", "critic", "all"):
-        rules = run_rules()
+        rules = score_rules(reqs)
+        print(f"[rules] scored {len(reqs)} requirements x {rules['attribute'].nunique()} attributes")
         critic = None
         if args.stage in ("critic", "all"):
             try:
-                critic = run_critic(args.model)
+                critic = score_critic(reqs, args.model)
             except LLMError as exc:
                 print(f"[critic] unavailable: {exc}")
                 print("[critic] writing rule-only scores; llm_score will be blank")
@@ -632,8 +783,9 @@ def main() -> int:
             flag = "  (weakly decidable)" if attr in WEAKLY_DECIDABLE else ""
             print(f"           {attr:<14} {val:.0%}{flag}")
 
+    audit = None
     if args.stage in ("hallucination", "all"):
-        audit = run_hallucination_audit()
+        audit = audit_hallucinations(reqs, reasoning)
         audit.to_csv(
             guard_write(out_dir / "hallucination_audit.csv"), index=False, encoding="utf-8"
         )
@@ -647,6 +799,18 @@ def main() -> int:
                 for _, r in bad.head(8).iterrows():
                     print(f"           {r['req_id']} [{r['verdict']}] {str(r['cited_entity'])[:70]}")
         print("[hallucination] wrote hallucination_audit.csv")
+
+    if args.stage in ("confidence", "all"):
+        if merged is None:
+            merged = pd.read_csv(out_dir / "validation_29148.csv")
+        if audit is None:
+            audit = pd.read_csv(out_dir / "hallucination_audit.csv").fillna("")
+        conf = confidence_table(reqs, merged, audit)
+        queue = review_queue(conf, reqs)
+        queue.to_csv(guard_write(out_dir / "review_queue.csv"), index=False, encoding="utf-8")
+        n_esc = int(conf["escalate"].sum())
+        print(f"\n[confidence] mean {conf['confidence'].mean():.2f}; "
+              f"{n_esc}/{len(conf)} escalated for human review -> review_queue.csv")
 
     return 0
 

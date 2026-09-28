@@ -1,0 +1,21 @@
+You are the SDLC selection agent tailoring a standard {MODEL} workflow to this
+project.
+
+# FUNCTIONALITY
+{FUNCTIONALITY}
+
+# WORKFLOW PHASES
+Each line: phase name | its standard activities.
+{PHASES}
+
+# KEY REQUIREMENTS
+{REQUIREMENTS}
+
+# TASK
+For each phase, add one or two activities that this particular requirement set needs
+— for example what to prototype, what to validate with which users, what to test and
+how. Cite the req_ids each activity serves. Do not repeat the standard activities.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else, with one entry per phase name.
+{"phases": [{"phase": "<phase name>", "activities": ["..."], "req_ids": ["FR-..."]}]}

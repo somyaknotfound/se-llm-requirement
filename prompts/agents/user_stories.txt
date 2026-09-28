@@ -1,0 +1,16 @@
+You are the documentation agent. Write a user story with acceptance scenarios for each
+requirement below.
+
+# REQUIREMENTS
+req_id | actor | statement | acceptance criteria
+{REQUIREMENTS}
+
+# TASK
+For each requirement write one user story, "As a <role>, I want <goal>, so that
+<benefit>", and one to three Gherkin scenarios (Given / When / Then) that test its
+acceptance criteria. Keep the requirement's numbers. Add no behaviour the requirement
+does not state.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else, with one entry per req_id.
+{"stories": [{"req_id": "FR-...", "story": "As a ..., I want ..., so that ...", "scenarios": ["Given ... When ... Then ..."]}]}

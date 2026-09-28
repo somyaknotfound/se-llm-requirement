@@ -1,0 +1,470 @@
+# Compliance and security control catalogue — part of the authorised knowledge base.
+#
+# Every control names the corpus document and section it comes from; the section
+# must exist as a chunk section in corpus/chunks.jsonl (tests/test_knowledge_base.py
+# enforces this), so a mapping to a control is always a mapping to text we hold.
+# `obligation` paraphrases the regulation closely; the corpus text is authoritative.
+#
+#   applies_to   case studies the control is applicable to
+#   category     multi-label, using the classification agent's vocabulary
+#   checkpoint   true = produces a mandatory approval/audit checkpoint in the SDLC workflow
+#   retention    the record-retention obligation the control imposes, if any
+#
+# The compliance agent proposes mappings; it never makes a legal determination.
+# Every mapping to a regulatory control is queued for the compliance officer.
+
+kb_version: "2026-09-28"
+
+controls:
+  # --- HIPAA Security Rule, 45 CFR 164 Subpart C (D04) -------------------------
+  - id: HIPAA-164.308(a)(1)(ii)(A)
+    doc: D04
+    section: "164.308(a)"
+    citation: "45 CFR 164.308(a)(1)(ii)(A)"
+    title: Risk analysis
+    obligation: >-
+      Conduct an accurate and thorough assessment of the potential risks and
+      vulnerabilities to the confidentiality, integrity, and availability of ePHI.
+    category: [security, regulatory]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+    checkpoint: true
+  - id: HIPAA-164.308(a)(1)(ii)(D)
+    doc: D04
+    section: "164.308(a)"
+    citation: "45 CFR 164.308(a)(1)(ii)(D)"
+    title: Information system activity review
+    obligation: >-
+      Regularly review records of information system activity, such as audit logs,
+      access reports, and security incident tracking reports.
+    category: [audit_reporting, operational]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(a)(1)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(a)(1)"
+    title: Access control
+    obligation: >-
+      Allow access to systems that maintain ePHI only to persons or software programs
+      that have been granted access rights.
+    category: [security, privacy]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(a)(2)(i)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(a)(2)(i)"
+    title: Unique user identification
+    obligation: Assign a unique name and/or number for identifying and tracking user identity.
+    category: [security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(a)(2)(ii)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(a)(2)(ii)"
+    title: Emergency access procedure
+    obligation: Establish procedures for obtaining necessary ePHI during an emergency.
+    category: [availability_reliability, security]
+    applies_to: [erx_issuance]
+  - id: HIPAA-164.312(a)(2)(iii)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(a)(2)(iii)"
+    title: Automatic logoff
+    obligation: Terminate an electronic session after a predetermined time of inactivity (addressable).
+    category: [security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(a)(2)(iv)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(a)(2)(iv)"
+    title: Encryption and decryption
+    obligation: Implement a mechanism to encrypt and decrypt ePHI (addressable).
+    category: [security, privacy]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(b)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(b)"
+    title: Audit controls
+    obligation: >-
+      Implement mechanisms that record and examine activity in information systems
+      that contain or use ePHI.
+    category: [audit_reporting, security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(c)(1)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(c)(1)"
+    title: Integrity
+    obligation: Protect ePHI from improper alteration or destruction.
+    category: [security, data_management]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(d)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(d)"
+    title: Person or entity authentication
+    obligation: Verify that a person or entity seeking access to ePHI is the one claimed.
+    category: [security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.312(e)(1)
+    doc: D04
+    section: "164.312"
+    citation: "45 CFR 164.312(e)(1)"
+    title: Transmission security
+    obligation: >-
+      Guard against unauthorized access to ePHI being transmitted over an electronic
+      communications network; integrity controls and encryption are addressable.
+    category: [security, privacy, integration]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: HIPAA-164.316(b)(2)(i)
+    doc: D04
+    section: "164.316"
+    citation: "45 CFR 164.316(b)(2)(i)"
+    title: Documentation retention
+    obligation: >-
+      Retain required security documentation for 6 years from its creation or the
+      date it was last in effect, whichever is later.
+    category: [regulatory, data_management]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+    retention: 6 years
+
+  # --- ONC certification criteria, 45 CFR 170.315 (D05) ------------------------
+  - id: ONC-170.315(a)(1)
+    doc: D05
+    section: "170.315(a)"
+    citation: "45 CFR 170.315(a)(1)"
+    title: CPOE — medications
+    obligation: Enable a user to record, change, and access medication orders.
+    category: [functional]
+    applies_to: [erx_issuance]
+  - id: ONC-170.315(a)(4)
+    doc: D05
+    section: "170.315(a)"
+    citation: "45 CFR 170.315(a)(4)"
+    title: Drug-drug and drug-allergy interaction checks
+    obligation: >-
+      Before a medication order is completed and acted upon, automatically indicate
+      drug-drug and drug-allergy contraindications based on the patient's medication
+      and allergy lists; allow severity levels to be adjusted only by identified users
+      or as an administrative function.
+    category: [functional, regulatory]
+    applies_to: [erx_issuance]
+  - id: ONC-170.315(a)(10)
+    doc: D05
+    section: "170.315(a)"
+    citation: "45 CFR 170.315(a)(10)"
+    title: Drug formulary and preferred drug list checks
+    obligation: Automatically check whether a drug formulary or preferred drug list exists for a given patient and medication.
+    category: [functional, integration]
+    applies_to: [erx_issuance]
+  - id: ONC-170.315(b)(3)
+    doc: D05
+    section: "170.315(b)"
+    citation: "45 CFR 170.315(b)(3)"
+    title: Electronic prescribing transactions
+    obligation: >-
+      Enable new prescriptions, change, cancel and renewal requests and responses,
+      fill status notifications and medication history using the adopted e-prescribing
+      standard (NewRx, RxChangeRequest, CancelRx, RxRenewalRequest, RxFill, RxHistoryRequest).
+    category: [functional, integration]
+    applies_to: [erx_issuance, refill_reminders]
+  - id: ONC-170.315(d)(1)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(1)"
+    title: Authentication, access control, and authorization
+    obligation: >-
+      Verify a user against a unique identifier and establish the type of access and
+      the actions the user is permitted to perform.
+    category: [security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: ONC-170.315(d)(2)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(2)"
+    title: Auditable events and tamper-resistance
+    obligation: >-
+      Record actions related to electronic health information by default; restrict
+      disabling to a limited set of users; audit records must not be changeable,
+      overwritable or deletable, and alteration must be detectable.
+    category: [audit_reporting, security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: ONC-170.315(d)(3)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(3)"
+    title: Audit reports
+    obligation: Enable a user to create an audit report for a specific time period and sort audit entries.
+    category: [audit_reporting]
+    applies_to: [erx_issuance, epcs_signing]
+  - id: ONC-170.315(d)(5)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(5)"
+    title: Automatic access time-out
+    obligation: >-
+      Automatically stop user access after a predetermined period of inactivity and
+      require authentication to resume.
+    category: [security]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: ONC-170.315(d)(6)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(6)"
+    title: Emergency access
+    obligation: Permit an identified set of users to access electronic health information during an emergency.
+    category: [availability_reliability, security]
+    applies_to: [erx_issuance]
+  - id: ONC-170.315(d)(7)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(7)"
+    title: End-user device encryption
+    obligation: >-
+      Encrypt electronic health information stored on end-user devices after use
+      stops, or prevent it from being stored locally.
+    category: [privacy, security]
+    applies_to: [erx_issuance, refill_reminders]
+  - id: ONC-170.315(d)(9)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(9)"
+    title: Trusted connection
+    obligation: Encrypt and integrity-protect exchanged content at message or transport level.
+    category: [security, integration]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: ONC-170.315(d)(13)
+    doc: D05
+    section: "170.315(d)"
+    citation: "45 CFR 170.315(d)(13)"
+    title: Multi-factor authentication
+    obligation: >-
+      Attest whether the module supports authentication of the user's identity
+      through multiple elements using industry-recognized standards, and describe
+      the use cases supported.
+    category: [security]
+    applies_to: [epcs_signing, refill_reminders]
+  - id: ONC-170.315(e)(1)
+    doc: D05
+    section: "170.315(e)"
+    citation: "45 CFR 170.315(e)(1)"
+    title: View, download, and transmit to 3rd party
+    obligation: >-
+      Patients and their authorized representatives must be able to use internet-based
+      technology to view, download, and transmit their health information.
+    category: [functional, privacy]
+    applies_to: [refill_reminders]
+
+  # --- DEA Electronic Prescriptions for Controlled Substances, 21 CFR 1311 (D06) --
+  - id: DEA-1311.105
+    doc: D06
+    section: "1311.105"
+    citation: "21 CFR 1311.105"
+    title: Identity proofing for the authentication credential
+    obligation: >-
+      Obtain the two-factor credential from a credential service provider performing
+      identity proofing at Assurance Level 3 or above, or a cross-certified
+      certification authority; issue the credential through two channels.
+    category: [security, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.115
+    doc: D06
+    section: "1311.115"
+    citation: "21 CFR 1311.115"
+    title: Two-factor authentication for signing
+    obligation: >-
+      Require two of three factors (knowledge, biometric, hard token) to sign a
+      controlled substance prescription; a hard token must be separate from the
+      computer and meet FIPS 140-2 Security Level 1.
+    category: [security, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(2)-(4)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(2)-(4)"
+    title: Logical access controls for signing functions
+    obligation: >-
+      Limit permissions for indicating readiness and signing by individual user name
+      or role; setting or changing those controls must involve two individuals.
+    category: [security, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(8)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(8)"
+    title: Time synchronisation
+    obligation: Keep application time within five minutes of the official NIST time source.
+    category: [regulatory, operational]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(9)-(11)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(9)-(11)"
+    title: Review, readiness and signing prompt
+    obligation: >-
+      Present the required prescription data for review, require the practitioner to
+      indicate each prescription is ready for signing, and prompt for two-factor
+      authentication while the data and the signing statement remain displayed.
+    category: [functional, regulatory, usability]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(14)-(16)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(14)-(16)"
+    title: Time stamp, digital signature and archive
+    obligation: >-
+      Time and date stamp the prescription at signing, digitally sign at least the
+      required information and archive the signed record, using a FIPS 140-2 Security
+      Level 1 validated cryptographic module.
+    category: [security, regulatory, data_management]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(19)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(19)"
+    title: No alteration after signing
+    obligation: >-
+      Do not allow alteration of required information after the prescription has been
+      digitally signed; any alteration after signing must cancel the prescription.
+    category: [security, functional]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(23)-(26)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(23)-(26)"
+    title: Audit trail content and protection
+    obligation: >-
+      Keep an audit trail of creation, alteration, readiness, signing, transmission and
+      deletion and of access-control changes, recording date, time, event type,
+      identity and outcome; protect audit records from deletion and modification.
+    category: [audit_reporting, security, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.120(b)(27)
+    doc: D06
+    section: "1311.120(b)"
+    citation: "21 CFR 1311.120(b)(27)"
+    title: Monthly prescription log
+    obligation: >-
+      Generate a log of all controlled substance prescriptions issued in the previous
+      calendar month within seven days, sortable by patient, drug and date of issuance.
+    category: [audit_reporting, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.125
+    doc: D06
+    section: "1311.125"
+    citation: "21 CFR 1311.125"
+    title: Access-control management and revocation
+    obligation: >-
+      Designate at least two individuals to manage signing access; a second
+      individual must approve grants with two-factor authentication; revoke signing
+      permission on the date a factor is lost or the registration lapses.
+    category: [security, regulatory, operational]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.140
+    doc: D06
+    section: "1311.140"
+    citation: "21 CFR 1311.140"
+    title: Signing a controlled substance prescription
+    obligation: >-
+      Display the signing statement with the prescription data, complete signing only
+      through the two-factor protocol, label the signing function clearly, and never
+      transmit an unsigned prescription.
+    category: [functional, regulatory, usability]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.150
+    doc: D06
+    section: "1311.150"
+    citation: "21 CFR 1311.150"
+    title: Internal audits and incident reporting
+    obligation: >-
+      Analyze the audit trail at least once every calendar day, generate an incident
+      report of auditable events, and report security incidents within one business day.
+    category: [audit_reporting, operational, regulatory]
+    applies_to: [epcs_signing]
+    checkpoint: true
+  - id: DEA-1311.170
+    doc: D06
+    section: "1311.170"
+    citation: "21 CFR 1311.170"
+    title: Transmission
+    obligation: >-
+      Transmit as soon as possible after signature, never alter content in transit, and
+      never convert the electronic prescription to another form such as facsimile.
+    category: [integration, regulatory]
+    applies_to: [epcs_signing]
+  - id: DEA-1311.300
+    doc: D06
+    section: "1311.300(a)-(h)"
+    citation: "21 CFR 1311.300"
+    title: Third-party audit or certification
+    obligation: >-
+      Obtain a third-party audit or DEA-approved certification before the application
+      is used for controlled substances, and again whenever relevant functionality is
+      altered or every two years, whichever is first.
+    category: [regulatory]
+    applies_to: [epcs_signing]
+    checkpoint: true
+  - id: DEA-1311.305
+    doc: D06
+    section: "1311.305"
+    citation: "21 CFR 1311.305"
+    title: Recordkeeping
+    obligation: >-
+      Retain records electronically for two years from creation or receipt, readily
+      retrievable and readable, and available to the Administration on request.
+    category: [data_management, regulatory]
+    applies_to: [epcs_signing]
+    retention: 2 years
+
+  # --- HL7 FHIR R4 (D01-D03) ---------------------------------------------------
+  - id: FHIR-MR-11.1.3
+    doc: D01
+    section: "11.1.3"
+    citation: "HL7 FHIR R4 MedicationRequest §11.1.3"
+    title: Medication order content
+    obligation: >-
+      Represent the order with medication, subject, requester, authored date, dosage
+      instructions and dispense request, including the number of refills authorized
+      and substitution restrictions.
+    category: [data_management, integration]
+    applies_to: [erx_issuance, refill_reminders]
+  - id: FHIR-AI-9.1.3.4
+    doc: D02
+    section: "9.1.3.4"
+    citation: "HL7 FHIR R4 AllergyIntolerance §9.1.3.4"
+    title: Allergy criticality
+    obligation: >-
+      Distinguish criticality (likelihood of significant harm) from severity of a
+      particular reaction when recording allergies and intolerances.
+    category: [data_management, functional]
+    applies_to: [erx_issuance]
+  - id: FHIR-SEC-6.1.0.4
+    doc: D03
+    section: "6.1.0.4"
+    citation: "HL7 FHIR R4 Security §6.1.0.4"
+    title: Client and user authentication
+    obligation: >-
+      Authenticate clients and users; OpenID Connect and OAuth (SMART on FHIR) are
+      recommended; protect authenticator mechanisms by risk.
+    category: [security]
+    applies_to: [erx_issuance, refill_reminders]
+  - id: FHIR-SEC-6.1.0.5
+    doc: D03
+    section: "6.1.0.5"
+    citation: "HL7 FHIR R4 Security §6.1.0.5"
+    title: Authorization and access control
+    obligation: >-
+      Do not communicate data without assurance the other party is authorized; apply
+      role- or attribute-based access control, including patient consent policies.
+    category: [security, privacy]
+    applies_to: [erx_issuance, epcs_signing, refill_reminders]
+  - id: FHIR-SEC-6.1.0.6
+    doc: D03
+    section: "6.1.0.6"
+    citation: "HL7 FHIR R4 Security §6.1.0.6"
+    title: Audit logging with AuditEvent
+    obligation: >-
+      Record security- and privacy-relevant events as AuditEvent resources; treat HTTP
+      logs as being as sensitive as the resources themselves.
+    category: [audit_reporting, privacy]
+    applies_to: [erx_issuance, refill_reminders]

@@ -1,19 +1,27 @@
-"""PART 1 driver — generate a traceable requirement set for the target functionality.
+"""PART 1 driver — single-prompt requirement generation (the baseline).
 
     python -m src.generate_reqs
+    python -m src.generate_reqs --case epcs_signing
     python -m src.generate_reqs --model secondary --dry-run
 
-Contract enforcement is deliberately split in two:
+This is the non-agentic baseline the multi-agent system is compared against: one
+prompt, document evidence only, no stakeholders, no clarification. With `--case` it
+runs on that case study's functionality, facets and knowledge-source allowlist and
+writes under outputs/cases/<id>/baseline/.
 
-  * Integrity is enforced HERE and is fatal. Fabricated chunk_ids, an empty
-    citation list on a requirement claiming not to be derived, broken enums — these
-    corrupt the traceability record, so the driver repairs once and then fails loud.
+Contract enforcement is split three ways:
+
+  * Unusable output is fatal after one repair: unparseable JSON, a broken schema,
+    or a count outside the contract. Nothing downstream can run on it.
+
+  * Citation integrity is recorded, not fatal. A chunk_id the model was never shown,
+    or a requirement with no valid citation that claims not to be derived, is kept
+    verbatim in `invalid_chunk_ids`, scored by the audit, and escalated for human
+    review. Aborting on it meant the hallucination audit could never observe one.
 
   * Requirement QUALITY (weak words, compound obligations, unverifiable acceptance
-    criteria) is deliberately NOT enforced here. It is measured by validate.py
-    against ISO/IEC/IEEE 29148. Repairing quality at generation time would launder
-    the model's output and leave the audit with nothing to find, which is precisely
-    the finding the report exists to report.
+    criteria) is not enforced here at all. validate.py measures it against
+    ISO/IEC/IEEE 29148; repairing it at generation time would launder the output.
 """
 
 from __future__ import annotations
@@ -69,6 +77,7 @@ REQ_COLUMNS = [
     "volatility",
     "source_chunk_ids",
     "derived",
+    "invalid_chunk_ids",
 ]
 REASONING_COLUMNS = ["req_id", "reasoning", "evidence_quote", "inference_type"]
 
@@ -110,12 +119,10 @@ def repair_directive(payload: Any, cfg: dict[str, Any]) -> str:
             f"You returned {n} requirements but the contract requires at least "
             f"{gen['min_requirements']}. ADD {need} or more genuinely new requirements, "
             f"continuing the existing numbering. Keep every requirement you already "
-            f"wrote exactly as it is. Draw the new ones from parts of the evidence you "
-            f"have not yet covered — prescription content and dosage, allergy and "
-            f"interaction checking, prescriber authentication and signing, "
-            f"controlled-substance handling, transmission to the pharmacy, audit "
-            f"logging, access control, and record retention. Do not pad the set with "
-            f"restatements of requirements you have already written."
+            f"wrote exactly as it is. Draw the new ones from parts of the SOURCE "
+            f"EVIDENCE above that you have not yet covered, and cite only chunk_ids "
+            f"that appear in it. Do not pad the set with restatements of requirements "
+            f"you have already written."
         )
     elif n > gen["max_requirements"]:
         lines.append(
@@ -180,19 +187,22 @@ def build_evidence(hits, budget: int) -> tuple[str, list[str]]:
 
 def validate_payload(
     payload: Any, valid_chunk_ids: set[str], cfg: dict[str, Any]
-) -> tuple[list[dict[str, Any]], list[str]]:
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     """Check the model's JSON against the output contract.
 
-    Returns (records, errors). Errors are integrity failures only; requirement
-    quality is out of scope here by design.
+    Returns (records, errors, flags). `errors` make the output unusable and are
+    fatal after one repair. `flags` are per-requirement citation-integrity failures:
+    the requirement is kept, the failure is recorded on it, and it is escalated.
+    Requirement quality is out of scope here by design.
     """
     errors: list[str] = []
+    flags: list[str] = []
 
     if not isinstance(payload, dict) or "requirements" not in payload:
-        return [], ["top-level JSON must be an object with a 'requirements' array"]
+        return [], ["top-level JSON must be an object with a 'requirements' array"], []
     reqs = payload["requirements"]
     if not isinstance(reqs, list) or not reqs:
-        return [], ["'requirements' must be a non-empty array"]
+        return [], ["'requirements' must be a non-empty array"], []
 
     gen = cfg["generation"]
     if not (gen["min_requirements"] <= len(reqs) <= gen["max_requirements"]):
@@ -255,25 +265,23 @@ def validate_payload(
         if not isinstance(cites, list):
             errors.append(f"{label}: source_chunk_ids must be an array")
             cites = []
+        cites = [str(c).strip() for c in cites if str(c).strip()]
 
         derived = r.get("derived")
         if not isinstance(derived, bool):
             errors.append(f"{label}: derived must be a boolean, got {derived!r}")
             derived = bool(derived)
 
-        fabricated = [c for c in cites if c not in valid_chunk_ids]
-        if fabricated:
-            errors.append(
-                f"{label}: cites chunk_id(s) not present in the supplied evidence: "
-                f"{fabricated}"
-            )
-        # The integrity rule from the build spec: a requirement must be either
-        # cited or explicitly flagged as inferred. Both-empty is unfalsifiable.
         real = [c for c in cites if c in valid_chunk_ids]
+        invalid = [c for c in cites if c not in valid_chunk_ids]
+        if invalid:
+            flags.append(
+                f"{label}: cites chunk_id(s) not present in the supplied evidence: {invalid}"
+            )
+        # A requirement must be either cited or explicitly flagged as inferred.
+        # Both-empty is unfalsifiable.
         if not real and not derived:
-            errors.append(f"{label}: no valid source_chunk_ids but derived=false")
-
-        quote = str(r.get("evidence_quote", "") or "")
+            flags.append(f"{label}: no valid source_chunk_ids but derived=false")
 
         records.append(
             {
@@ -289,14 +297,14 @@ def validate_payload(
                 "volatility": r.get("volatility"),
                 "source_chunk_ids": ";".join(real),
                 "derived": derived,
+                "invalid_chunk_ids": ";".join(invalid),
                 "reasoning": str(r.get("reasoning", "")).strip(),
-                "evidence_quote": quote.strip(),
+                "evidence_quote": str(r.get("evidence_quote", "") or "").strip(),
                 "inference_type": r.get("inference_type"),
-                "_fabricated_chunk_ids": ";".join(fabricated),
             }
         )
 
-    return records, errors
+    return records, errors, flags
 
 
 def traceability_matrix(records: list[dict[str, Any]], doc_ids: list[str]) -> pd.DataFrame:
@@ -312,13 +320,36 @@ def traceability_matrix(records: list[dict[str, Any]], doc_ids: list[str]) -> pd
     return pd.DataFrame(rows, columns=["req_id", "type", *doc_ids])
 
 
-def generate(model_key: str = "primary", dry_run: bool = False) -> int:
+def _check(resp_text_json, valid_ids, cfg) -> tuple[Any, list[dict[str, Any]], list[str], list[str]]:
+    payload: Any = {}
+    try:
+        payload = resp_text_json()
+        records, errors, flags = validate_payload(payload, valid_ids, cfg)
+    except ValueError as exc:
+        records, errors, flags = [], [f"response was not parseable JSON: {exc}"], []
+    return payload, records, errors, flags
+
+
+def output_dir(case_id: str | None) -> Path:
+    base = resolve(load_pipeline()["paths"]["outputs"])
+    return base / "cases" / case_id / "baseline" if case_id else base
+
+
+def generate(model_key: str = "primary", dry_run: bool = False, case_id: str | None = None) -> int:
+    from .cases import load_case, target_for
+
     cfg = load_pipeline()
-    out_dir = resolve(cfg["paths"]["outputs"])
-    target = cfg["target"]
+    out_dir = ensure_dir(output_dir(case_id))
+    target = target_for(case_id)
     gen = cfg["generation"]
 
-    hits = retrieve_evidence()
+    facets = allowed = None
+    if case_id:
+        case = load_case(case_id)
+        facets = case.get("facets")
+        allowed = set(case.get("knowledge_sources", [])) or None
+
+    hits = retrieve_evidence(facets=facets, allowed_docs=allowed)
     evidence, shown_ids = build_evidence(hits, cfg["retrieval"]["max_context_tokens"])
 
     print(
@@ -351,6 +382,10 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
     client = OllamaClient()
     client.require([model_key])
     valid_ids = set(shown_ids)
+    # Both calls get a wider window than the pipeline default: 25 requirements with
+    # per-requirement reasoning approach 6k tokens on their own, and the repair
+    # prompt carries the evidence AND the previous response.
+    window = {"num_ctx": gen.get("num_ctx", 32768), "num_predict": gen.get("num_predict", 8192)}
 
     resp = client.generate(
         model_key,
@@ -358,28 +393,31 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
         json_mode=True,
         tag="p1_requirements",
         meta={"target": target["id"]},
+        **window,
     )
     guard_write(out_dir / "raw_p1_response.txt").write_text(resp.text, encoding="utf-8")
+    payload, records, errors, flags = _check(resp.json, valid_ids, cfg)
+    contract: dict[str, Any] = {
+        "initial_errors": errors,
+        "initial_flags": flags,
+        "repair_attempted": False,
+        "used": "initial",
+    }
 
-    payload: Any = {}
-    try:
-        payload = resp.json()
-        records, errors = validate_payload(payload, valid_ids, cfg)
-    except ValueError as exc:
-        records, errors = [], [f"response was not parseable JSON: {exc}"]
-
-    if errors:
-        print(f"[part1] {len(errors)} contract violation(s); attempting one repair")
-        for e in errors[:10]:
+    if errors or flags:
+        print(f"[part1] {len(errors)} contract violation(s), {len(flags)} citation flag(s); "
+              "attempting one repair")
+        for e in (errors + flags)[:10]:
             print(f"        - {e}")
 
         directive = repair_directive(payload, cfg)
         print(f"[part1] repair directive: {directive.splitlines()[0][:96]}...")
         repair = render(
             load_prompt("p1_repair.txt"),
-            ERRORS="\n".join(f"- {e}" for e in errors),
+            ERRORS="\n".join(f"- {e}" for e in errors + flags),
             PREVIOUS=resp.text,
             DIRECTIVE=directive,
+            EVIDENCE=evidence,
         )
         resp2 = client.generate(
             model_key,
@@ -387,24 +425,40 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
             json_mode=True,
             tag="p1_repair",
             meta={"target": target["id"], "repair_of": resp.call_id},
+            **window,
         )
         guard_write(out_dir / "raw_p1_repair_response.txt").write_text(
             resp2.text, encoding="utf-8"
         )
-        try:
-            records, errors = validate_payload(resp2.json(), valid_ids, cfg)
-        except ValueError as exc:
-            records, errors = [], [f"repair response was not parseable JSON: {exc}"]
+        _, records2, errors2, flags2 = _check(resp2.json, valid_ids, cfg)
+        contract.update(repair_attempted=True, repair_errors=errors2, repair_flags=flags2)
 
-        if errors:
-            print(f"\n[part1] FAILED after repair — {len(errors)} violation(s) remain:")
-            for e in errors:
+        # Use the repair when it produced usable output. If it broke something the
+        # first response had right, fall back to the first response rather than
+        # discarding a usable set; if neither is usable, abort.
+        if not errors2:
+            records, errors, flags = records2, errors2, flags2
+            contract["used"] = "repair"
+        elif errors:
+            print(f"\n[part1] FAILED after repair — {len(errors2)} violation(s) remain:")
+            for e in errors2:
                 print(f"        - {e}")
+            guard_write(out_dir / "part1_contract.json").write_text(
+                json.dumps(contract, indent=2), encoding="utf-8"
+            )
             raise SystemExit(
                 "Part 1 aborted. Raw responses are preserved in outputs/ and "
                 "logs/llm_calls.jsonl for the report's failure analysis."
             )
-        print("[part1] repair succeeded")
+        else:
+            print("[part1] the repair broke the contract; keeping the first response")
+            contract["used"] = "initial_after_failed_repair"
+        print(f"[part1] using the {contract['used']} response")
+
+    contract["final_flags"] = flags
+    guard_write(out_dir / "part1_contract.json").write_text(
+        json.dumps(contract, indent=2), encoding="utf-8"
+    )
 
     df = pd.DataFrame(records)
     df[REQ_COLUMNS].to_csv(guard_write(out_dir / "requirements.csv"), index=False, encoding="utf-8")
@@ -424,6 +478,10 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
 
     print(f"\n[part1] {len(records)} requirements ({len(records)-n_nfr} FR / {n_nfr} NFR)")
     print(f"[part1] traceability: {n_cited}/{len(records)} cite >=1 real chunk ({rate:.0%})")
+    if flags:
+        print(f"[part1] {len(flags)} citation-integrity flag(s) kept and escalated for review:")
+        for f in flags:
+            print(f"        - {f}")
     if rate < gen["min_traceability_rate"]:
         print(
             f"[part1] WARNING: below the {gen['min_traceability_rate']:.0%} target — "
@@ -431,17 +489,19 @@ def generate(model_key: str = "primary", dry_run: bool = False) -> int:
         )
     if uncited_docs:
         print(f"[part1] uncited source documents (a finding, not a bug): {uncited_docs}")
-    print(f"[part1] wrote requirements.csv, requirements_reasoning.csv, traceability_matrix.csv")
+    print(f"[part1] wrote requirements.csv, requirements_reasoning.csv, traceability_matrix.csv "
+          f"-> {out_dir}")
     return 0
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Part 1 — requirement generation")
+    ap = argparse.ArgumentParser(description="Part 1 — single-prompt requirement generation")
     ap.add_argument("--model", default="primary", choices=["primary", "secondary"])
+    ap.add_argument("--case", default=None, help="run on a case study's functionality")
     ap.add_argument("--dry-run", action="store_true", help="render the prompt without calling")
     args = ap.parse_args()
     try:
-        return generate(args.model, args.dry_run)
+        return generate(args.model, args.dry_run, args.case)
     except LLMError as exc:
         print(f"[part1] FAILED: {exc}")
         return 1

@@ -1,0 +1,16 @@
+You are the classification agent. Assign every requirement below to ALL the
+categories that apply — this is multi-label classification.
+
+# CATEGORIES
+{CATEGORIES}
+
+# REQUIREMENTS
+{REQUIREMENTS}
+
+Rules: at least one category per requirement; use only the category ids above. A
+requirement that describes a behaviour of the system is "functional" even when it
+also has quality categories.
+
+# OUTPUT FORMAT
+Return ONE JSON object and nothing else, with one entry per requirement id.
+{"classifications": [{"req_id": "FR-...", "categories": ["functional", "security"]}]}

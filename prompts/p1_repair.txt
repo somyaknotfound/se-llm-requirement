@@ -1,5 +1,13 @@
 Your previous response did not satisfy the required output contract.
 
+# SOURCE EVIDENCE
+These are the same excerpts you were given before. Each is labelled with a
+chunk_id, and these chunk_ids are the ONLY identifiers you may cite. Do not
+invent, abbreviate, renumber or guess a chunk_id — a chunk_id that is not written
+below does not exist.
+
+{EVIDENCE}
+
 # VALIDATION ERRORS
 {ERRORS}
 
@@ -17,9 +25,9 @@ implicate. If a requirement is faulty, repair its fields.
 
 Reminders on the constraints that were violated most often:
 
-- source_chunk_ids must contain chunk_ids that appear verbatim in the evidence
-  you were given. If you cannot support a requirement with a real chunk_id, set
-  "derived": true rather than inventing an identifier.
+- source_chunk_ids must contain chunk_ids copied exactly from the SOURCE EVIDENCE
+  labels above. If you cannot support a requirement with one of those chunk_ids,
+  set "derived": true rather than inventing an identifier.
 - A statement contains exactly one "shall" and exactly one obligation.
 - evidence_quote must be copied verbatim from a chunk you cited, or be "".
 - nfr_category is "none" for every FR, and a real category for every NFR.

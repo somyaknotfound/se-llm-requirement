@@ -67,6 +67,10 @@ def part1_metrics(out_dir: Path, cfg: dict) -> list[dict[str, Any]]:
     uncited = [d for d in DOC_IDS if d not in docs_seen]
 
     integrity_bugs = int((~cited & ~derived).sum())
+    invalid = reqs["invalid_chunk_ids"].astype(str).str.strip().ne("") if "invalid_chunk_ids" in reqs else cited & False
+
+    contract_path = out_dir / "part1_contract.json"
+    contract = json.loads(contract_path.read_text(encoding="utf-8")) if contract_path.exists() else {}
 
     out = [
         ("requirements_total", n, ""),
@@ -78,7 +82,11 @@ def part1_metrics(out_dir: Path, cfg: dict) -> list[dict[str, Any]]:
         ("documents_cited", len(docs_seen), "; ".join(sorted(docs_seen))),
         ("documents_uncited", len(uncited), "; ".join(uncited) or "none"),
         ("integrity_violations", integrity_bugs,
-         "rows with no citation AND derived=false (must be 0)"),
+         "rows with no citation AND derived=false — kept, flagged and escalated"),
+        ("guessed_chunk_citations", int(invalid.sum()),
+         "requirements citing a chunk_id the model was never shown"),
+        ("repair_attempted", int(bool(contract.get("repair_attempted"))),
+         f"response used: {contract.get('used', 'n/a')}; initial errors: {len(contract.get('initial_errors', []))}"),
     ]
     if "nfr_category" in reqs:
         cats = reqs.loc[reqs["type"] == "NFR", "nfr_category"].value_counts().to_dict()
@@ -214,7 +222,27 @@ def part2_metrics(out_dir: Path) -> list[dict[str, Any]]:
                 ))
             means = an.groupby("criterion")["score"].mean().round(2).to_dict()
             out.append(("criterion_mean_scores", "", str(means)))
+
+    consistency_path = out_dir / "sdlc_consistency.csv"
+    if consistency_path.exists():
+        cons = pd.read_csv(consistency_path)
+        if len(cons):
+            out.append((
+                "engine_consistency",
+                round(float(cons["consistent"].astype(bool).mean()), 3),
+                "runs whose named model is the one their own factor scores imply (rules + MCDA)",
+            ))
     return _rows("part2", out)
+
+
+def evaluation_metrics(out_dir: Path) -> list[dict[str, Any]]:
+    """The case-study evaluation (src/evaluate.py), one row per case x system x metric."""
+    path = out_dir / "evaluation" / "summary.csv"
+    if not path.exists():
+        return []
+    ev = pd.read_csv(path).fillna("")
+    return [{"section": f"eval:{r.case}:{r.system}", "metric": r.metric, "value": r.value, "detail": r.detail}
+            for r in ev.itertuples()]
 
 
 def cost_metrics(cfg: dict) -> list[dict[str, Any]]:
@@ -261,6 +289,7 @@ def main() -> int:
     rows += validation_metrics(out_dir)
     rows += hallucination_metrics(out_dir)
     rows += part2_metrics(out_dir)
+    rows += evaluation_metrics(out_dir)
     rows += cost_metrics(cfg)
 
     if not rows:
