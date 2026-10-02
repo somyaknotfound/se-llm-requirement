@@ -195,7 +195,9 @@ conflict detection a ground truth. Fact ids are stripped before any agent sees a
 
 **Integrity failures are recorded, not fatal.** A citation to a chunk the model was never
 shown is kept in `invalid_chunk_ids`, counted by the hallucination audit, and escalated.
-Only unusable output (unparseable, wrong schema, wrong count) aborts Part 1.
+A requirement set that breaks Part 1's output contract (count, FR/NFR floors, a field
+outside its allowed values) is kept with `contract_passed = 0` and the violations
+recorded; only a response with no usable requirements aborts.
 
 **Defences are measured.** Each seeded prompt injection is replayed with and without the
 quarantine-and-delimiting defences to give an attack success rate for both.
@@ -213,10 +215,11 @@ its own facets and knowledge-source allowlist.
 **`required models are not present`** — pull both models; the code never substitutes a
 fallback silently.
 
-**Part 1 aborts after repair** — the output was unusable twice (not parseable, wrong
-schema, or outside the 18–25 count). Read `raw_p1_repair_response.txt`; that is a
-reportable result about a 7B model, not something to loosen the contract for. Citation
-problems alone no longer abort: they are flagged in `invalid_chunk_ids` and escalated.
+**Part 1 prints `CONTRACT FAILED`** — neither the first response nor the repair met the
+output contract (for example too few NFRs). The attempt with fewer violations is kept and
+`part1_contract.json` records what failed; that is a reportable result about a 7B model,
+not something to loosen the contract for. Part 1 aborts only when neither response
+contains a usable requirement set: read `raw_p1_repair_response.txt`.
 
 **A case run was interrupted** — `python -m src.orchestrator --case <case> --resume`.
 

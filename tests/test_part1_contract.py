@@ -41,7 +41,7 @@ def test_citation_integrity_is_flagged_not_fatal():
     assert rec["source_chunk_ids"] == ""
 
 
-def test_count_violation_is_fatal():
+def test_count_violation_is_a_contract_error():
     cfg = load_pipeline()
     _, errors, _ = generate_reqs.validate_payload(_payload(8, 8, ["x"]), {"x"}, cfg)
     assert any("contract requires between" in e for e in errors)
@@ -109,9 +109,23 @@ def test_a_repair_that_breaks_the_contract_falls_back_to_the_first_response(isol
     assert len(pd.read_csv(out / "requirements.csv")) == 19
 
 
-def test_unusable_output_still_aborts(isolated, monkeypatch):
-    _, shown = isolated
-    monkeypatch.setattr(generate_reqs, "OllamaClient",
-                        lambda: ScriptedPart1(_payload(3, 3, shown[:1]), _payload(4, 4, shown[:1])))
+def test_a_contract_failure_keeps_the_closer_attempt_and_records_it(isolated, monkeypatch):
+    # The first GPU run: 19 requirements with too few NFRs; the repair shrank the set to 12.
+    out, shown = isolated
+    first = _payload(16, 3, shown[:1])
+    shrunk = _payload(9, 3, shown[:1])
+    monkeypatch.setattr(generate_reqs, "OllamaClient", lambda: ScriptedPart1(first, shrunk))
+    assert generate_reqs.generate() == 0
+    contract = json.loads((out / "part1_contract.json").read_text())
+    assert contract["used"] == "initial_after_failed_repair" and not contract["contract_passed"]
+    assert any("NFRs" in e for e in contract["final_errors"])
+    assert len(pd.read_csv(out / "requirements.csv")) == 19
+
+
+def test_output_with_no_requirements_still_aborts(isolated, monkeypatch):
+    out, _ = isolated
+    monkeypatch.setattr(generate_reqs, "OllamaClient", lambda: ScriptedPart1("not an object", {"requirements": []}))
     with pytest.raises(SystemExit):
         generate_reqs.generate()
+    assert not json.loads((out / "part1_contract.json").read_text())["contract_passed"]
+    assert not (out / "requirements.csv").exists()

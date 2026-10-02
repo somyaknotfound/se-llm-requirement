@@ -414,7 +414,7 @@ choices from `outputs/evaluation/summary_wide.csv` (`sdlc_top1`, `sdlc_top2`).
 
 The original Part 1 generator grounds one prompt in faceted evidence and asks for 18–25
 requirements with per-requirement reasoning and verbatim evidence quotes. It enforces an
-output contract with one repair attempt. Two first-run failures shaped it:
+output contract with one repair attempt. Three early failures shaped it:
 
 - The first Colab run returned 13 requirements; the repair prompt forbade adding any, so
   it returned the same 13. The repair now receives a directive naming the edit needed.
@@ -423,6 +423,12 @@ output contract with one repair attempt. Two first-run failures shaped it:
   contain the evidence, and each Ollama call is stateless. The repair prompt now carries
   the evidence. Citation-integrity failures are recorded in `invalid_chunk_ids`, counted
   by the hallucination audit and escalated, instead of aborting the run.
+- On the first full GPU run, both first responses were usable sets that fell short on the
+  NFR floor (one also had a field outside its allowed values), and
+  both repairs returned shorter sets than the originals. Aborting would have left the
+  baseline with nothing to compare, so the attempt with fewer violations is now kept and
+  the failure recorded (`contract_passed` in `outputs/metrics_summary.csv`). The contract
+  still judges the output; it no longer discards it.
 
 `[PENDING RUN]` — requirement count, traceability rate, integrity flags and repair
 outcome from `outputs/part1_contract.json` and the `part1` section of

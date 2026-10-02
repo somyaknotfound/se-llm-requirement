@@ -327,10 +327,19 @@ Recorded here so the report can defend them. Each was a measured call, not an ov
 11. **Citation-integrity failures are recorded and escalated, not fatal.** Making a
     fabricated chunk id abort the run meant the hallucination audit could never
     observe one, and one bad citation discarded 17 good requirements. Part 1 now
-    aborts only on output it cannot use (unparseable JSON, broken schema, count or
-    FR/NFR floors). Invalid citations are kept verbatim in `invalid_chunk_ids`,
+    aborts only on output it cannot use (see note 12 for the contract floors). Invalid
+    citations are kept verbatim in `invalid_chunk_ids`,
     score 0 on `traceable`, are counted as fabricated by the hallucination audit, and
     put the requirement in the human review queue.
+
+12. **A contract failure is recorded, not fatal, once a repair has been tried.** On the
+    first full GPU run, both baselines had a usable set whose main fault was too
+    few NFRs; the repair, told only how many NFRs were missing, returned a shorter set,
+    and the run aborted, so the baseline comparison had nothing to measure. Now the
+    attempt with fewer violations is kept (the repair on a tie), `part1_contract.json`
+    records `contract_passed` and the remaining violations, and the metrics report
+    them. The contract itself is unchanged; it judges the output instead of discarding
+    it. Only a response with no usable requirements still aborts.
 
 ---
 
@@ -425,4 +434,5 @@ only once the author has reviewed them.
    notebook pins Ollama and serves one request at a time, embeddings run on the CPU
    (GPU kernels can reorder near-tied retrieval hits), and every session records its
    commit, GPU, model digests and package versions. A Part 1 baseline that aborts is
-   recorded as a result rather than retried, because with fixed seeds a retry repeats it.
+   recorded as a result rather than retried, because with fixed seeds a retry repeats it;
+   it is retried once only when the code has changed since.

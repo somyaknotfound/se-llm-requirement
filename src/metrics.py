@@ -87,6 +87,8 @@ def part1_metrics(out_dir: Path, cfg: dict) -> list[dict[str, Any]]:
          "requirements citing a chunk_id the model was never shown"),
         ("repair_attempted", int(bool(contract.get("repair_attempted"))),
          f"response used: {contract.get('used', 'n/a')}; initial errors: {len(contract.get('initial_errors', []))}"),
+        ("contract_passed", int(contract.get("contract_passed", True)),
+         "; ".join(contract.get("final_errors", [])[:5]) or "all output-contract checks passed"),
     ]
     if "nfr_category" in reqs:
         cats = reqs.loc[reqs["type"] == "NFR", "nfr_category"].value_counts().to_dict()

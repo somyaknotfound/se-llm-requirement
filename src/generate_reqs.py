@@ -433,16 +433,19 @@ def generate(model_key: str = "primary", dry_run: bool = False, case_id: str | N
         _, records2, errors2, flags2 = _check(resp2.json, valid_ids, cfg)
         contract.update(repair_attempted=True, repair_errors=errors2, repair_flags=flags2)
 
-        # Use the repair when it produced usable output. If it broke something the
-        # first response had right, fall back to the first response rather than
-        # discarding a usable set; if neither is usable, abort.
-        if not errors2:
-            records, errors, flags = records2, errors2, flags2
-            contract["used"] = "repair"
-        elif errors:
-            print(f"\n[part1] FAILED after repair — {len(errors2)} violation(s) remain:")
-            for e in errors2:
+        # Keep the attempt with the fewest violations (the repair on a tie, since it
+        # saw the errors). A set that still breaks the contract is kept and recorded
+        # as failing: the baseline comparison needs what the single prompt actually
+        # produced, and on the first GPU run both repairs returned shorter sets than
+        # the originals, so aborting left nothing to measure. Only output with no
+        # requirements in it at all is unusable.
+        attempts = {"repair": (records2, errors2, flags2), "initial": (records, errors, flags)}
+        usable = [name for name, (recs, _, _) in attempts.items() if recs]
+        if not usable:
+            print("\n[part1] FAILED — neither response contained a usable requirement set:")
+            for e in errors + errors2:
                 print(f"        - {e}")
+            contract.update(contract_passed=False, final_errors=errors2)
             guard_write(out_dir / "part1_contract.json").write_text(
                 json.dumps(contract, indent=2), encoding="utf-8"
             )
@@ -450,11 +453,17 @@ def generate(model_key: str = "primary", dry_run: bool = False, case_id: str | N
                 "Part 1 aborted. Raw responses are preserved in outputs/ and "
                 "logs/llm_calls.jsonl for the report's failure analysis."
             )
-        else:
-            print("[part1] the repair broke the contract; keeping the first response")
-            contract["used"] = "initial_after_failed_repair"
+        best = min(usable, key=lambda name: len(attempts[name][1]))
+        records, errors, flags = attempts[best]
+        contract["used"] = "repair" if best == "repair" else "initial_after_failed_repair"
         print(f"[part1] using the {contract['used']} response")
+        if errors:
+            print(f"[part1] CONTRACT FAILED — kept with {len(errors)} violation(s) recorded "
+                  "in part1_contract.json:")
+            for e in errors[:10]:
+                print(f"        - {e}")
 
+    contract.update(contract_passed=not errors, final_errors=errors)
     contract["final_flags"] = flags
     guard_write(out_dir / "part1_contract.json").write_text(
         json.dumps(contract, indent=2), encoding="utf-8"
