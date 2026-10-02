@@ -1,8 +1,12 @@
 """The whole multi-agent pipeline, offline, with the scripted model."""
 
 import json
+import os
 import re
 import sqlite3
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -167,6 +171,30 @@ def test_resume_makes_no_new_model_calls(run):
     again = Coordinator("erx_issuance", client=llm, retriever=FakeRetriever(), embedder=fake_embed, run_dir=run_dir)
     again.run(resume=True)
     assert llm.calls == []
+
+
+PROMPT_DIGEST = """
+import hashlib, tempfile
+from pathlib import Path
+from src.orchestrator import Coordinator
+from tests.fakes import FakeLLM, FakeRetriever, fake_embed
+llm = FakeLLM()
+with tempfile.TemporaryDirectory() as d:
+    Coordinator("erx_issuance", client=llm, retriever=FakeRetriever(), embedder=fake_embed, run_dir=Path(d)).run()
+print(hashlib.sha256(repr([(c["tag"], c["model"], c["prompt"]) for c in llm.calls]).encode()).hexdigest())
+"""
+
+
+def test_prompts_are_identical_across_processes():
+    """With fixed seeds, a model run is reproducible only if every prompt is byte-identical.
+    Set iteration order changes with PYTHONHASHSEED, so compare two processes."""
+    root = Path(__file__).resolve().parent.parent
+    digests = {
+        subprocess.run([sys.executable, "-c", PROMPT_DIGEST], cwd=root, env={**os.environ, "PYTHONHASHSEED": seed},
+                       capture_output=True, text=True, check=True).stdout.split()[-1]
+        for seed in ("1", "2")
+    }
+    assert len(digests) == 1
 
 
 def test_blackboard_enforces_least_privilege():

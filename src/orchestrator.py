@@ -416,12 +416,13 @@ class Coordinator:
 
     def manifest(self, started: str, timings: dict[str, float]) -> dict[str, Any]:
         digests = self.client.model_digests() if hasattr(self.client, "model_digests") else {}
+        server = self.client.server_version() if hasattr(self.client, "server_version") else ""
         models = self.cfg["agents"]
         return {
             "case": self.case["id"], "started": started, "finished": datetime.now(timezone.utc).isoformat(),
             "seconds_total": round(sum(timings.values()), 1), "seconds_by_step": timings,
             "agent_model": models["model"], "persona_model": models["persona_model"],
-            "model_digests": digests, "knowledge_base": fingerprint(),
+            "model_digests": digests, "ollama_version": server, "knowledge_base": fingerprint(),
             "requirements": len(active(self.board.get("requirements", []))),
             "approval_items": len(self.board.get("approvals", [])),
             "security_events": len(self.board.get("security_events", [])),

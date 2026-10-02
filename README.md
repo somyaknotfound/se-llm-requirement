@@ -22,9 +22,17 @@ adoption stay with authorised humans.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/somyaknotfound/se-llm-requirement/blob/main/notebooks/run_on_colab.ipynb)
 
-Set `Runtime -> Change runtime type -> T4 GPU`, then run the cells in order. Setup takes
-about 15 minutes, each case study 30–45 minutes, the SDLC framing matrix about 15.
-Download the results zip at the end — Colab destroys `/content` when the runtime ends.
+Set `Runtime -> Change runtime type -> T4 GPU`, then `Runtime -> Run all`. It runs
+unattended from a fresh runtime to a results zip; the only prompt is Google Drive's
+sign-in at the start. The whole run takes about 4–5 GPU hours: setup ~15 minutes, each
+case study ~1–1.5 hours, the experiments ~40 minutes. Progress is saved to Drive at every
+step, so if Colab disconnects or the free GPU quota runs out, reconnect and Run all
+again: finished stages are skipped and an interrupted case resumes where it stopped.
+
+Runs are deterministic: seeded calls, prompts verified byte-identical across processes,
+Ollama pinned to one version and serving one request at a time, and embeddings on the CPU.
+Each session's commit, GPU, model digests and package versions are recorded in
+`outputs/run_environment/`.
 
 ---
 

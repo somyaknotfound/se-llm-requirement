@@ -214,6 +214,29 @@ def _case_sdlc_tables() -> list[str]:
     return parts
 
 
+def _case_quality_tables() -> list[str]:
+    """29148 rule pass rate per attribute: multi-agent first draft vs final, and the baseline."""
+    from .cases import case_ids, case_out_dir
+    from .generate_reqs import output_dir
+
+    parts: list[str] = []
+    for cid in case_ids():
+        cols: dict[str, dict[str, float]] = {}
+        state_path = case_out_dir(cid) / "state.json"
+        if state_path.exists():
+            snaps = (json.loads(state_path.read_text(encoding="utf-8")).get("validation") or {}).get("snapshots", [])
+            for s in snaps:
+                if s["label"] in ("v1", "final"):
+                    cols["multi_agent_" + ("first_draft" if s["label"] == "v1" else "final")] = s["pass_rate"]
+        base_path = output_dir(cid) / "validation_29148.csv"
+        if base_path.exists():
+            cols["baseline"] = pd.read_csv(base_path).groupby("attribute")["rule_score"].mean().round(3).to_dict()
+        if cols:
+            table = pd.DataFrame(cols).rename_axis("attribute").reset_index()
+            parts += [f"## 29148 rule pass rate by attribute — {cid}", "", _md_table(table), ""]
+    return parts
+
+
 def _md_table(df: pd.DataFrame, max_rows: int | None = None) -> str:
     if max_rows and len(df) > max_rows:
         df = df.head(max_rows)
@@ -277,6 +300,7 @@ def write_tables(cfg, out_dir: Path) -> None:
         parts += ["## Case-study evaluation (multi-agent vs baseline)", "",
                   _md_table(pd.read_csv(wide_path).fillna("")), ""]
     parts += _case_sdlc_tables()
+    parts += _case_quality_tables()
 
     report_dir = ensure_dir(resolve("report"))
     (report_dir / "tables.md").write_text("\n".join(parts), encoding="utf-8")

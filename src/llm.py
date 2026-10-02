@@ -146,6 +146,16 @@ class OllamaClient:
             return {}
         return {m["name"]: m.get("digest", "") for m in r.json().get("models", [])}
 
+    def server_version(self) -> str:
+        """The Ollama build that served the run: same weights and seed on a different
+        build is not guaranteed to produce the same tokens."""
+        try:
+            r = requests.get(f"{self.host}/api/version", timeout=15)
+            r.raise_for_status()
+        except requests.RequestException:
+            return ""
+        return r.json().get("version", "")
+
     def resolve_model(self, model_key: str) -> tuple[str, dict[str, Any]]:
         """Map a roster key ('primary') to a concrete model id and its params."""
         spec = self.config["models"].get(model_key)

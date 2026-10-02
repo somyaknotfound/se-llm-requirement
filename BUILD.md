@@ -419,3 +419,10 @@ only once the author has reviewed them.
    the affected items. One malformed answer should not discard a whole case.
 6. **Defences are measured, not assumed.** Each seeded injection is replayed with
    and without the defences to give an attack success rate for both.
+7. **Determinism is pinned and recorded, not assumed.** Seeds fix sampling, but the same
+   seed only reproduces tokens when the prompt, weights, Ollama build and GPU match. So
+   the offline suite checks that prompts are byte-identical across processes, the Colab
+   notebook pins Ollama and serves one request at a time, embeddings run on the CPU
+   (GPU kernels can reorder near-tied retrieval hits), and every session records its
+   commit, GPU, model digests and package versions. A Part 1 baseline that aborts is
+   recorded as a result rather than retried, because with fixed seeds a retry repeats it.

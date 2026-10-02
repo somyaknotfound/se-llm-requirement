@@ -177,9 +177,11 @@ def conflict_detection(state: dict[str, Any], gold: dict[str, Any]) -> dict[str,
             if (x in fa and y in fb) or (y in fa and x in fb):
                 detected.add(s["id"])
                 true_flags.add(c["id"])
+    missed = sorted({s["id"] for s in seeded} - detected)
     return {"recall": round(len(detected) / len(seeded), 3) if seeded else None,
             "precision": round(len(true_flags) / len(flagged), 3) if flagged else None,
-            "detail": f"{len(detected)}/{len(seeded)} seeded conflicts found; {len(flagged)} conflicts flagged"}
+            "detail": f"{len(detected)}/{len(seeded)} seeded conflicts found; {len(flagged)} conflicts flagged; "
+                      f"missed: {missed}"}
 
 
 def _category_agreement(matches: list[dict[str, Any]], generated: dict[str, dict[str, Any]],
@@ -293,6 +295,13 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
         conf = [r.get("confidence") for r in reqs if r.get("confidence") is not None]
         add("multi_agent", "mean_confidence", round(sum(conf) / len(conf), 3) if conf else None, "")
         add("multi_agent", "escalated", sum(1 for r in reqs if r.get("escalate")), "requirements escalated for review")
+        log_path = out_dir / "agent_log.jsonl"
+        if log_path.exists():
+            events = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            calls = [e for e in events if "errors" in e]
+            failed = [e for e in calls if e["errors"]]
+            add("multi_agent", "agent_calls_failed_after_repair", len(failed),
+                f"of {len(calls)} agent calls; {sorted({e['event'] for e in failed})}")
         _sdlc_accuracy(add, state, gold)
         _human_corrections(add, out_dir)
         manifest_path = out_dir / "run_manifest.json"

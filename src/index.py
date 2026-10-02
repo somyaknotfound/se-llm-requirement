@@ -32,7 +32,10 @@ def _embedder(model_name: str):
     if model_name not in _MODEL_CACHE:
         from sentence_transformers import SentenceTransformer
 
-        _MODEL_CACHE[model_name] = SentenceTransformer(model_name)
+        # CPU on purpose: GPU kernels give slightly different floats than CPU ones, which
+        # can reorder near-tied retrieval hits between machines, and on a T4 the CUDA
+        # context would take VRAM that Ollama needs to keep both models fully resident.
+        _MODEL_CACHE[model_name] = SentenceTransformer(model_name, device="cpu")
     return _MODEL_CACHE[model_name]
 
 

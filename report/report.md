@@ -6,9 +6,10 @@
 > **Status of this document.** The problem framing (§1), system design (§2),
 > methodology (§3), evaluation design (§4), the independent SDLC argument (§6.2) and
 > threats to validity (§9) are complete and were written from the built system.
-> Sections marked `[PENDING RUN]` fill in from the generated CSVs once the pipeline has
-> run on a GPU (`notebooks/run_on_colab.ipynb`). Every number must come from
-> `outputs/`, never retyped by hand — regenerate with `python -m src.metrics &&
+> Sections marked `[PENDING RUN]` fill in from the generated outputs once the pipeline
+> has run on a GPU (`notebooks/run_on_colab.ipynb`); each names the files it draws on.
+> Every number must come from `outputs/` or `report/tables.md`, never retyped by hand —
+> regenerate with `python -m src.evaluate --case all && python -m src.metrics &&
 > python -m src.report`.
 
 ---
@@ -295,7 +296,17 @@ response, token counts and latency; every run manifest records the model digests
 
 All parameters are in `config/`; changing them invalidates `outputs/`. Raw responses are
 never edited. `PROTECT_OUTPUTS=1` refuses to overwrite artefacts. The offline test suite
-(`python -m pytest`) runs the entire multi-agent pipeline with a scripted model.
+(`python -m pytest`) runs the entire multi-agent pipeline with a scripted model, and
+checks that two processes with different hash seeds send byte-identical prompts.
+
+Every model call is seeded, so the same prompt, weights, Ollama build and GPU return the
+same tokens. The Colab run fixes each of these: Ollama 0.34.4 serving one request at a
+time, model digests recorded in every run manifest, and embeddings computed on the CPU
+(GPU kernels can reorder near-tied retrieval hits). Each session records its commit,
+GPU, driver and package versions in `outputs/run_environment/`. An interrupted run
+resumes from its last checkpointed step. Bit-identical replay is not claimed across GPUs
+or Ollama builds. Within one setup, Ollama reuses a cached prompt prefix where it can, so
+the first call after a resume may differ from an uninterrupted run.
 
 ---
 
@@ -347,40 +358,53 @@ ids they used, which are stripped before any agent reads them and used only for 
 
 ### 5.1 Requirement gathering
 
-`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv`: precision, recall and F1
-for both systems per case; the precision on elicited requirements; category agreement.
+`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv`: precision, recall and F1 for both systems per case; the
+precision on elicited requirements; category agreement. Automatic matches are listed in
+`outputs/cases/<case>/matches_*.csv` for human verification.
 
 ![Evaluation](../figures/evaluation_comparison.png)
 
 ### 5.2 Ambiguity and conflict detection
 
-`[PENDING RUN]` — seeded ambiguities and conflicts found per case, and which were missed.
+`[PENDING RUN]` — from `outputs/evaluation/summary.csv` (`ambiguity_detection_recall`, `conflict_detection_recall`,
+`conflict_detection_precision`; the `detail` column names the missed ids): seeded
+ambiguities and conflicts found per case, and which were missed.
 
 ### 5.3 Compliance, security and traceability
 
-`[PENDING RUN]` — control coverage (and gold-control coverage), open gaps and gap
-proposals, unmitigated threats, traceability coverage, hallucination rate and citation
-correctness for both systems.
+`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv` (`control_coverage`, `gold_control_coverage`,
+`traceability_coverage`, `hallucination_rate`, `citation_correctness`) for both systems;
+open gaps from `outputs/cases/<case>/artifacts/open_issues.csv` (`compliance_gap` rows);
+gap proposals and mappings from `artifacts/compliance_matrix.csv`; unmitigated threats
+from `artifacts/threat_register.csv` (empty `mitigated_by`).
 
 ### 5.4 Requirement quality
 
-`[PENDING RUN]` — 29148 pass rate per attribute, first draft vs final, for the multi-agent
-system and the baseline; scorer agreement.
+`[PENDING RUN]` — from `report/tables.md` ("29148 rule pass rate by attribute — <case>":
+multi-agent first draft and final, and the baseline) and the means in
+`outputs/evaluation/summary_wide.csv` (`quality_first_draft`, `quality_final`); scorer
+agreement from `outputs/metrics_summary.csv` (`scorer_agreement`,
+`scorer_agreement_by_attribute`).
 
 ### 5.5 SDLC recommendations
 
-`[PENDING RUN]` — the ranking per case (`report/tables.md`), fired rules, cautions,
-escalations; accuracy against the expert choices; contested factors.
+`[PENDING RUN]` — the ranking per case ("SDLC ranking — <case>" in `report/tables.md`);
+fired rules, cautions, escalations and contested factors from
+`outputs/cases/<case>/artifacts/sdlc_recommendation.md`; accuracy against the expert
+choices from `outputs/evaluation/summary_wide.csv` (`sdlc_top1`, `sdlc_top2`).
 
 ### 5.6 Security
 
-`[PENDING RUN]` — identifiers masked per case; injections quarantined; attack success
-with and without defences (`outputs/evaluation/injection_replay.csv`).
+`[PENDING RUN]` — identifiers masked per case (`phi_masked` rows in
+`outputs/cases/<case>/security_events.csv`); injections quarantined
+(`injection_quarantined:*` in `outputs/evaluation/summary_wide.csv`); attack success with and without defences
+(`outputs/evaluation/injection_replay.csv`).
 
 ### 5.7 Human oversight, time and satisfaction
 
-`[PENDING RUN]` — approval items by type and priority; human correction rate; processing
-time against manual effort; SUS.
+`[PENDING RUN]` — approval items by type and priority from
+`outputs/cases/<case>/review_queue.csv`; `human_correction_rate`, `processing_minutes`,
+`time_saved_vs_manual` and `stakeholder_satisfaction_sus` from `outputs/evaluation/summary_wide.csv`.
 
 ---
 
@@ -400,8 +424,11 @@ output contract with one repair attempt. Two first-run failures shaped it:
   the evidence. Citation-integrity failures are recorded in `invalid_chunk_ids`, counted
   by the hallucination audit and escalated, instead of aborting the run.
 
-`[PENDING RUN]` — requirement count, traceability rate, integrity flags, repair outcome
-(`outputs/part1_contract.json`), 29148 results.
+`[PENDING RUN]` — requirement count, traceability rate, integrity flags and repair
+outcome from `outputs/part1_contract.json` and the `part1` section of
+`outputs/metrics_summary.csv`; 29148 results from `outputs/validation_29148.csv` ("29148
+pass rate by attribute" in `report/tables.md`). Per-case baselines are under
+`outputs/cases/<case>/baseline/`.
 
 ### 6.2 SDLC selection — the defensible answer, argued independently
 
@@ -438,9 +465,11 @@ framing. Malformed runs are recorded, never re-rolled.
 ![SDLC recommendation by framing](../figures/sdlc_by_framing.png)
 ![Criterion scores by framing](../figures/sdlc_criteria.png)
 
-`[PENDING RUN]` — modal recommendation, flip rate, cross-model agreement, grounding rate,
-and the engine consistency rate (`outputs/sdlc_consistency.csv`): the share of runs whose
-named model is the one their own factor scores imply.
+`[PENDING RUN]` — modal recommendation, flip rate, cross-model agreement and grounding
+rate from the `part2` section of `outputs/metrics_summary.csv` (per-run detail in
+`outputs/sdlc_runs.csv` and `outputs/sdlc_analysis.csv`), and the engine consistency rate
+from `outputs/sdlc_consistency.csv`: the share of runs whose named model is the one their
+own factor scores imply.
 
 ---
 
@@ -478,18 +507,24 @@ a seeded fixture; the test suite covers it.
 
 ### 8.1 Where the agents added value
 
-`[PENDING RUN]` — compare against the baseline: what interviews and clarification found
-that documents alone did not; what the conflict, compliance and security agents caught.
+`[PENDING RUN]` — interpretation of §5 and §6.1, citing their numbers: what interviews
+and clarification found that documents alone did not (the `origin` and
+`source_statement_ids` columns of `outputs/cases/<case>/requirements.csv`); what the
+conflict, compliance and security agents caught.
 
 ### 8.2 Where they failed
 
-`[PENDING RUN]` — lead with the hallucination audit; then the weakest 29148 attributes,
-missed ambiguities and conflicts, schema failures, and escalations.
+`[PENDING RUN]` — lead with the hallucination audit (`hallucination_rate` in `outputs/evaluation/summary_wide.csv`;
+`outputs/hallucination_audit.csv` for the baseline); then the weakest 29148 attributes
+(§5.4), missed ambiguities and conflicts (§5.2), schema failures
+(`agent_calls_failed_after_repair` in `outputs/evaluation/summary.csv`) and escalations (`escalated`).
 
 ### 8.3 What a requirements engineer still must do
 
 `[PENDING RUN]` — anchor to the weakly decidable attributes, the adjudicated
-disagreements, the escalated items and the human correction rate, and to §9.1.
+disagreements (`outputs/adjudication_worksheet.csv`, `human_adjudication` column), the
+escalated items (`outputs/cases/<case>/review_queue.csv`), the human correction rate
+(§5.7), and to §9.1.
 
 ---
 
@@ -549,7 +584,7 @@ probability; there is no ground truth to calibrate it against.
 
 ## 10. Conclusion
 
-`[PENDING RUN]` — state plainly: (a) whether the requirement sets are usable first drafts
+`[PENDING RUN]` — drawn only from §5–§8; state plainly: (a) whether the requirement sets are usable first drafts
 and with which corrections, compared with the single-prompt baseline and with manual
 analysis; (b) whether the SDLC recommendations were defensible and whether their
 justifications were; (c) what the validation, compliance and security layers caught that
