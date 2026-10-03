@@ -62,3 +62,32 @@ def test_confidence_caps_and_escalation():
     assert conf.loc["CONF", "confidence"] <= 0.5 and conf.loc["CONF", "escalate"]
     queue = validate.review_queue(conf.reset_index(), df)
     assert queue.iloc[0]["escalate"] and (queue["human_decision"] == "").all()
+
+
+def test_quotes_match_on_words_not_spacing_or_quote_marks():
+    fhir = next(c for c in load_chunks() if c["chunk_id"] == "D01#S11.1.3#c09")
+    assert '" numberOfRepeatsAllowed "' in fhir["text"]        # the HTML conversion's spacing
+    df = _frame([
+        {"req_id": "SPACING", "statement": "The system shall x.", "acceptance_criteria": "y",
+         "source_chunk_ids": fhir["chunk_id"],
+         "evidence_quote": '"numberOfRepeatsAllowed" : "< unsignedInt >", // Number of refills authorized'},
+        {"req_id": "WRAPPED", "statement": "The system shall x.", "acceptance_criteria": "y",
+         "source_chunk_ids": CHUNK["chunk_id"], "evidence_quote": f'"{CHUNK["text"][:80]}"'},
+        {"req_id": "PARAPHRASE", "statement": "The system shall x.", "acceptance_criteria": "y",
+         "source_chunk_ids": fhir["chunk_id"],
+         "evidence_quote": "Technology must be able to record the number of refills a prescriber authorized."},
+    ])
+    audit = validate.audit_hallucinations(df)
+    verdict = audit[audit["entity_type"] == "evidence_quote"].set_index("req_id")["verdict"]
+    assert verdict["SPACING"] == "verified" and verdict["WRAPPED"] == "verified"
+    assert verdict["PARAPHRASE"] == "fabricated"
+
+
+def test_empty_adjudication_cells_are_not_counted_as_human_verdicts(tmp_path):
+    from src.metrics import validation_metrics
+
+    pd.DataFrame({"req_id": ["R1", "R2"], "attribute": ["verifiable"] * 2, "rule_score": [1, 0],
+                  "llm_score": [1, 1], "agreement": ["agree", "disagree"],
+                  "human_adjudication": [None, None]}).to_csv(tmp_path / "validation_29148.csv", index=False)
+    rows = {r["metric"]: r["value"] for r in validation_metrics(tmp_path)}
+    assert rows["human_adjudicated"] == 0

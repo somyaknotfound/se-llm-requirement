@@ -11,6 +11,7 @@ contradicting their own appendices.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -128,7 +129,8 @@ def validation_metrics(out_dir: Path) -> list[dict[str, Any]]:
     else:
         out.append(("scorer_agreement", "n/a", "LLM critic did not run"))
 
-    adjudicated = val[val["human_adjudication"].astype(str).str.strip().ne("")]
+    # fillna first: astype(str) turns an empty cell into "nan", which would count as a verdict.
+    adjudicated = val[val["human_adjudication"].fillna("").astype(str).str.strip().ne("")]
     out.append(("human_adjudicated", len(adjudicated), "conflicts resolved by hand"))
     return _rows("validation", out)
 
@@ -211,8 +213,11 @@ def part2_metrics(out_dir: Path) -> list[dict[str, Any]]:
                 round(grounded.mean(), 3),
                 "criterion justifications citing >=1 req_id vs generic SE reasoning",
             ))
-            reqs_path = out_dir / "requirements.csv"
-            if reqs_path.exists():
+            # Older runs did not record which set they scored; guessing would risk
+            # checking the ids against the wrong set, so the metric is skipped.
+            scored = runs["requirements_file"].iloc[0] if "requirements_file" in runs else ""
+            reqs_path = resolve(scored) if scored else None
+            if reqs_path is not None and reqs_path.exists():
                 valid = set(pd.read_csv(reqs_path)["req_id"].astype(str))
                 def all_real(cell: str) -> bool:
                     ids = [c.strip() for c in str(cell).split(";") if c.strip()]
@@ -220,8 +225,10 @@ def part2_metrics(out_dir: Path) -> list[dict[str, Any]]:
                 out.append((
                     "grounding_rate_valid_ids",
                     round(an["cited_req_ids"].apply(all_real).mean(), 3),
-                    "justifications where every cited req_id actually exists",
+                    f"justifications where every cited req_id exists in {scored}",
                 ))
+            else:
+                out.append(("grounding_rate_valid_ids", "n/a", "scored requirements file not recorded"))
             means = an.groupby("criterion")["score"].mean().round(2).to_dict()
             out.append(("criterion_mean_scores", "", str(means)))
 
@@ -253,6 +260,9 @@ def cost_metrics(cfg: dict) -> list[dict[str, Any]]:
         return []
     calls, prompt_tok, completion_tok, wall, errors = 0, 0, 0, 0.0, 0
     by_tag: dict[str, int] = {}
+    # Seeds fix sampling, but Ollama reuses cached prompt tokens from the previous call,
+    # so whether an identical call returns identical text is measured, not assumed.
+    responses: dict[str, list[str]] = {}
     for line in log_path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
@@ -271,7 +281,16 @@ def cost_metrics(cfg: dict) -> list[dict[str, Any]]:
         wall += rec.get("latency_s") or 0.0
         tag = rec.get("tag") or "untagged"
         by_tag[tag] = by_tag.get(tag, 0) + 1
-    return _rows("cost", [
+        call = json.dumps([rec.get("model_id"), rec.get("prompt"), rec.get("system"), rec.get("params"),
+                           rec.get("json_mode")], sort_keys=True)
+        responses.setdefault(hashlib.sha256(call.encode()).hexdigest(), []).append(rec.get("text", ""))
+    repeated = [texts for texts in responses.values() if len(texts) > 1]
+    identical = sum(1 for texts in repeated if len(set(texts)) == 1)
+    return _rows("reproducibility", [
+        ("repeated_calls", len(repeated), "identical calls (model, prompt, parameters) sent more than once"),
+        ("repeated_calls_identical", identical,
+         f"{identical}/{len(repeated)} returned byte-identical text" if repeated else "no call was repeated"),
+    ]) + _rows("cost", [
         ("llm_calls", calls, str(by_tag)),
         ("llm_call_errors", errors, "failed attempts (retried)"),
         ("prompt_tokens_total", prompt_tok, ""),

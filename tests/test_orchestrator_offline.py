@@ -57,6 +57,15 @@ def test_persona_facts_never_reach_an_agent_prompt(run):
                if not str(c["tag"]).startswith(("persona.", "p3_critic")))
 
 
+def test_extraction_sees_the_project_context_and_no_preset_field_values(run):
+    coord, _, llm, _ = run
+    context = " ".join(coord.case["project_context"].split()[:8])
+    extract = [c["prompt"] for c in llm.calls if str(c["tag"]).startswith("extraction.extract")]
+    assert extract and all(context in " ".join(p.split()) for p in extract)
+    template = (Path(__file__).resolve().parent.parent / "prompts/agents/extract.txt").read_text(encoding="utf-8")
+    assert '"volatility": "Low"' not in template and '"priority": "Must"' not in template
+
+
 def test_personas_run_on_the_second_model(run):
     _, _, llm, _ = run
     persona_models = {c["model"] for c in llm.calls if c["tag"] == "persona.answer"}

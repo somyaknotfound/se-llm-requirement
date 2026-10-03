@@ -299,14 +299,31 @@ never edited. `PROTECT_OUTPUTS=1` refuses to overwrite artefacts. The offline te
 (`python -m pytest`) runs the entire multi-agent pipeline with a scripted model, and
 checks that two processes with different hash seeds send byte-identical prompts.
 
-Every model call is seeded, so the same prompt, weights, Ollama build and GPU return the
-same tokens. The Colab run fixes each of these: Ollama 0.34.4 serving one request at a
+Every model call is seeded, so the same prompt, weights, Ollama build, GPU and cache state
+return the same tokens. The Colab run fixes each of these: Ollama 0.34.4 serving one request at a
 time, model digests recorded in every run manifest, and embeddings computed on the CPU
 (GPU kernels can reorder near-tied retrieval hits). Each session records its commit,
 GPU, driver and package versions in `outputs/run_environment/`. An interrupted run
 resumes from its last checkpointed step. Bit-identical replay is not claimed across GPUs
 or Ollama builds. Within one setup, Ollama reuses a cached prompt prefix where it can, so
-the first call after a resume may differ from an uninterrupted run.
+the first call after a resume may differ from an uninterrupted run. The call log measures
+this directly: `repeated_calls_identical` in `outputs/metrics_summary.csv` counts identical
+calls that returned identical text.
+
+### 3.6 Runs
+
+Run 1 (archived in `runs/`) exercised the whole pipeline on the GPU and exposed four
+defects, all fixed before Run 2. Every result in §5–§8 comes from Run 2.
+
+- The extraction prompt's example carried concrete field values and the agent never saw
+  the project context, so requirements were labelled low-volatility almost uniformly.
+  Every project then looked stable to the SDLC factor scorers, and the engine ranked
+  Waterfall first for all three cases (escalated as a near tie for two of them). The
+  fix covers every judged field and leaves the engine untouched (BUILD.md note 14).
+- The evidence-quote check called genuine quotes fabricated when the corpus text
+  differed only in spacing left by HTML conversion (note 13).
+- Two metrics were wrong: empty adjudication cells counted as human verdicts, and the
+  framing matrix's citations were checked against the wrong requirement set (note 15).
 
 ---
 

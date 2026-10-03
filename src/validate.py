@@ -139,6 +139,12 @@ def _corpus_text() -> str:
 
 
 @lru_cache(maxsize=1)
+def _corpus_words() -> str:
+    proc_dir = resolve(load_pipeline()["paths"]["corpus_processed"])
+    return _words(" ".join(p.read_text(encoding="utf-8") for p in sorted(proc_dir.glob("*.txt"))))
+
+
+@lru_cache(maxsize=1)
 def _chunks_by_id() -> dict[str, dict[str, Any]]:
     return {c["chunk_id"]: c for c in load_chunks()}
 
@@ -146,6 +152,17 @@ def _chunks_by_id() -> dict[str, dict[str, Any]]:
 def _norm(text: str) -> str:
     text = text.replace("§", " ").replace("—", " ").replace("–", " ")
     return re.sub(r"\s+", " ", text).lower()
+
+
+def _words(text: str) -> str:
+    """Letters and digits only, for matching evidence quotes.
+
+    HTML-to-text conversion leaves spacing artefacts in the corpus (`" quantity "`)
+    that a model copying the source exactly does not reproduce, and models often wrap
+    a quote in quotation marks. Matching on the words keeps the test verbatim without
+    calling a correct quote fabricated over its spacing.
+    """
+    return re.sub(r"[^0-9a-z]", "", text.lower())
 
 
 # --- 6.1 rule-based scorer -----------------------------------------------
@@ -555,13 +572,13 @@ def audit_hallucinations(reqs: pd.DataFrame, reasoning: pd.DataFrame | None = No
         quote = extra.get("evidence_quote", "").strip()
         if quote:
             cited = _split(r.get("source_chunk_ids"))
-            cited_text = _norm(" ".join(chunks[c]["text"] for c in cited if c in chunks))
-            nq = _norm(quote)
+            cited_text = _words(" ".join(chunks[c]["text"] for c in cited if c in chunks))
+            nq = _words(quote)
             if len(nq) < 12:
                 verdict, evidence = "unverifiable", "quote too short to match reliably"
             elif nq in cited_text:
                 verdict, evidence = "verified", "verbatim in a cited chunk"
-            elif nq in corpus:
+            elif nq in _corpus_words():
                 verdict, evidence = "misattributed", "present in corpus but not in the cited chunk(s)"
             else:
                 verdict, evidence = "fabricated", "not present anywhere in the corpus"

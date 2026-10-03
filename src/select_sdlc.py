@@ -30,7 +30,7 @@ from typing import Any
 
 import pandas as pd
 
-from . import load_pipeline, resolve
+from . import PROJECT_ROOT, load_pipeline, resolve
 from .generate_reqs import guard_write, load_prompt, render
 from .llm import LLMError, OllamaClient
 from .sdlc_engine import factor_names, load_sdlc
@@ -309,9 +309,10 @@ def run_matrix(
     pd.DataFrame(analysis_rows, columns=ANALYSIS_COLUMNS).to_csv(
         guard_write(out_dir / "sdlc_analysis.csv"), index=False, encoding="utf-8"
     )
-    pd.DataFrame(run_rows, columns=RUN_COLUMNS).to_csv(
-        guard_write(out_dir / "sdlc_runs.csv"), index=False, encoding="utf-8"
-    )
+    runs = pd.DataFrame(run_rows, columns=RUN_COLUMNS)
+    # Which set was scored, so cited req_ids can be checked against the right ids.
+    runs["requirements_file"] = req_path.relative_to(PROJECT_ROOT).as_posix()
+    runs.to_csv(guard_write(out_dir / "sdlc_runs.csv"), index=False, encoding="utf-8")
 
     ok = [r for r in run_rows if r["recommended_canonical"] != "unknown"]
     print(f"\n[part2] {len(run_rows)} runs, {len(ok)} produced a recommendation")

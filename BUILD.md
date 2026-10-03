@@ -341,6 +341,30 @@ Recorded here so the report can defend them. Each was a measured call, not an ov
     them. The contract itself is unchanged; it judges the output instead of discarding
     it. Only a response with no usable requirements still aborts.
 
+13. **Evidence quotes are matched on their words, not their spacing.** The HTML-to-text
+    conversion leaves artefacts such as `" numberOfRepeatsAllowed "`, and models often
+    wrap a quote in quotation marks. Run 1's audit called genuine FHIR quotes
+    fabricated over spacing alone. Quotes now match on letters and digits only, which
+    is still a verbatim test: a paraphrase stays fabricated.
+
+14. **The extraction agent sees the project context, and its prompt no longer presets
+    field values.** In Run 1 the extraction prompt's JSON example carried concrete
+    values (`"volatility": "Low"`, `"priority": "Must"`, `"risk_class": "Standard"`)
+    and the agent never saw the project context, so nearly every requirement was
+    labelled low-volatility. The factor scorers read that column, every project looked
+    stable, and the engine ranked Waterfall first for all three cases, the weekly-
+    shipping refill app included. Every judged field now shows its allowed values
+    instead of an example value, and the agent gets the same project context the SDLC
+    agent already had. All judged fields were changed, not only volatility, so the fix
+    is not aimed at one outcome; the engine's profiles and rules are untouched. Run 1
+    is archived in `runs/` and the report says what it showed.
+
+15. **Two metrics were wrong in Run 1 and are fixed.** `human_adjudicated` counted
+    empty cells as verdicts (pandas reads them as NaN, which became the text "nan").
+    `grounding_rate_valid_ids` checked cited ids against the Part 1 set instead of the
+    set the framing matrix scored; framing runs now record their input file, and the
+    metric is skipped for runs that did not.
+
 ---
 
 # Part B — Alignment with the problem statement

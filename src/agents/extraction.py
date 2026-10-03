@@ -70,6 +70,7 @@ class RequirementExtractionAgent(Agent):
         payload, errors = self.ask(
             "extract",
             {"FUNCTIONALITY": self._functionality(), "SOURCE_LABEL": label,
+             "CONTEXT": spotlight(self.ctx.case.get("project_context", "").strip(), "project_context"),
              "STATEMENTS": block, "EVIDENCE": evidence or "(no evidence retrieved)"},
             check, tag=f"extract.{_slug(label)}",
         )

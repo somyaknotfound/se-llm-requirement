@@ -29,6 +29,10 @@ case study ~1–1.5 hours, the experiments ~40 minutes. Progress is saved to Dri
 step, so if Colab disconnects or the free GPU quota runs out, reconnect and Run all
 again: finished stages are skipped and an interrupted case resumes where it stopped.
 
+Each run keeps its progress in its own Drive folder (`RUN_NAME` in the first cell), so a new
+name starts a fresh run without touching an earlier one. Earlier runs' results zips are
+archived in `runs/`.
+
 Runs are deterministic: seeded calls, prompts verified byte-identical across processes,
 Ollama pinned to one version and serving one request at a time, and embeddings on the CPU.
 Each session's commit, GPU, model digests and package versions are recorded in

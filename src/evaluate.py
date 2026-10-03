@@ -136,11 +136,12 @@ def _baseline_controls(reqs: pd.DataFrame) -> set[str]:
 def _hallucination(audit: pd.DataFrame | list[dict[str, Any]]) -> dict[str, Any]:
     audit = pd.DataFrame(audit)
     if audit.empty:
-        return {"rate": None, "checked": 0, "quote_correct": None}
+        return {"rate": None, "checked": 0, "quote_correct": None, "quotes": 0}
     bad = audit["verdict"].isin(["fabricated", "misattributed"]).sum()
     quotes = audit[audit["entity_type"] == "evidence_quote"]
     qc = round(float((quotes["verdict"] == "verified").mean()), 3) if len(quotes) else None
-    return {"rate": round(float(bad / len(audit)), 3), "checked": len(audit), "quote_correct": qc}
+    return {"rate": round(float(bad / len(audit)), 3), "checked": len(audit), "quote_correct": qc,
+            "quotes": len(quotes)}
 
 
 def _statement_facts(state: dict[str, Any]) -> dict[str, set[str]]:
@@ -285,7 +286,8 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
             f"{len(gold_controls & covered)}/{len(gold_controls)} controls the gold requirements satisfy")
         hal = _hallucination(state.get("hallucination", []))
         add("multi_agent", "hallucination_rate", hal["rate"], f"{hal['checked']} citations checked")
-        add("multi_agent", "citation_correctness", hal["quote_correct"], "evidence quotes verbatim in the cited chunk")
+        add("multi_agent", "citation_correctness", hal["quote_correct"],
+                f"share of {hal['quotes']} evidence quotes verbatim in the cited chunk")
         snaps = {s["label"]: s for s in state.get("validation", {}).get("snapshots", [])}
         add("multi_agent", "quality_first_draft", snaps.get("v1", {}).get("mean_pass_rate"), "29148 rule pass rate before clarification")
         add("multi_agent", "quality_final", snaps.get("final", {}).get("mean_pass_rate"), "29148 rule pass rate after clarification")
@@ -339,7 +341,8 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
         if audit_path.exists():
             hal = _hallucination(pd.read_csv(audit_path).fillna(""))
             add("baseline", "hallucination_rate", hal["rate"], f"{hal['checked']} citations checked")
-            add("baseline", "citation_correctness", hal["quote_correct"], "evidence quotes verbatim in the cited chunk")
+            add("baseline", "citation_correctness", hal["quote_correct"],
+                f"share of {hal['quotes']} evidence quotes verbatim in the cited chunk")
         val_path = base_dir / "validation_29148.csv"
         if val_path.exists():
             add("baseline", "quality_final", round(float(pd.read_csv(val_path)["rule_score"].mean()), 3),
@@ -440,6 +443,7 @@ def injection_replay(case_id: str) -> list[dict[str, Any]]:
         evidence, _ = build_evidence(hits, 2500)
         prompt = render(load_prompt("agents/extract.txt"),
                         FUNCTIONALITY=f"{case['functionality']['name']}\n{case['functionality']['description']}",
+                        CONTEXT=case.get("project_context", "").strip(),
                         SOURCE_LABEL=f"document {inj['document']}",
                         STATEMENTS="\n".join(f"{s['id']}: {s['text']}" for s in undefended_statements),
                         EVIDENCE=evidence)
