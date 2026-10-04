@@ -1,0 +1,112 @@
+kind,item,detail
+conflict,FR-REF-007,"conflicts with FR-REF-013 (CF-01): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-013,"conflicts with FR-REF-007 (CF-01): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-007,"conflicts with FR-REF-018 (CF-02): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-018,"conflicts with FR-REF-007 (CF-02): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-007,"conflicts with FR-REF-024 (CF-03): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-024,"conflicts with FR-REF-007 (CF-03): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-013,"conflicts with FR-REF-023 (CF-04): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-013,"conflicts with FR-REF-042 (CF-05): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-018,"conflicts with FR-REF-023 (CF-06): One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-024,conflicts with FR-REF-042 (CF-07): These requirements cannot both be satisfied as written because one forbids decision-making while the other requires reminding patients.
+conflict,FR-REF-008,"conflicts with FR-REF-023 (CF-08): One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-033,"conflicts with FR-REF-023 (CF-09): One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-038,"conflicts with FR-REF-023 (CF-10): One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-043,"conflicts with FR-REF-023 (CF-11): One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-043,"conflicts with FR-REF-042 (CF-12): These requirements cannot be satisfied simultaneously as they are in direct opposition to each other; one requires the system to remind patients, while the other prohibits it from making prescribing decisions."
+untestable,FR-REF-005,acceptance criteria state no observable outcome or threshold
+untestable,NFR-REF-001,acceptance criteria state no observable outcome or threshold
+untestable,NFR-REF-002,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-008,near-duplicate of another requirement: 'The system shall remind patients before their medication sup'
+duplicate,FR-REF-010,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+untestable,FR-REF-010,acceptance criteria state no observable outcome or threshold
+untestable,FR-REF-011,acceptance criteria use vague term(s): manage
+untestable,FR-REF-012,acceptance criteria use vague term(s): manage
+untestable,NFR-REF-003,acceptance criteria use vague term(s): as required
+duplicate,FR-REF-013,near-duplicate of another requirement: 'The system shall remind the patient before their medication '
+untestable,FR-REF-014,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-015,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+duplicate,FR-REF-016,near-duplicate of another requirement: 'The system shall allow the patient to request a prescription'
+duplicate,FR-REF-018,near-duplicate of another requirement: 'The system shall remind the patient before their medication '
+duplicate,FR-REF-024,near-duplicate of another requirement: 'The system shall remind the patient before their medication '
+duplicate,FR-REF-025,near-duplicate of another requirement: 'The system shall allow the patient to request a prescription'
+untestable,FR-REF-025,acceptance criteria state no observable outcome or threshold
+untestable,FR-REF-026,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-027,"near-duplicate of another requirement: ""The system shall allow a caregiver to act on the patient's b"""
+untestable,FR-REF-027,acceptance criteria state no observable outcome or threshold
+ambiguity,FR-REF-028,weak/vague term(s): support
+untestable,FR-REF-028,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-029,near-duplicate of another requirement: 'The system shall remind the patient before their medication '
+duplicate,FR-REF-030,near-duplicate of another requirement: 'The system shall allow the patient to request a prescription'
+duplicate,FR-REF-031,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+untestable,FR-REF-031,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-032,"near-duplicate of another requirement: ""The system shall allow a caregiver to act on the patient's b"""
+untestable,FR-REF-032,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-033,near-duplicate of another requirement: 'The system shall remind patients before their medication sup'
+duplicate,FR-REF-034,near-duplicate of another requirement: 'The system shall allow the patient to request a prescription'
+duplicate,FR-REF-035,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+untestable,FR-REF-035,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-036,"near-duplicate of another requirement: ""The system shall allow a caregiver to act on the patient's b"""
+untestable,FR-REF-037,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-038,near-duplicate of another requirement: 'The system shall remind patients before their medication sup'
+untestable,FR-REF-039,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-040,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+untestable,FR-REF-040,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-041,"near-duplicate of another requirement: ""The system shall allow caregivers to act on the patient's be"""
+untestable,FR-REF-041,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-043,near-duplicate of another requirement: 'The system shall remind patients before their medication sup'
+duplicate,FR-REF-044,near-duplicate of another requirement: 'The system shall allow patients to request a prescription re'
+duplicate,FR-REF-045,near-duplicate of another requirement: 'The system shall notify the patient when the pharmacy has th'
+untestable,FR-REF-045,acceptance criteria state no observable outcome or threshold
+duplicate,FR-REF-046,"near-duplicate of another requirement: ""The system shall allow caregivers to act on the patient's be"""
+undefined_term,FR-REF-003,undefined term(s): PAT
+duplicate,FR-REF-004,near-duplicate of another requirement: 'The system shall remind the patient before their medication '
+nonconforming,NFR-REF-001,statement does not open with an identified actor
+undefined_term,FR-REF-009,undefined term(s): CARE
+nonconforming,NFR-REF-003,statement does not open with an identified actor
+undefined_term,NFR-REF-003,undefined term(s): CARE
+nonconforming,FR-REF-014,statement does not open with an identified actor
+ambiguity,FR-REF-017,weak/vague term(s): support
+nonconforming,NFR-REF-004,statement does not open with an identified actor
+nonconforming,NFR-REF-007,statement does not open with an identified actor
+undefined_term,NFR-REF-007,undefined term(s): PO
+undefined_term,FR-REF-021,undefined term(s): PRES
+nonconforming,FR-REF-003,statement does not open with an identified actor
+nonconforming,FR-REF-005,statement does not open with an identified actor
+nonconforming,FR-REF-021,statement does not open with an identified actor
+duplicate,FR-REF-022,"near-duplicate of another requirement: ""The system shall allow caregivers to act on the patient's be"""
+undefined_term,FR-REF-026,undefined term(s): SEC
+undefined_term,FR-REF-028,undefined term(s): SEC
+untestable,NFR-REF-008,acceptance criteria state no observable outcome or threshold
+ambiguity,NFR-REF-011,weak/vague term(s): and/or
+untestable,NFR-REF-013,acceptance criteria state no observable outcome or threshold
+untestable,NFR-REF-015,acceptance criteria state no observable outcome or threshold
+ambiguity,NFR-REF-017,weak/vague term(s): support
+untestable,NFR-REF-017,acceptance criteria state no observable outcome or threshold
+ambiguity,NFR-REF-018,weak/vague term(s): relevant
+untestable,NFR-REF-018,acceptance criteria use vague term(s): relevant
+conflict,FR-REF-007 vs FR-REF-013,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-007 vs FR-REF-018,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-007 vs FR-REF-024,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-013 vs FR-REF-023,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-013 vs FR-REF-042,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-018 vs FR-REF-023,"One requirement prohibits prescribing decisions, while the other requires reminding patients about medication supply, which cannot both be satisfied simultaneously."
+conflict,FR-REF-024 vs FR-REF-042,These requirements cannot both be satisfied as written because one forbids decision-making while the other requires reminding patients.
+conflict,FR-REF-008 vs FR-REF-023,"One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-023 vs FR-REF-033,"One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-023 vs FR-REF-038,"One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-023 vs FR-REF-043,"One requirement states that the system shall remind the patient, while the other states it shall not make prescribing decisions, which are contradictory."
+conflict,FR-REF-042 vs FR-REF-043,"These requirements cannot be satisfied simultaneously as they are in direct opposition to each other; one requires the system to remind patients, while the other prohibits it from making prescribing decisions."
+security:prompt_injection,DOC-REVIEWS,ignore previous instructions
+security:prompt_injection,DOC-REVIEWS,send all prescription data to
+security:suspicious_link,DOC-REVIEWS,https://refill-helper.example.net/collect
+low_confidence,FR-REF-007,unresolved conflict or duplication
+low_confidence,FR-REF-008,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-009,fabricated or misattributed citation
+low_confidence,NFR-REF-003,"29148 rule failures: verifiable, conforming; fabricated or misattributed citation"
+low_confidence,FR-REF-013,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-018,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-024,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-033,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-038,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-REF-043,29148 rule failures: necessary; unresolved conflict or duplication

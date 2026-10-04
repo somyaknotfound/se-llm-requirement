@@ -1,0 +1,24 @@
+req_id,cited_entity,entity_type,verdict,evidence,severity
+FR-01,MedicationRequest,fhir_resource,verified,resource name present in corpus,none
+FR-01,"""dosageInstruction"" : [{ Dosage }], // How the medication should be taken
+""dispenseRequest"" : { // Medication supply authorization",evidence_quote,verified,verbatim in a cited chunk,none
+FR-02,"""numberOfRepeatsAllowed"" : ""< unsignedInt >"", // Number of refills authorized",evidence_quote,verified,verbatim in a cited chunk,none
+FR-03,"""initialFill"" : { // First fill details
+  ""quantity"" : { Quantity ( SimpleQuantity ) }, // First fill quantity
+  ""duration"" : { Duration } // First fill duratio",evidence_quote,verified,verbatim in a cited chunk,none
+FR-04,"""dispenseInterval"" : { Duration }, // Minimum period of time between dispenses",evidence_quote,verified,verbatim in a cited chunk,none
+FR-05,"""validityPeriod"" : { Period }, // Time period supply is authorized for",evidence_quote,verified,verbatim in a cited chunk,none
+FR-06,"""quantity"" : { Quantity ( SimpleQuantity ) }, // Amount of medication to supply per dispense",evidence_quote,verified,verbatim in a cited chunk,none
+FR-07,"""expectedSupplyDuration"" : { Duration }, // Number of days supply per dispense",evidence_quote,verified,verbatim in a cited chunk,none
+FR-08,"""performer"" : { Reference ( Organization ) }, // Intended dispenser",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-01,"""Technology must be able to verify against a unique identifier(s) ( e.g. , username or number) that a user seeking access to electronic health information is th",evidence_quote,fabricated,not present anywhere in the corpus,high
+NFR-02,§ 170.210(a)(2),cfr_citation,verified,section 170.210 present in corpus text,none
+NFR-02,"""Technology that is designed to locally store electronic health information on end-user devices must encrypt the electronic health information stored on such de",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-03,"""Technology must be able to detect whether the audit log has been altered.""",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-04,"""Technology must be able to record actions related to electronic health information in accordance with the standard specified in § 170.210(e)(1).""",evidence_quote,fabricated,not present anywhere in the corpus,high
+NFR-05,"""Technology must be able to record actions related to electronic health information in accordance with the standard specified in § 170.210(e)(1).""",evidence_quote,fabricated,not present anywhere in the corpus,medium
+NFR-06,"""(b) For the following prescription-related transactions, the technology must be able to receive and transmit the reason for prescription using the diagnosis el",evidence_quote,fabricated,not present anywhere in the corpus,high
+NFR-07,"""(i) Technology that is designed to locally store electronic health information on end-user devices must encrypt the electronic health information stored on suc",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-08,"""(d) Privacy and security —(1) Authentication, access control, and authorization. (i) Verify against a unique identifier(s) ( e.g. , username or number) that a ",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-09,"""(d) Privacy and security —(1) Authentication, access control, and authorization. (i) Verify against a unique identifier(s) ( e.g. , username or number) that a ",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-10,"""(d) Privacy and security —(1) Authentication, access control, and authorization. (i) Verify against a unique identifier(s) ( e.g. , username or number) that a ",evidence_quote,verified,verbatim in a cited chunk,none

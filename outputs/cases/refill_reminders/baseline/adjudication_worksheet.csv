@@ -1,0 +1,13 @@
+req_id,attribute,rule_score,llm_score,agreement,human_adjudication,note
+FR-01,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria mention storing the request correctly but do not provide a specific test or method to verify this storage.
+FR-02,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria includes 'and the system stores it correctly', which is not observable as a separate action from setting the numberOfRepeatsAllowed element."
+FR-03,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria does not specify the exact method of verification or the criteria for 'correctly' storing the elements.
+FR-04,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify that the system stores the dispenseInterval correctly.
+FR-05,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not specify a clear method for verifying that the system stores the validityPeriod element 'correctly'.
+FR-06,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify that the quantity is stored 'correctly'.
+FR-07,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify the system stores the value correctly.
+FR-08,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria 'Prescribers can set the performer element in the dispenseRequest, and the system stores it correctly' are not observable without specifying what 'correctly' means."
+NFR-01,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'Only prescribers with valid credentials can create or modify MedicationRequests' are not observable without a clear definition of 'valid credentials.'
+NFR-02,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria refer to a specific standard, but it is not clear how this can be observed or tested."
+NFR-03,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'MedicationRequests are protected from unauthorized access and modification' are not observable; the audit log recording attempts is observable but does not fully cover the protection aspect.
+NFR-04,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'can be reviewed' are not observable or testable.

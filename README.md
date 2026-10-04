@@ -40,6 +40,19 @@ Each session's commit, GPU, model digests and package versions are recorded in
 
 ---
 
+## Findings (Run 2)
+
+On three healthcare case studies the multi-agent system recovered 0.622–0.886 of each gold
+standard against 0.111–0.314 for a single prompt, mapped every applicable control, and cut
+hallucinated citations to a rate of 0.014–0.054, at the cost of over-generation and a review
+queue of 157–300 items per case. It found none of the eight seeded stakeholder conflicts. The
+SDLC engine chose plan-driven models for the two regulated cases and Agile for the volatile
+patient app, escalating each as a near tie; asked directly, the models followed the prompt's
+framing in every run and matched their own factor scores once in 18. Gold-based figures are
+provisional until the gold standards are reviewed. Details and sources: [the report](report/report.md).
+
+---
+
 ## What is in the box
 
 | Part | What it does | Code |

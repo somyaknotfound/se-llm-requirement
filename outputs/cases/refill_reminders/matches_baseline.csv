@@ -1,0 +1,5 @@
+gold_id,gold_statement,req_id,statement,similarity,human_verdict
+G-REF-02,The app shall calculate the run-out date from the dispensed quantity and expected supply duration of the active prescription.,FR-07,The system shall allow prescribers to specify the expected number of days supply per dispense in a medication request.,0.738,
+G-REF-09,The app shall notify the patient when the pharmacy has dispensed the medication and it is ready to collect.,FR-08,The system shall allow prescribers to specify the intended dispenser for a medication request.,0.719,
+G-REF-01,The app shall send a refill reminder 7 days before a medication's supply is expected to run out.,FR-02,The system shall allow prescribers to specify the number of refills allowed for a medication request.,0.657,
+G-REF-04,The app shall require the patient to confirm they are still taking the medication before a renewal request is sent.,FR-05,The system shall allow prescribers to specify the time period for which a medication request is authorized.,0.636,

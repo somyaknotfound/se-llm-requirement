@@ -1,0 +1,17 @@
+{
+  "initial_errors": [
+    "produced 16 requirements; contract requires between 18 and 25"
+  ],
+  "initial_flags": [],
+  "repair_attempted": true,
+  "used": "repair",
+  "repair_errors": [
+    "NFR-10: nfr_category='data integrity' is not one of ['compliance', 'maintainability', 'none', 'performance', 'portability', 'reliability', 'security', 'usability']"
+  ],
+  "repair_flags": [],
+  "contract_passed": false,
+  "final_errors": [
+    "NFR-10: nfr_category='data integrity' is not one of ['compliance', 'maintainability', 'none', 'performance', 'portability', 'reliability', 'security', 'usability']"
+  ],
+  "final_flags": []
+}

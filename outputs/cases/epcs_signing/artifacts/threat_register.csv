@@ -1,0 +1,9 @@
+id,stride,asset,description,mitigated_by,proposed_req_id
+TH-01,Spoofing,Prescriber identity and prescription authenticity,An attacker could spoof the prescriber's identity to issue fraudulent prescriptions.,NFR-EPCS-009,
+TH-02,Tampering,Prescription data integrity,An attacker could tamper with the prescription data after it has been signed.,NFR-EPCS-016,
+TH-03,Repudiation,Prescriber actions and accountability,A prescriber could deny their actions or claim they were not performed.,NFR-EPCS-026,
+TH-04,Information disclosure,Prescription data and audit logs,Sensitive prescription data and audit logs could be disclosed to unauthorized parties.,,
+TH-05,Denial of service,Prescription processing and system availability,An attacker could perform a denial of service attack to disrupt prescription processing.,,
+TH-06,Elevation of privilege,Access control and signing permissions,An attacker could elevate their privileges to gain unauthorized access or sign prescriptions.,,
+TH-07,Spoofing,Pharmacy and prescriber communication,An attacker could spoof the pharmacy or prescriber to intercept or alter prescription data.,,
+TH-08,Tampering,Prescription transmission integrity,An attacker could tamper with the prescription data during transmission.,,

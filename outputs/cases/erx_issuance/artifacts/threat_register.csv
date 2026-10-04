@@ -1,0 +1,9 @@
+id,stride,asset,description,mitigated_by,proposed_req_id
+TH-01,Spoofing,Prescriber identity and prescription data,A malicious actor could impersonate a prescriber to issue fraudulent prescriptions.,NFR-ERX-012; FR-ERX-018,
+TH-02,Tampering,Prescription data integrity,"An attacker could alter prescription details, leading to incorrect medication being dispensed.",NFR-ERX-021; NFR-ERX-024; NFR-ERX-025,
+TH-03,Repudiation,Prescription override actions,"A prescriber could deny overriding a prescription, making it difficult to track the reason.",FR-ERX-012; NFR-ERX-020,
+TH-04,Information disclosure,Patient medication data and prescriber actions,"Sensitive information could be exposed to unauthorized users, compromising patient privacy.",NFR-ERX-019; NFR-ERX-022,
+TH-05,Denial of service,Prescription processing and transmission,A denial of service attack could prevent the system from processing or transmitting prescriptions.,NFR-ERX-016,
+TH-06,Elevation of privilege,System and network access,"An attacker could exploit vulnerabilities to gain higher privileges, compromising the system.",NFR-ERX-012,
+TH-07,Spoofing,Pharmacy intermediary communication,A malicious actor could impersonate a pharmacy to receive unauthorized prescriptions.,NFR-ERX-024,
+TH-08,Denial of service,System availability and performance,"A denial of service attack could cause the system to become unavailable or slow, impacting prescription processing.",NFR-ERX-016,

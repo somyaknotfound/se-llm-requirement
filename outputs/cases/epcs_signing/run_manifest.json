@@ -1,0 +1,44 @@
+{
+  "case": "epcs_signing",
+  "started": "2026-10-04T17:04:14.424985+00:00",
+  "finished": "2026-10-04T17:13:45.860680+00:00",
+  "seconds_total": 5619.0,
+  "seconds_by_step": {
+    "intake": 0.0,
+    "interviews": 250.1,
+    "extraction": 1511.8,
+    "classification": 78.5,
+    "conflicts": 51.5,
+    "quality_v1": 0.2,
+    "clarification": 675.6,
+    "compliance": 1109.8,
+    "security_privacy": 53.6,
+    "risk": 317.7,
+    "validation": 998.8,
+    "sdlc": 414.4,
+    "documentation": 156.7,
+    "approval": 0.3
+  },
+  "agent_model": "primary",
+  "persona_model": "secondary",
+  "model_digests": {
+    "llama3.1:8b": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "qwen2.5:7b-instruct": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  "ollama_version": "0.34.4",
+  "knowledge_base": {
+    "kb_version": "2026-09-28",
+    "controls_version": "2026-09-28",
+    "sdlc_version": "2026-09-28",
+    "manifest_sha": "adf65966b731d94d",
+    "chunks_sha": "30a5f2fb6b217919",
+    "controls_sha": "0e55be9e1561fbb5",
+    "sdlc_sha": "9e7df934c7f423df",
+    "stakeholders_sha": "2b967c8778d27a40",
+    "pipeline_sha": "4dd8908590d78ac5",
+    "models_sha": "2ff841130a7a093e"
+  },
+  "requirements": 83,
+  "approval_items": 300,
+  "security_events": 2
+}

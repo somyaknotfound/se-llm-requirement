@@ -1,0 +1,151 @@
+kind,item,detail
+conflict,NFR-EPCS-014,conflicts with NFR-EPCS-039 (CF-01): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-039,conflicts with NFR-EPCS-014 (CF-01): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-039,conflicts with NFR-EPCS-049 (CF-02): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-049,conflicts with NFR-EPCS-039 (CF-02): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-021,conflicts with NFR-EPCS-049 (CF-03): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-049,conflicts with NFR-EPCS-021 (CF-03): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-014,conflicts with NFR-EPCS-021 (CF-04): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-021,conflicts with NFR-EPCS-014 (CF-04): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-005,conflicts with FR-EPCS-006 (CF-05): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,FR-EPCS-006,conflicts with NFR-EPCS-005 (CF-05): Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-007,"conflicts with FR-EPCS-012 (CF-06): A prohibits transmission of a printed prescription, while B requires printing under certain conditions."
+conflict,FR-EPCS-012,"conflicts with NFR-EPCS-007 (CF-06): A prohibits transmission of a printed prescription, while B requires printing under certain conditions."
+conflict,NFR-EPCS-005,"conflicts with FR-EPCS-010 (CF-07): A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,FR-EPCS-010,"conflicts with NFR-EPCS-005 (CF-07): A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,NFR-EPCS-005,"conflicts with FR-EPCS-017 (CF-08): A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,FR-EPCS-017,"conflicts with NFR-EPCS-005 (CF-08): A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,NFR-EPCS-003,"conflicts with NFR-EPCS-005 (CF-09): A mandates digital signing with a prescriber's private key, while B forbids transmitting controlled prescriptions unless signed."
+conflict,NFR-EPCS-005,"conflicts with NFR-EPCS-003 (CF-09): A mandates digital signing with a prescriber's private key, while B forbids transmitting controlled prescriptions unless signed."
+conflict,NFR-EPCS-039,"conflicts with NFR-EPCS-048 (CF-10): Both requirements state the system must pass a third-party audit, but A implies the audit is a prerequisite for use, while B states the audit is a condition for use."
+conflict,NFR-EPCS-048,"conflicts with NFR-EPCS-039 (CF-10): Both requirements state the system must pass a third-party audit, but A implies the audit is a prerequisite for use, while B states the audit is a condition for use."
+conflict,NFR-EPCS-003,"conflicts with NFR-EPCS-006 (CF-11): A mandates digital signing with a prescriber's private key, while B prohibits any alteration after signing, which implies the signed information cannot be changed."
+conflict,NFR-EPCS-006,"conflicts with NFR-EPCS-003 (CF-11): A mandates digital signing with a prescriber's private key, while B prohibits any alteration after signing, which implies the signed information cannot be changed."
+conflict,NFR-EPCS-006,"conflicts with NFR-EPCS-027 (CF-12): These requirements conflict because the first one prohibits altering signed information, while the second ensures data integrity during transmission, which could potentially involve alterations."
+conflict,NFR-EPCS-027,"conflicts with NFR-EPCS-006 (CF-12): These requirements conflict because the first one prohibits altering signed information, while the second ensures data integrity during transmission, which could potentially involve alterations."
+conflict,NFR-EPCS-002,"conflicts with NFR-EPCS-005 (CF-13): These requirements conflict because the first ensures only the prescriber can sign, while the second prevents transmission without signing, which implies the prescriber must sign before transmission."
+conflict,NFR-EPCS-005,"conflicts with NFR-EPCS-002 (CF-13): These requirements conflict because the first ensures only the prescriber can sign, while the second prevents transmission without signing, which implies the prescriber must sign before transmission."
+conflict,NFR-EPCS-004,"conflicts with NFR-EPCS-005 (CF-14): These requirements conflict because the first mandates archiving, while the second prevents transmission without signing, which implies a signed record must exist before transmission can occur."
+conflict,NFR-EPCS-005,"conflicts with NFR-EPCS-004 (CF-14): These requirements conflict because the first mandates archiving, while the second prevents transmission without signing, which implies a signed record must exist before transmission can occur."
+conflict,NFR-EPCS-005,"conflicts with NFR-EPCS-027 (CF-15): These requirements conflict because the first prevents transmission without signing, while the second ensures data integrity during transmission, which could involve alterations."
+conflict,NFR-EPCS-027,"conflicts with NFR-EPCS-005 (CF-15): These requirements conflict because the first prevents transmission without signing, while the second ensures data integrity during transmission, which could involve alterations."
+non_singular,FR-EPCS-003,compound obligation near 'and transmit'
+untestable,FR-EPCS-004,acceptance criteria state no observable outcome or threshold
+untestable,NFR-EPCS-010,acceptance criteria state no observable outcome or threshold
+ambiguity,NFR-EPCS-011,weak/vague term(s): manage
+duplicate,FR-EPCS-006,near-duplicate of another requirement: 'The system shall transmit signed prescriptions to the pharma'
+missing_source,FR-EPCS-007,cites chunk_id(s) it was never shown: D06#S1311.305#c30
+missing_source,FR-EPCS-008,cites chunk_id(s) it was never shown: D06#S1311.305#c30
+untestable,NFR-EPCS-016,acceptance criteria state no observable outcome or threshold
+untestable,FR-EPCS-009,acceptance criteria state no observable outcome or threshold
+untestable,NFR-EPCS-021,acceptance criteria use vague term(s): as required
+untestable,NFR-EPCS-022,acceptance criteria state no observable outcome or threshold
+duplicate,FR-EPCS-010,near-duplicate of another requirement: 'The system shall transmit signed controlled substances presc'
+untestable,NFR-EPCS-025,acceptance criteria use vague term(s): as required
+untestable,NFR-EPCS-030,acceptance criteria state no observable outcome or threshold
+untestable,FR-EPCS-014,acceptance criteria state no observable outcome or threshold
+non_singular,NFR-EPCS-038,compound obligation near 'and generate'
+non_singular,NFR-EPCS-042,compound obligation near 'and provide'
+ambiguity,FR-EPCS-015,weak/vague term(s): support
+untestable,FR-EPCS-015,acceptance criteria state no observable outcome or threshold
+undefined_term,FR-EPCS-015,undefined term(s): II
+untestable,NFR-EPCS-043,acceptance criteria state no observable outcome or threshold
+untestable,NFR-EPCS-044,acceptance criteria state no observable outcome or threshold
+untestable,FR-EPCS-016,acceptance criteria state no observable outcome or threshold
+duplicate,FR-EPCS-017,near-duplicate of another requirement: 'The system shall transmit signed controlled substances presc'
+untestable,NFR-EPCS-046,acceptance criteria state no observable outcome or threshold
+untestable,NFR-EPCS-048,acceptance criteria state no observable outcome or threshold
+ambiguity,FR-EPCS-018,weak/vague term(s): support
+untestable,FR-EPCS-018,acceptance criteria use vague term(s): support
+undefined_term,FR-EPCS-018,undefined term(s): II
+untestable,FR-EPCS-019,acceptance criteria state no observable outcome or threshold
+untestable,FR-EPCS-020,acceptance criteria use vague term(s): manage
+untestable,FR-EPCS-021,acceptance criteria use vague term(s): process
+untestable,FR-EPCS-024,acceptance criteria state no observable outcome or threshold
+nonconforming,NFR-EPCS-003,statement does not open with an identified actor
+nonconforming,NFR-EPCS-007,statement does not open with an identified actor
+nonconforming,NFR-EPCS-010,statement does not open with an identified actor
+nonconforming,NFR-EPCS-011,statement does not open with an identified actor
+duplicate,NFR-EPCS-014,near-duplicate of another requirement: 'NFR-EPCS-048: The system shall undergo a third-party EPCS au'
+undefined_term,NFR-EPCS-021,undefined term(s): COMP
+nonconforming,NFR-EPCS-023,statement does not open with an identified actor
+undefined_term,NFR-EPCS-023,undefined term(s): COMP
+nonconforming,NFR-EPCS-024,statement does not open with an identified actor
+ambiguity,NFR-EPCS-025,weak/vague term(s): as required
+nonconforming,NFR-EPCS-029,statement does not open with an identified actor
+nonconforming,NFR-EPCS-030,statement does not open with an identified actor
+nonconforming,NFR-EPCS-031,statement does not open with an identified actor
+nonconforming,NFR-EPCS-032,statement does not open with an identified actor
+nonconforming,NFR-EPCS-033,statement does not open with an identified actor
+nonconforming,NFR-EPCS-034,statement does not open with an identified actor
+nonconforming,NFR-EPCS-044,statement does not open with an identified actor
+ambiguity,NFR-EPCS-046,weak/vague term(s): support
+nonconforming,NFR-EPCS-046,statement does not open with an identified actor
+duplicate,NFR-EPCS-048,near-duplicate of another requirement: 'The system shall undergo a third-party audit before it can b'
+nonconforming,NFR-EPCS-048,statement does not open with an identified actor
+nonconforming,FR-EPCS-021,statement does not open with an identified actor
+nonconforming,NFR-EPCS-002,statement does not open with an identified actor
+undefined_term,NFR-EPCS-003,undefined term(s): PRES
+undefined_term,FR-EPCS-004,undefined term(s): PRES
+undefined_term,NFR-EPCS-011,undefined term(s): CRED
+nonconforming,NFR-EPCS-016,statement does not open with an identified actor
+nonconforming,NFR-EPCS-019,statement does not open with an identified actor
+nonconforming,NFR-EPCS-022,statement does not open with an identified actor
+undefined_term,NFR-EPCS-025,undefined term(s): COMP
+nonconforming,NFR-EPCS-043,statement does not open with an identified actor
+nonconforming,FR-EPCS-016,statement does not open with an identified actor
+undefined_term,FR-EPCS-016,undefined term(s): PRES
+undefined_term,FR-EPCS-021,undefined term(s): PRES
+nonconforming,FR-EPCS-024,statement does not open with an identified actor
+undefined_term,FR-EPCS-024,undefined term(s): PRES
+missing_control,NFR-EPCS-002,"a security, privacy or regulatory requirement mapped to no control"
+untestable,NFR-EPCS-050,acceptance criteria state no observable outcome or threshold
+non_singular,NFR-EPCS-055,semicolon suggests two obligations
+untestable,NFR-EPCS-055,acceptance criteria state no observable outcome or threshold
+non_singular,NFR-EPCS-058,semicolon suggests two obligations
+untestable,NFR-EPCS-058,acceptance criteria use vague term(s): process
+undefined_term,NFR-EPCS-057,undefined term(s): HMAC
+conflict,NFR-EPCS-014 vs NFR-EPCS-039,Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-039 vs NFR-EPCS-049,Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-021 vs NFR-EPCS-049,Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-014 vs NFR-EPCS-021,Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-005 vs FR-EPCS-006,Both statements cannot be satisfied simultaneously as they are negations of each other.
+conflict,NFR-EPCS-007 vs FR-EPCS-012,"A prohibits transmission of a printed prescription, while B requires printing under certain conditions."
+conflict,NFR-EPCS-005 vs FR-EPCS-010,"A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,NFR-EPCS-005 vs FR-EPCS-017,"A forbids transmitting controlled prescriptions unless signed, while B mandates transmitting signed prescriptions to the pharmacy."
+conflict,NFR-EPCS-003 vs NFR-EPCS-005,"A mandates digital signing with a prescriber's private key, while B forbids transmitting controlled prescriptions unless signed."
+conflict,NFR-EPCS-039 vs NFR-EPCS-048,"Both requirements state the system must pass a third-party audit, but A implies the audit is a prerequisite for use, while B states the audit is a condition for use."
+conflict,NFR-EPCS-003 vs NFR-EPCS-006,"A mandates digital signing with a prescriber's private key, while B prohibits any alteration after signing, which implies the signed information cannot be changed."
+conflict,NFR-EPCS-006 vs NFR-EPCS-027,"These requirements conflict because the first one prohibits altering signed information, while the second ensures data integrity during transmission, which could potentially involve alterations."
+conflict,NFR-EPCS-002 vs NFR-EPCS-005,"These requirements conflict because the first ensures only the prescriber can sign, while the second prevents transmission without signing, which implies the prescriber must sign before transmission."
+conflict,NFR-EPCS-004 vs NFR-EPCS-005,"These requirements conflict because the first mandates archiving, while the second prevents transmission without signing, which implies a signed record must exist before transmission can occur."
+conflict,NFR-EPCS-005 vs NFR-EPCS-027,"These requirements conflict because the first prevents transmission without signing, while the second ensures data integrity during transmission, which could involve alterations."
+unmitigated_threat,TH-04,Sensitive prescription data and audit logs could be disclosed to unauthorized parties.
+unmitigated_threat,TH-05,An attacker could perform a denial of service attack to disrupt prescription processing.
+unmitigated_threat,TH-06,An attacker could elevate their privileges to gain unauthorized access or sign prescriptions.
+unmitigated_threat,TH-07,An attacker could spoof the pharmacy or prescriber to intercept or alter prescription data.
+unmitigated_threat,TH-08,An attacker could tamper with the prescription data during transmission.
+security:prompt_injection,DOC-VENDOR,do not flag
+security:phi_masked,DOC-FINDING,"['DEA', 'NPI', 'PERSON']"
+low_confidence,NFR-EPCS-002,29148 rule failures: conforming; unresolved conflict or duplication
+low_confidence,NFR-EPCS-003,29148 rule failures: conforming; unresolved conflict or duplication
+low_confidence,NFR-EPCS-004,unresolved conflict or duplication
+low_confidence,NFR-EPCS-005,fabricated or misattributed citation; unresolved conflict or duplication
+low_confidence,NFR-EPCS-006,unresolved conflict or duplication
+low_confidence,NFR-EPCS-007,29148 rule failures: conforming; fabricated or misattributed citation; unresolved conflict or duplication
+low_confidence,FR-EPCS-005,fabricated or misattributed citation
+low_confidence,NFR-EPCS-009,fabricated or misattributed citation
+low_confidence,NFR-EPCS-010,"29148 rule failures: verifiable, conforming; fabricated or misattributed citation"
+low_confidence,NFR-EPCS-012,fabricated or misattributed citation
+low_confidence,FR-EPCS-006,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-EPCS-007,29148 rule failures: traceable; fabricated or misattributed citation; cited evidence it was never shown
+low_confidence,FR-EPCS-008,29148 rule failures: traceable; fabricated or misattributed citation; cited evidence it was never shown
+low_confidence,NFR-EPCS-014,29148 rule failures: necessary; fabricated or misattributed citation; unresolved conflict or duplication
+low_confidence,NFR-EPCS-021,29148 rule failures: verifiable; unresolved conflict or duplication
+low_confidence,FR-EPCS-010,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,FR-EPCS-012,unresolved conflict or duplication
+low_confidence,NFR-EPCS-027,unresolved conflict or duplication
+low_confidence,NFR-EPCS-039,unresolved conflict or duplication
+low_confidence,FR-EPCS-017,29148 rule failures: necessary; unresolved conflict or duplication
+low_confidence,NFR-EPCS-048,"29148 rule failures: necessary, verifiable, conforming; fabricated or misattributed citation; unresolved conflict or duplication"
+low_confidence,NFR-EPCS-049,unresolved conflict or duplication

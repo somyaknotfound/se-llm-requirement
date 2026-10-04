@@ -1,0 +1,131 @@
+req_id,control_id,citation,relation,evidence_chunk_id,rationale,similarity,needs_officer_approval,status
+FR-REF-001,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.416,True,proposed
+FR-REF-001,ONC-170.315(d)(5),45 CFR 170.315(d)(5),partially,D05#S170.315(d)#c17,"Automatically stop user access after a predetermined period of inactivity and require authentication to resume, but does not directly address the reminder functionality.",0.326,True,proposed
+FR-REF-002,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.575,True,proposed
+FR-REF-002,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.433,True,proposed
+FR-REF-003,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.506,True,proposed
+FR-REF-003,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.473,True,proposed
+FR-REF-004,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.421,True,proposed
+FR-REF-004,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.394,True,proposed
+FR-REF-005,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c10,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.586,True,proposed
+FR-REF-005,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c09,"Enables fill status notifications, but not specifically text message notifications.",0.448,True,proposed
+FR-REF-006,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c13,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.547,True,proposed
+FR-REF-006,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c09,"Enables fill status notifications, but not specifically text message notifications.",0.444,True,proposed
+NFR-REF-001,ONC-170.315(d)(7),45 CFR 170.315(d)(7),partially,D05#S170.315(d)#c17,"Encrypts electronic health information stored on end-user devices, but not specifically for reminders.",0.372,True,proposed
+NFR-REF-001,ONC-170.315(d)(5),45 CFR 170.315(d)(5),partially,D05#S170.315(d)#c17,"Automatically stops user access after inactivity, but not specifically for reminders.",0.311,True,proposed
+NFR-REF-002,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.467,True,proposed
+NFR-REF-002,FHIR-SEC-6.1.0.4,HL7 FHIR R4 Security §6.1.0.4,satisfies,D03#S6.1.0.4#c11,Authenticates clients and users using OpenID Connect.,0.438,True,proposed
+NFR-REF-002,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c10,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.357,True,proposed
+FR-REF-007,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Ensures data is not communicated without authorization.,0.371,True,proposed
+FR-REF-007,ONC-170.315(d)(2),45 CFR 170.315(d)(2),satisfies,D05#S170.315(d)#c17,Records actions related to electronic health information and restricts their change.,0.325,True,proposed
+FR-REF-008,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c09,"Enables prescription renewal requests and responses, but does not explicitly mention reminders.",0.465,True,proposed
+FR-REF-009,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables prescription renewal requests and responses with patient consent.,0.519,True,proposed
+FR-REF-009,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Ensures data is not communicated without authorization.,0.498,True,proposed
+FR-REF-009,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Allows patients to view their health information.,0.48,True,proposed
+FR-REF-010,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables prescription renewal requests and responses.,0.54,True,proposed
+FR-REF-010,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Allows patients to view their health information.,0.39,True,proposed
+FR-REF-011,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,"Ensures data is not communicated without authorization, including patient consent policies.",0.555,True,proposed
+FR-REF-011,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view their health information, but does not specifically address consent for medication reminders.",0.511,True,proposed
+FR-REF-012,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,"Ensures data is not communicated without authorization, including patient consent policies.",0.51,True,proposed
+FR-REF-012,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view their health information, but does not specifically address consent withdrawal.",0.405,True,proposed
+NFR-REF-003,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,"Ensures data is not communicated without authorization, including patient consent policies.",0.579,True,proposed
+NFR-REF-003,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view their health information, which indirectly supports obtaining consent.",0.49,True,proposed
+NFR-REF-003,ONC-170.315(d)(7),45 CFR 170.315(d)(7),partially,D05#S170.315(d)#c17,"Encrypts electronic health information after use stops, which is related to consent but not directly.",0.404,True,proposed
+FR-REF-013,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c09,"Enables medication history requests, which is related to reminders but not directly.",0.46,True,proposed
+FR-REF-013,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view their health information, which is related to reminders but not directly.",0.379,True,proposed
+FR-REF-015,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.561,True,proposed
+FR-REF-015,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables fill status notifications.,0.543,True,proposed
+FR-REF-016,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables renewal requests and responses.,0.625,True,proposed
+FR-REF-016,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.537,True,proposed
+FR-REF-017,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c08,"Enables fill status notifications, but does not specifically mention A/B testing for reminder wording.",0.387,True,proposed
+FR-REF-017,ONC-170.315(d)(5),45 CFR 170.315(d)(5),partially,D05#S170.315(d)#c17,"Automatically stops user access after a predetermined period of inactivity and requires authentication to resume, but does not specifically mention A/B testing for reminder wording.",0.311,True,proposed
+FR-REF-018,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c14,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.486,True,proposed
+FR-REF-018,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables fill status notifications.,0.46,True,proposed
+FR-REF-019,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables renewal requests and responses.,0.552,True,proposed
+FR-REF-019,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c06,Includes number of refills authorized but does not cover the patient confirmation aspect.,0.459,True,proposed
+FR-REF-019,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,Enables internet-based access but does not cover the patient confirmation aspect.,0.424,True,proposed
+FR-REF-020,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables renewal requests and responses.,0.654,True,proposed
+FR-REF-020,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c06,Includes number of refills authorized but does not cover the prescriber notification aspect.,0.478,True,proposed
+FR-REF-020,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,Enables internet-based access but does not cover the prescriber notification aspect.,0.411,True,proposed
+FR-REF-021,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables fill status notifications.,0.513,True,proposed
+FR-REF-021,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,Includes dispense request details.,0.473,True,proposed
+FR-REF-021,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,Enables internet-based access but does not cover the specific notification aspect.,0.33,True,proposed
+FR-REF-022,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Enables role-based and attribute-based access control.,0.55,True,proposed
+FR-REF-022,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,Enables internet-based access but does not cover the specific consent aspect.,0.474,True,proposed
+FR-REF-022,ONC-170.315(d)(1),45 CFR 170.315(d)(1),partially,D05#S170.315(d)#c17,Enables user verification but does not cover the specific consent aspect.,0.358,True,proposed
+FR-REF-024,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c14,"The evidence indicates the system represents the order with medication, subject, requester, authored date, dosage instructions and dispense request, including the number of refills authorized and substitution restrictions.",0.486,True,proposed
+FR-REF-024,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"The evidence indicates the system allows patients to use internet-based technology to view, download, and transmit their health information, which partially satisfies the requirement.",0.379,True,proposed
+FR-REF-025,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"The evidence indicates the system enables new prescriptions, change, cancel and renewal requests and responses, fill status notifications and medication history using the adopted e-prescribing standard.",0.625,True,proposed
+FR-REF-025,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c06,"The evidence indicates the system represents the order with medication, subject, requester, authored date, dosage instructions and dispense request, including the number of refills authorized and substitution restrictions.",0.537,True,proposed
+FR-REF-026,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,The evidence indicates the system enables fill status notifications.,0.495,True,proposed
+FR-REF-026,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c13,"The evidence indicates the system represents the order with medication, subject, requester, authored date, dosage instructions and dispense request, including the number of refills authorized and substitution restrictions.",0.477,True,proposed
+FR-REF-027,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,"The evidence indicates the system applies role- or attribute-based access control, including patient consent policies.",0.562,True,proposed
+FR-REF-027,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"The evidence indicates the system allows patients to use internet-based technology to view, download, and transmit their health information.",0.506,True,proposed
+FR-REF-027,ONC-170.315(d)(1),45 CFR 170.315(d)(1),partially,D05#S170.315(d)#c17,The evidence indicates the system verifies a user against a unique identifier and establishes the type of access and the actions the user is permitted to perform.,0.367,True,proposed
+NFR-REF-005,ONC-170.315(d)(5),45 CFR 170.315(d)(5),satisfies,D05#S170.315(d)#c17,Automatically stops user access after inactivity and requires authentication.,0.523,True,proposed
+NFR-REF-005,HIPAA-164.312(a)(2)(iii),45 CFR 164.312(a)(2)(iii),satisfies,D04#S164.312#c07,Terminates an electronic session after inactivity.,0.434,True,proposed
+FR-REF-028,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role- or attribute-based access control.,0.555,True,proposed
+FR-REF-028,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Enables patients to view, download, and transmit health information.",0.554,True,proposed
+FR-REF-028,ONC-170.315(d)(9),45 CFR 170.315(d)(9),satisfies,D05#S170.315(d)#c17,Encrypts and integrity-protects exchanged content.,0.534,True,proposed
+FR-REF-029,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c11,Represents the order with medication and dispense request.,0.448,True,proposed
+FR-REF-029,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables prescription renewal requests.,0.431,True,proposed
+FR-REF-029,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Enables patients to view, download, and transmit health information.",0.336,True,proposed
+FR-REF-030,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables prescription renewal requests.,0.625,True,proposed
+FR-REF-030,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,Represents the order with medication and dispense request.,0.537,True,proposed
+FR-REF-030,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Enables patients to view, download, and transmit health information.",0.435,True,proposed
+FR-REF-031,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,Represents the dispense request including number of refills authorized.,0.578,True,proposed
+FR-REF-031,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables fill status notifications.,0.548,True,proposed
+FR-REF-032,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role-based access control for patient consent policies.,0.562,True,proposed
+FR-REF-032,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based technology for patient health information access.,0.506,True,proposed
+FR-REF-032,ONC-170.315(d)(1),45 CFR 170.315(d)(1),satisfies,D05#S170.315(d)#c17,Verifies user against unique identifier and establishes access type.,0.367,True,proposed
+FR-REF-033,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c14,Represents the number of refills authorized.,0.505,True,proposed
+FR-REF-033,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables fill status notifications.,0.465,True,proposed
+FR-REF-033,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based technology for patient health information access.,0.399,True,proposed
+FR-REF-034,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables renewal requests and responses.,0.625,True,proposed
+FR-REF-034,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,Represents the number of refills authorized.,0.537,True,proposed
+FR-REF-034,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based technology for patient health information access.,0.435,True,proposed
+FR-REF-035,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,Represents the dispense request including fill details and duration.,0.577,True,proposed
+FR-REF-035,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables fill status notifications.,0.54,True,proposed
+FR-REF-036,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role-based access control for patient consent.,0.562,True,proposed
+FR-REF-036,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based access for patient health information.,0.506,True,proposed
+FR-REF-036,ONC-170.315(d)(1),45 CFR 170.315(d)(1),satisfies,D05#S170.315(d)#c17,Verifies user against a unique identifier.,0.367,True,proposed
+FR-REF-037,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based access for patient health information.,0.519,True,proposed
+FR-REF-037,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c15,Represents the order with medication and dispense request.,0.38,True,proposed
+FR-REF-037,ONC-170.315(d)(7),45 CFR 170.315(d)(7),partially,D05#S170.315(d)#c17,Encrypts electronic health information stored on end-user devices.,0.327,True,proposed
+FR-REF-038,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c14,Represents the order with medication and substitution restrictions.,0.505,True,proposed
+FR-REF-038,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables fill status notifications.,0.465,True,proposed
+FR-REF-038,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based access for patient health information.,0.399,True,proposed
+FR-REF-039,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables prescription renewal requests and responses.,0.552,True,proposed
+FR-REF-039,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c14,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request, but does not specifically mention renewal.",0.534,True,proposed
+FR-REF-039,ONC-170.315(e)(1),45 CFR 170.315(e)(1),partially,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view and transmit health information, but does not specifically mention renewal.",0.37,True,proposed
+FR-REF-040,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,Represents the dispense request including the number of refills authorized.,0.577,True,proposed
+FR-REF-040,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables fill status notifications.,0.54,True,proposed
+FR-REF-040,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view, download, and transmit their health information.",0.39,True,proposed
+FR-REF-041,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,"Applies role- or attribute-based access control, including patient consent policies.",0.555,True,proposed
+FR-REF-041,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view, download, and transmit their health information.",0.496,True,proposed
+FR-REF-041,ONC-170.315(d)(1),45 CFR 170.315(d)(1),partially,D05#S170.315(d)#c17,"Verifies a user against a unique identifier and establishes the type of access, but does not specifically mention acting on behalf of a patient.",0.365,True,proposed
+FR-REF-043,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c14,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request, but does not specifically mention reminders.",0.505,True,proposed
+FR-REF-043,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables fill status notifications which can be used to remind the patient.,0.465,True,proposed
+FR-REF-043,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,"Allows patients to use internet-based technology to view, download, and transmit their health information.",0.399,True,proposed
+FR-REF-044,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables prescription renewal requests and responses.,0.625,True,proposed
+FR-REF-044,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c06,Represents the order with refills but does not explicitly cover renewal requests.,0.544,True,proposed
+FR-REF-045,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables fill status notifications.,0.54,True,proposed
+FR-REF-045,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c17,Represents the dispense request including refill authorization.,0.577,True,proposed
+FR-REF-046,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role-based access control for patient consent policies.,0.555,True,proposed
+FR-REF-046,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based technology for patient consent.,0.496,True,proposed
+FR-REF-046,ONC-170.315(d)(1),45 CFR 170.315(d)(1),partially,D05#S170.315(d)#c17,Verifies user access but does not explicitly cover proxy access for minors.,0.365,True,proposed
+NFR-REF-006,ONC-170.315(e)(1),45 CFR 170.315(e)(1),satisfies,D05#S170.315(e)#c20,Enables internet-based technology for patient consent.,0.516,True,proposed
+NFR-REF-006,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role-based access control for patient consent policies.,0.5,True,proposed
+NFR-REF-006,HIPAA-164.312(b),45 CFR 164.312(b),partially,D04#S164.312#c07,Implements mechanisms for recording and examining activity but does not specifically address proxy access.,0.389,True,proposed
+NFR-REF-007,ONC-170.315(d)(7),45 CFR 170.315(d)(7),satisfies,D05#S170.315(d)#c17,Encrypts electronic health information stored on end-user devices after use stops.,0.565,True,proposed
+NFR-REF-008,HIPAA-164.308(a)(1)(ii)(A),45 CFR 164.308(a)(1)(ii)(A),satisfies,D04#S164.308(a)#c04,proposed to close a compliance gap,,True,proposed
+NFR-REF-009,HIPAA-164.308(a)(1)(ii)(D),45 CFR 164.308(a)(1)(ii)(D),satisfies,D04#S164.308(a)#c04,proposed to close a compliance gap,,True,proposed
+NFR-REF-010,HIPAA-164.312(a)(1),45 CFR 164.312(a)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-011,HIPAA-164.312(a)(2)(i),45 CFR 164.312(a)(2)(i),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-012,HIPAA-164.312(a)(2)(iv),45 CFR 164.312(a)(2)(iv),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-013,HIPAA-164.312(c)(1),45 CFR 164.312(c)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-014,HIPAA-164.312(d),45 CFR 164.312(d),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-015,HIPAA-164.312(e)(1),45 CFR 164.312(e)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-REF-016,HIPAA-164.316(b)(2)(i),45 CFR 164.316(b)(2)(i),satisfies,D04#S164.316#c09,proposed to close a compliance gap,,True,proposed
+NFR-REF-017,ONC-170.315(d)(13),45 CFR 170.315(d)(13),satisfies,D05#S170.315(d)#c17,proposed to close a compliance gap,,True,proposed
+NFR-REF-018,FHIR-SEC-6.1.0.6,HL7 FHIR R4 Security §6.1.0.6,satisfies,D03#S6.1.0.6#c15,proposed to close a compliance gap,,True,proposed

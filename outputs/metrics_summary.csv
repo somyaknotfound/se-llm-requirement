@@ -4,3 +4,172 @@ corpus,corpus_bytes,1062330,raw downloaded bytes
 corpus,chunks,148,tokenizer=cl100k_base
 corpus,chunk_tokens_total,71111,
 corpus,chunk_tokens_mean,480.5,
+part1,requirements_total,18,
+part1,requirements_fr,18,
+part1,requirements_nfr,0,target >= 8
+part1,traceability_rate,1.0,share citing >=1 chunk_id; target >= 0.7
+part1,derived_rate,0.0,share marked derived=true
+part1,documents_cited,3,D01; D05; D06
+part1,documents_uncited,3,D02; D03; D04
+part1,integrity_violations,0,"rows with no citation AND derived=false — kept, flagged and escalated"
+part1,guessed_chunk_citations,0,requirements citing a chunk_id the model was never shown
+part1,repair_attempted,1,response used: initial_after_failed_repair; initial errors: 2
+part1,contract_passed,0,"only 0 NFRs; contract requires at least 8; FR-10: risk_class='Performance' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+part1,nfr_categories,0,{}
+part1,risk_class_distribution,,"{'Safety-critical': 17, 'Performance': 1}"
+part1,volatility_distribution,,{'Low': 18}
+part1,priority_distribution,,{'Must': 18}
+validation,pass_rate_complete,1.0,"rule=100%, llm=100%"
+validation,pass_rate_conforming,1.0,"rule=100%, llm=100%"
+validation,pass_rate_feasible,1.0,"rule=100%, llm=100%"
+validation,pass_rate_necessary,1.0,"rule=100%, llm=100%"
+validation,pass_rate_singular,1.0,"rule=100%, llm=100%"
+validation,pass_rate_traceable,1.0,"rule=100%, llm=100%"
+validation,pass_rate_unambiguous,1.0,"rule=100%, llm=0%"
+validation,pass_rate_verifiable,0.667,"rule=67%, llm=0%"
+validation,scorer_agreement,0.792,144 judgements compared
+validation,scorer_agreement_by_attribute,,"{'complete': 1.0, 'conforming': 1.0, 'feasible': 1.0, 'necessary': 1.0, 'singular': 1.0, 'traceable': 1.0, 'unambiguous': 0.0, 'verifiable': 0.33}"
+validation,disagreements,30,
+validation,human_adjudicated,0,conflicts resolved by hand
+hallucination,citations_checked,17,"{'verified': 15, 'misattributed': 1, 'fabricated': 1}"
+hallucination,fabricated,1,
+hallucination,misattributed,1,
+hallucination,unverifiable,0,
+hallucination,hallucination_rate,0.118,(fabricated + misattributed) / citations checked
+hallucination,high_severity,1,fabricated citation on a safety-critical requirement
+hallucination,suspect_by_entity_type,,{'evidence_quote': 2}
+part2,runs_total,18,
+part2,runs_with_recommendation,18,
+part2,modal_recommendation,Agile,"{'Agile': 12, 'Waterfall': 3, 'V-Model': 3}"
+part2,modal_share,0.667,share of runs choosing the modal model
+part2,framing_flip_rate,1.0,"6/6 (model,trial) groups changed answer across framings"
+part2,cross_model_agreement,0.667,"6/9 (framing,trial) pairs where both models agreed"
+part2,recommendation_agile_primed,,{'Agile': 6}
+part2,recommendation_neutral,,{'Agile': 6}
+part2,recommendation_plan_primed,,"{'Waterfall': 3, 'V-Model': 3}"
+part2,grounding_rate,0.979,criterion justifications citing >=1 req_id vs generic SE reasoning
+part2,grounding_rate_valid_ids,0.803,justifications where every cited req_id exists in outputs/cases/erx_issuance/requirements.csv
+part2,criterion_mean_scores,,"{'change_frequency': 2.0, 'continuous_delivery_need': 3.0, 'documentation_rigour': 4.28, 'failure_consequence': 4.83, 'formal_verification_need': 4.56, 'legacy_dependence': 2.22, 'project_complexity': 3.78, 'regulatory_criticality': 4.72, 'requirement_instability': 2.39, 'schedule_budget_rigidity': 4.33, 'security_risk': 4.83, 'stakeholder_availability': 4.28, 'system_size': 3.22}"
+part2,engine_consistency,0.056,runs whose named model is the one their own factor scores imply (rules + MCDA)
+eval:epcs_signing:multi_agent,precision,0.373,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,recall,0.886,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,f1,0.525,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,precision_elicited,0.419,31/74 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,requirements_generated,83,"gold has 35; by origin {'compliance_gap': 9, 'document': 18, 'stakeholder': 56} (gold not yet reviewed — provisional)"
+eval:epcs_signing:multi_agent,category_agreement,0.366,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,ambiguity_detection_recall,0.833,5/6 seeded vague facts followed up; missed: ['F-SEC-01'] (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,conflict_detection_recall,0.0,"0/3 seeded conflicts found; 15 conflicts flagged; missed: ['C-EPCS-01', 'C-EPCS-02', 'C-EPCS-03']; both sides reached the requirements for 3/3 (gold not yet reviewed — provisional)"
+eval:epcs_signing:multi_agent,conflict_detection_precision,0.0,"0/3 seeded conflicts found; 15 conflicts flagged; missed: ['C-EPCS-01', 'C-EPCS-02', 'C-EPCS-03']; both sides reached the requirements for 3/3 (gold not yet reviewed — provisional)"
+eval:epcs_signing:multi_agent,control_coverage,1.0,33/33 applicable controls
+eval:epcs_signing:multi_agent,gold_control_coverage,1.0,18/18 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+eval:epcs_signing:multi_agent,hallucination_rate,0.054,221 citations checked
+eval:epcs_signing:multi_agent,citation_correctness,0.73,share of 37 evidence quotes verbatim in the cited chunk
+eval:epcs_signing:multi_agent,quality_first_draft,0.895,29148 rule pass rate before clarification
+eval:epcs_signing:multi_agent,quality_final,0.905,29148 rule pass rate after clarification
+eval:epcs_signing:multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+eval:epcs_signing:multi_agent,mean_confidence,0.73,
+eval:epcs_signing:multi_agent,escalated,22,requirements escalated for review
+eval:epcs_signing:multi_agent,agent_calls_failed_after_repair,12,"of 165 agent calls; ['extract.document-DOC-CRED-policy', 'extract.document-DOC-FINDING-audit-finding', 'extract.document-DOC-KICKOFF-meeting-notes', 'extract.document-DOC-VENDOR-email', 'factors.primary', 'factors.secondary', 'map.1', 'map.12', 'map.15', 'map.4', 'revise.NFR-EPCS-019', 'stride']"
+eval:epcs_signing:multi_agent,sdlc_recommendation,Waterfall,87.5%; runner-up V-Model
+eval:epcs_signing:multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+eval:epcs_signing:multi_agent,human_correction_rate,,no human decisions recorded yet
+eval:epcs_signing:multi_agent,processing_minutes,93.7,"wall-clock, all steps"
+eval:epcs_signing:multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+eval:epcs_signing:multi_agent,injection_quarantined:INJ-EPCS-01,1,the scanner quarantined the seeded injection before any agent saw it
+eval:epcs_signing:baseline,precision,0.611,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:baseline,recall,0.314,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:baseline,f1,0.415,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:epcs_signing:baseline,requirements_generated,18,gold has 35 (gold not yet reviewed — provisional)
+eval:epcs_signing:baseline,control_coverage,0.485,16/33 applicable controls — upper bound: any cited chunk in the control's section counts
+eval:epcs_signing:baseline,hallucination_rate,0.0,1 citations checked
+eval:epcs_signing:baseline,citation_correctness,1.0,share of 1 evidence quotes verbatim in the cited chunk
+eval:epcs_signing:baseline,quality_final,0.944,29148 rule pass rate (no clarification loop)
+eval:epcs_signing:baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+eval:epcs_signing:baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+eval:epcs_signing:baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+eval:epcs_signing:baseline,processing_minutes,5.7,model time for the Part 1 calls
+eval:epcs_signing:multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded
+eval:erx_issuance:multi_agent,precision,0.651,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,recall,0.622,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,f1,0.636,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,precision_elicited,0.778,28/36 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,requirements_generated,43,"gold has 45; by origin {'compliance_gap': 7, 'document': 6, 'stakeholder': 30} (gold not yet reviewed — provisional)"
+eval:erx_issuance:multi_agent,category_agreement,0.506,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,ambiguity_detection_recall,0.857,6/7 seeded vague facts followed up; missed: ['F-PHARM-04'] (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,conflict_detection_recall,0.0,"0/3 seeded conflicts found; 5 conflicts flagged; missed: ['C-ERX-01', 'C-ERX-02', 'C-ERX-03']; both sides reached the requirements for 0/3 (gold not yet reviewed — provisional)"
+eval:erx_issuance:multi_agent,conflict_detection_precision,0.0,"0/3 seeded conflicts found; 5 conflicts flagged; missed: ['C-ERX-01', 'C-ERX-02', 'C-ERX-03']; both sides reached the requirements for 0/3 (gold not yet reviewed — provisional)"
+eval:erx_issuance:multi_agent,control_coverage,1.0,28/28 applicable controls
+eval:erx_issuance:multi_agent,gold_control_coverage,1.0,19/19 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+eval:erx_issuance:multi_agent,hallucination_rate,0.029,104 citations checked
+eval:erx_issuance:multi_agent,citation_correctness,0.625,share of 8 evidence quotes verbatim in the cited chunk
+eval:erx_issuance:multi_agent,quality_first_draft,0.924,29148 rule pass rate before clarification
+eval:erx_issuance:multi_agent,quality_final,0.942,29148 rule pass rate after clarification
+eval:erx_issuance:multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+eval:erx_issuance:multi_agent,mean_confidence,0.745,
+eval:erx_issuance:multi_agent,escalated,9,requirements escalated for review
+eval:erx_issuance:multi_agent,agent_calls_failed_after_repair,11,"of 104 agent calls; ['extract.document-DOC-EMAIL-email', 'extract.document-DOC-INCIDENT-incident-report', 'extract.document-DOC-INTERFACE-legacy-system-spe', 'extract.document-DOC-KICKOFF-meeting-notes', 'extract.document-DOC-POLICY-policy', 'extract.stakeholder-architect-ARCH', 'extract.stakeholder-clinical-safety-officer-CSO', 'extract.stakeholder-pharmacist-PHARM', 'extract.stakeholder-product-owner-PO', 'extract.stakeholder-security-officer-SEC', 'stride']"
+eval:erx_issuance:multi_agent,sdlc_recommendation,Waterfall,79.2%; runner-up V-Model
+eval:erx_issuance:multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+eval:erx_issuance:multi_agent,human_correction_rate,,no human decisions recorded yet
+eval:erx_issuance:multi_agent,processing_minutes,68.8,"wall-clock, all steps"
+eval:erx_issuance:multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+eval:erx_issuance:multi_agent,injection_quarantined:INJ-ERX-01,1,the scanner quarantined the seeded injection before any agent saw it
+eval:erx_issuance:baseline,precision,0.312,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:baseline,recall,0.111,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:baseline,f1,0.164,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:erx_issuance:baseline,requirements_generated,16,gold has 45 (gold not yet reviewed — provisional)
+eval:erx_issuance:baseline,control_coverage,0.357,10/28 applicable controls — upper bound: any cited chunk in the control's section counts
+eval:erx_issuance:baseline,hallucination_rate,0.312,16 citations checked
+eval:erx_issuance:baseline,citation_correctness,0.688,share of 16 evidence quotes verbatim in the cited chunk
+eval:erx_issuance:baseline,quality_final,0.953,29148 rule pass rate (no clarification loop)
+eval:erx_issuance:baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+eval:erx_issuance:baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+eval:erx_issuance:baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+eval:erx_issuance:baseline,processing_minutes,6.2,model time for the Part 1 calls
+eval:erx_issuance:multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded
+eval:refill_reminders:multi_agent,precision,0.29,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,recall,0.643,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,f1,0.4,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,precision_elicited,0.353,18/51 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,requirements_generated,62,"gold has 28; by origin {'compliance_gap': 11, 'document': 19, 'stakeholder': 32} (gold not yet reviewed — provisional)"
+eval:refill_reminders:multi_agent,category_agreement,0.509,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,ambiguity_detection_recall,0.75,3/4 seeded vague facts followed up; missed: ['F-SEC-02'] (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,conflict_detection_recall,0.0,"0/2 seeded conflicts found; 12 conflicts flagged; missed: ['C-REF-01', 'C-REF-02']; both sides reached the requirements for 2/2 (gold not yet reviewed — provisional)"
+eval:refill_reminders:multi_agent,conflict_detection_precision,0.0,"0/2 seeded conflicts found; 12 conflicts flagged; missed: ['C-REF-01', 'C-REF-02']; both sides reached the requirements for 2/2 (gold not yet reviewed — provisional)"
+eval:refill_reminders:multi_agent,control_coverage,1.0,23/23 applicable controls
+eval:refill_reminders:multi_agent,gold_control_coverage,1.0,16/16 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+eval:refill_reminders:multi_agent,hallucination_rate,0.014,147 citations checked
+eval:refill_reminders:multi_agent,citation_correctness,0.0,share of 2 evidence quotes verbatim in the cited chunk
+eval:refill_reminders:multi_agent,quality_first_draft,0.809,29148 rule pass rate before clarification
+eval:refill_reminders:multi_agent,quality_final,0.871,29148 rule pass rate after clarification
+eval:refill_reminders:multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+eval:refill_reminders:multi_agent,mean_confidence,0.754,
+eval:refill_reminders:multi_agent,escalated,10,requirements escalated for review
+eval:refill_reminders:multi_agent,agent_calls_failed_after_repair,6,"of 150 agent calls; ['extract.document-DOC-API-legacy-system-spec', 'extract.document-DOC-PROXY-policy', 'extract.document-DOC-REVIEWS-feedback', 'extract.document-DOC-SURVEY-questionnaire', 'extract.stakeholder-security-officer-SEC', 'stride']"
+eval:refill_reminders:multi_agent,sdlc_recommendation,Agile,62.5%; runner-up DevSecOps
+eval:refill_reminders:multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+eval:refill_reminders:multi_agent,human_correction_rate,,no human decisions recorded yet
+eval:refill_reminders:multi_agent,processing_minutes,65.9,"wall-clock, all steps"
+eval:refill_reminders:multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+eval:refill_reminders:multi_agent,injection_quarantined:INJ-REF-01,1,the scanner quarantined the seeded injection before any agent saw it
+eval:refill_reminders:baseline,precision,0.222,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:baseline,recall,0.143,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:baseline,f1,0.174,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+eval:refill_reminders:baseline,requirements_generated,18,gold has 28 (gold not yet reviewed — provisional)
+eval:refill_reminders:baseline,control_coverage,0.391,9/23 applicable controls — upper bound: any cited chunk in the control's section counts
+eval:refill_reminders:baseline,hallucination_rate,0.2,20 citations checked
+eval:refill_reminders:baseline,citation_correctness,0.778,share of 18 evidence quotes verbatim in the cited chunk
+eval:refill_reminders:baseline,quality_final,0.986,29148 rule pass rate (no clarification loop)
+eval:refill_reminders:baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+eval:refill_reminders:baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+eval:refill_reminders:baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+eval:refill_reminders:baseline,processing_minutes,6.5,model time for the Part 1 calls
+eval:refill_reminders:multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded
+reproducibility,repeated_calls,5,"identical calls (model, prompt, parameters) sent more than once"
+reproducibility,repeated_calls_identical,4,4/5 returned byte-identical text
+cost,llm_calls,826,"{'smoke_test': 4, 'p1_requirements': 4, 'p1_repair': 4, 'p3_critic': 258, 'stakeholder_interaction.questions.PRES': 3, 'persona.answer': 66, 'stakeholder_interaction.followups.PRES': 3, 'stakeholder_interaction.questions.PHARM': 2, 'stakeholder_interaction.followups.PHARM': 2, 'stakeholder_interaction.questions.CSO': 1, 'stakeholder_interaction.followups.CSO': 1, 'stakeholder_interaction.questions.COMP': 2, 'stakeholder_interaction.followups.COMP': 2, 'stakeholder_interaction.questions.SEC': 3, 'stakeholder_interaction.followups.SEC': 3, 'stakeholder_interaction.questions.ARCH': 1, 'stakeholder_interaction.followups.ARCH': 1, 'stakeholder_interaction.questions.PO': 2, 'stakeholder_interaction.followups.PO': 2, 'extraction.extract.stakeholder-prescriber-PRES': 3, 'extraction.extract.stakeholder-prescriber-PRES.repair': 1, 'extraction.extract.stakeholder-pharmacist-PHARM': 2, 'extraction.extract.stakeholder-pharmacist-PHARM.repair': 1, 'extraction.extract.stakeholder-clinical-safety-officer-CSO': 1, 'extraction.extract.stakeholder-clinical-safety-officer-CSO.repair': 1, 'extraction.extract.stakeholder-compliance-officer-COMP': 2, 'extraction.extract.stakeholder-security-officer-SEC': 3, 'extraction.extract.stakeholder-security-officer-SEC.repair': 3, 'extraction.extract.stakeholder-architect-ARCH': 1, 'extraction.extract.stakeholder-architect-ARCH.repair': 1, 'extraction.extract.stakeholder-product-owner-PO': 2, 'extraction.extract.stakeholder-product-owner-PO.repair': 1, 'extraction.extract.document-DOC-KICKOFF-meeting-notes': 2, 'extraction.extract.document-DOC-KICKOFF-meeting-notes.repair': 2, 'extraction.extract.document-DOC-POLICY-policy': 1, 'extraction.extract.document-DOC-POLICY-policy.repair': 1, 'extraction.extract.document-DOC-EMAIL-email': 1, 'extraction.extract.document-DOC-EMAIL-email.repair': 1, 'extraction.extract.document-DOC-INTERFACE-legacy-system-spe': 1, 'extraction.extract.document-DOC-INTERFACE-legacy-system-spe.repair': 1, 'extraction.extract.document-DOC-INCIDENT-incident-report': 1, 'extraction.extract.document-DOC-INCIDENT-incident-report.repair': 1, 'classification.classify.1': 6, 'classification.classify.2': 6, 'classification.classify.3': 3, 'classification.classify.4': 3, 'classification.classify.5': 3, 'classification.classify.6': 3, 'classification.classify.7': 3, 'conflict_detection.pairs.1': 3, 'conflict_detection.pairs.2': 3, 'conflict_detection.pairs.3': 3, 'conflict_detection.pairs.4': 3, 'clarification.questions.r1.PRES': 3, 'clarification.questions.r1.PHARM': 2, 'clarification.questions.r1.COMP': 2, 'clarification.questions.r1.ARCH': 1, 'clarification.questions.r1.PO': 2, 'extraction.revise.FR-ERX-004': 1, 'extraction.revise.FR-ERX-005': 2, 'extraction.revise.NFR-ERX-002': 2, 'extraction.revise.FR-ERX-006': 2, 'extraction.revise.FR-ERX-007': 2, 'extraction.revise.NFR-ERX-003': 2, 'extraction.revise.FR-ERX-009': 1, 'extraction.revise.NFR-ERX-007': 2, 'extraction.revise.FR-ERX-015': 2, 'extraction.revise.FR-ERX-014': 2, 'extraction.revise.FR-ERX-018': 2, 'extraction.revise.FR-ERX-019': 2, 'extraction.revise.FR-ERX-020': 2, 'extraction.revise.FR-ERX-022': 1, 'extraction.revise.FR-ERX-023': 1, 'clarification.questions.r2.PRES': 3, 'clarification.questions.r2.PHARM': 2, 'clarification.questions.r2.COMP': 2, 'clarification.questions.r2.ARCH': 1, 'clarification.questions.r2.PO': 2, 'compliance.map.1': 3, 'compliance.map.2': 3, 'compliance.map.3': 3, 'compliance.map.4': 3, 'compliance.map.5': 3, 'compliance.map.6': 3, 'compliance.map.6.repair': 1, 'compliance.map.7': 3, 'compliance.map.8': 3, 'compliance.map.9': 3, 'compliance.gaps.1': 3, 'compliance.gaps.2': 3, 'security_privacy.stride': 3, 'security_privacy.stride.repair': 3, 'risk_analysis.risk.1': 3, 'risk_analysis.risk.2': 3, 'risk_analysis.risk.3': 3, 'risk_analysis.risk.4': 3, 'risk_analysis.risk.5': 3, 'risk_analysis.risk.6': 3, 'risk_analysis.risk.7': 3, 'risk_analysis.risk.8': 3, 'sdlc_selection.factors.primary': 3, 'sdlc_selection.factors.secondary': 3, 'sdlc_selection.explain': 3, 'sdlc_selection.tailor': 3, 'documentation.stories.1': 3, 'documentation.stories.2': 3, 'documentation.stories.2.repair': 1, 'documentation.stories.3': 3, 'documentation.stories.4': 3, 'documentation.use_cases': 3, 'stakeholder_interaction.questions.CRED': 1, 'stakeholder_interaction.followups.CRED': 1, 'stakeholder_interaction.questions.AUD': 1, 'stakeholder_interaction.followups.AUD': 1, 'extraction.extract.stakeholder-compliance-officer-CRED': 1, 'extraction.extract.stakeholder-auditor-AUD': 1, 'extraction.extract.document-DOC-CRED-policy': 1, 'extraction.extract.document-DOC-CRED-policy.repair': 1, 'extraction.extract.document-DOC-VENDOR-email': 1, 'extraction.extract.document-DOC-VENDOR-email.repair': 1, 'extraction.extract.document-DOC-FINDING-audit-finding': 1, 'extraction.extract.document-DOC-FINDING-audit-finding.repair': 1, 'extraction.extract.document-DOC-IDP-legacy-system-spec': 1, 'classification.classify.1.repair': 1, 'classification.classify.8': 2, 'classification.classify.9': 2, 'classification.classify.10': 1, 'classification.classify.11': 1, 'classification.classify.12': 1, 'classification.classify.13': 1, 'clarification.questions.r1.PRES.repair': 1, 'clarification.questions.r1.CRED': 1, 'clarification.questions.r1.SEC': 2, 'extraction.revise.FR-EPCS-001': 1, 'extraction.revise.NFR-EPCS-002': 2, 'extraction.revise.FR-EPCS-002': 2, 'extraction.revise.NFR-EPCS-003': 2, 'extraction.revise.FR-EPCS-003': 1, 'extraction.revise.FR-EPCS-004': 2, 'extraction.revise.NFR-EPCS-007': 1, 'extraction.revise.FR-EPCS-015': 2, 'extraction.revise.NFR-EPCS-043': 2, 'extraction.revise.NFR-EPCS-044': 2, 'extraction.revise.FR-EPCS-016': 2, 'extraction.revise.NFR-EPCS-046': 2, 'extraction.revise.NFR-EPCS-048': 2, 'extraction.revise.FR-EPCS-018': 2, 'extraction.revise.FR-EPCS-019': 2, 'extraction.revise.FR-EPCS-020': 2, 'extraction.revise.FR-EPCS-021': 2, 'extraction.revise.FR-EPCS-024': 2, 'extraction.revise.NFR-EPCS-010': 2, 'extraction.revise.NFR-EPCS-011': 2, 'extraction.revise.FR-EPCS-007': 2, 'extraction.revise.FR-EPCS-008': 2, 'extraction.revise.NFR-EPCS-016': 2, 'extraction.revise.FR-EPCS-009': 2, 'extraction.revise.NFR-EPCS-019': 2, 'extraction.revise.NFR-EPCS-019.repair': 1, 'extraction.revise.NFR-EPCS-021': 2, 'extraction.revise.NFR-EPCS-022': 2, 'extraction.revise.NFR-EPCS-023': 2, 'extraction.revise.NFR-EPCS-024': 1, 'extraction.revise.NFR-EPCS-025': 2, 'extraction.revise.FR-EPCS-013': 2, 'extraction.revise.NFR-EPCS-029': 1, 'extraction.revise.NFR-EPCS-030': 2, 'extraction.revise.NFR-EPCS-031': 1, 'extraction.revise.FR-EPCS-014': 2, 'extraction.revise.NFR-EPCS-032': 1, 'extraction.revise.NFR-EPCS-033': 1, 'extraction.revise.NFR-EPCS-034': 1, 'clarification.questions.r2.PRES.repair': 1, 'clarification.questions.r2.CRED': 1, 'clarification.questions.r2.SEC': 2, 'compliance.map.1.repair': 1, 'compliance.map.4.repair': 1, 'compliance.map.10': 2, 'compliance.map.11': 2, 'compliance.map.12': 2, 'compliance.map.12.repair': 1, 'compliance.map.13': 2, 'compliance.map.14': 1, 'compliance.map.15': 1, 'compliance.map.15.repair': 1, 'compliance.map.16': 1, 'compliance.map.17': 1, 'compliance.map.17.repair': 1, 'compliance.map.18': 1, 'compliance.map.19': 1, 'compliance.map.19.repair': 1, 'risk_analysis.risk.9': 2, 'risk_analysis.risk.10': 2, 'risk_analysis.risk.11': 2, 'risk_analysis.risk.12': 1, 'risk_analysis.risk.13': 1, 'risk_analysis.risk.14': 1, 'sdlc_selection.factors.primary.repair': 1, 'sdlc_selection.factors.secondary.repair': 2, 'documentation.stories.5': 2, 'stakeholder_interaction.questions.PAT': 1, 'stakeholder_interaction.followups.PAT': 1, 'stakeholder_interaction.questions.CARE': 1, 'stakeholder_interaction.followups.CARE': 1, 'extraction.extract.stakeholder-patient-PAT': 1, 'extraction.extract.stakeholder-patient-CARE': 1, 'extraction.extract.stakeholder-patient-CARE.repair': 1, 'extraction.extract.document-DOC-SURVEY-questionnaire': 1, 'extraction.extract.document-DOC-SURVEY-questionnaire.repair': 1, 'extraction.extract.document-DOC-REVIEWS-feedback': 1, 'extraction.extract.document-DOC-REVIEWS-feedback.repair': 1, 'extraction.extract.document-DOC-API-legacy-system-spec': 1, 'extraction.extract.document-DOC-API-legacy-system-spec.repair': 1, 'extraction.extract.document-DOC-PROXY-policy': 1, 'extraction.extract.document-DOC-PROXY-policy.repair': 1, 'clarification.questions.r1.PAT': 1, 'clarification.questions.r1.CARE': 1, 'extraction.revise.FR-REF-002': 1, 'extraction.revise.FR-REF-003': 2, 'extraction.revise.FR-REF-004': 1, 'extraction.revise.FR-REF-005': 2, 'extraction.revise.FR-REF-006': 2, 'extraction.revise.NFR-REF-001': 2, 'extraction.revise.NFR-REF-002': 2, 'extraction.revise.FR-REF-009': 2, 'extraction.revise.FR-REF-010': 2, 'extraction.revise.FR-REF-011': 2, 'extraction.revise.FR-REF-012': 2, 'extraction.revise.NFR-REF-003': 2, 'extraction.revise.FR-REF-014': 2, 'extraction.revise.FR-REF-015': 1, 'extraction.revise.FR-REF-016': 1, 'extraction.revise.FR-REF-017': 2, 'extraction.revise.NFR-REF-004': 1, 'extraction.revise.FR-REF-030': 1, 'extraction.revise.FR-REF-031': 2, 'extraction.revise.FR-REF-032': 2, 'extraction.revise.FR-REF-034': 1, 'extraction.revise.FR-REF-035': 2, 'extraction.revise.FR-REF-036': 1, 'extraction.revise.FR-REF-037': 2, 'extraction.revise.FR-REF-039': 2, 'extraction.revise.FR-REF-040': 2, 'extraction.revise.FR-REF-041': 2, 'extraction.revise.FR-REF-044': 1, 'extraction.revise.FR-REF-045': 2, 'extraction.revise.NFR-REF-007': 2, 'extraction.revise.FR-REF-019': 1, 'extraction.revise.FR-REF-020': 2, 'extraction.revise.FR-REF-021': 2, 'extraction.revise.FR-REF-022': 2, 'extraction.revise.FR-REF-025': 2, 'extraction.revise.FR-REF-026': 2, 'extraction.revise.FR-REF-027': 2, 'extraction.revise.FR-REF-028': 2, 'clarification.questions.r2.PAT': 1, 'clarification.questions.r2.CARE': 1, 'compliance.map.5.repair': 1, 'compliance.map.10.repair': 1, 'risk_analysis.risk.6.repair': 1, 'risk_analysis.risk.11.repair': 1, 'documentation.stories.6': 1, 'documentation.stories.7': 1, 'documentation.stories.8': 1, 'p2_sdlc': 18, 'extraction.extract.document-DOC-VENDOR': 1, 'extraction.extract.document-DOC-VENDOR.repair': 1, 'injection_replay.undefended': 3, 'extraction.extract.document-DOC-EMAIL': 1, 'extraction.extract.document-DOC-EMAIL.repair': 1, 'extraction.extract.document-DOC-REVIEWS': 1, 'extraction.extract.document-DOC-REVIEWS.repair': 1}"
+cost,llm_call_errors,0,failed attempts (retried)
+cost,prompt_tokens_total,1021425,
+cost,completion_tokens_total,399570,
+cost,tokens_total,1420995,
+cost,wall_clock_s,17778.2,296.3 minutes of model time

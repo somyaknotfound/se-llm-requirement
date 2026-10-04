@@ -1,0 +1,19 @@
+req_id,reasoning,evidence_quote,inference_type
+FR-01,"This requirement is directly extracted from the evidence, ensuring that only authorized prescribers can sign controlled substance prescriptions.","While the prescription information required in § 1311.120(b)(9) and the statement required by paragraph (a)(3) of this section remain displayed, the practitioner must be prompted to complete the two-factor authentication protocol.",direct_extraction
+FR-02,"This requirement is derived from the evidence, ensuring that signed prescriptions are securely stored and can be audited.",,regulatory_derivation
+FR-03,"This requirement is derived from the evidence, ensuring that prescriptions are accurately and securely transmitted to the pharmacy.",,regulatory_derivation
+FR-04,"This requirement is derived from the evidence, ensuring that all actions are logged and can be audited for security incidents.",,regulatory_derivation
+FR-05,"This requirement is derived from the evidence, ensuring that prescribers can correct errors or make changes to prescriptions.",,regulatory_derivation
+FR-06,"This requirement is derived from the evidence, ensuring patient safety by preventing harmful drug interactions.",,regulatory_derivation
+FR-07,"This requirement is derived from the evidence, ensuring compliance with data retention regulations.",,regulatory_derivation
+FR-08,"This requirement is derived from the evidence, ensuring that all necessary information is included in the prescription.",,regulatory_derivation
+NFR-01,"This requirement is derived from the evidence, ensuring that prescriber credentials are secure and not misused.",,regulatory_derivation
+NFR-02,"This requirement is derived from the evidence, ensuring that the system can handle high volumes of requests efficiently.",,regulatory_derivation
+NFR-03,"This requirement is derived from the evidence, ensuring data integrity and availability in case of system failures.",,regulatory_derivation
+NFR-04,"This requirement is derived from the evidence, ensuring that the system adheres to all legal obligations.",,regulatory_derivation
+NFR-05,"This requirement is derived from the evidence, ensuring that the system can be easily updated and maintained over time.",,regulatory_derivation
+NFR-06,"This requirement is derived from the evidence, ensuring interoperability with other health information systems.",,regulatory_derivation
+NFR-07,"This requirement is derived from the evidence, ensuring that prescribers can easily and correctly sign prescriptions.",,regulatory_derivation
+NFR-08,"This requirement is derived from the evidence, ensuring that the system complies with HIPAA standards.",,regulatory_derivation
+NFR-09,"This requirement is derived from the evidence, ensuring that only authorized individuals can access sensitive prescription data.",,regulatory_derivation
+NFR-10,"This requirement is derived from the evidence, ensuring that prescription records are not altered and can be trusted.",,regulatory_derivation

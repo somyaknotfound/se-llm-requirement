@@ -179,10 +179,14 @@ def conflict_detection(state: dict[str, Any], gold: dict[str, Any]) -> dict[str,
                 detected.add(s["id"])
                 true_flags.add(c["id"])
     missed = sorted({s["id"] for s in seeded} - detected)
+    # A conflict whose two sides never both reached a requirement is an elicitation miss,
+    # not a detection miss: the conflict agent had nothing to compare.
+    in_reqs = set().union(*map(req_facts, reqs)) if reqs else set()
+    elicited = sorted(s["id"] for s in seeded if set(s["facts"]) <= in_reqs)
     return {"recall": round(len(detected) / len(seeded), 3) if seeded else None,
             "precision": round(len(true_flags) / len(flagged), 3) if flagged else None,
             "detail": f"{len(detected)}/{len(seeded)} seeded conflicts found; {len(flagged)} conflicts flagged; "
-                      f"missed: {missed}"}
+                      f"missed: {missed}; both sides reached the requirements for {len(elicited)}/{len(seeded)}"}
 
 
 def _category_agreement(matches: list[dict[str, Any]], generated: dict[str, dict[str, Any]],

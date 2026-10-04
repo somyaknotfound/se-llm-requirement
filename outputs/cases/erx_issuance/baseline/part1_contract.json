@@ -1,0 +1,48 @@
+{
+  "initial_errors": [
+    "produced 16 requirements; contract requires between 18 and 25",
+    "FR-06: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-01: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-02: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-04: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-05: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-06: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "initial_flags": [],
+  "repair_attempted": true,
+  "used": "initial_after_failed_repair",
+  "repair_errors": [
+    "FR-06: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-01: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-02: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-04: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-05: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-06: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-09: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-10: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "repair_flags": [],
+  "contract_passed": false,
+  "final_errors": [
+    "produced 16 requirements; contract requires between 18 and 25",
+    "FR-06: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "FR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-01: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-02: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-04: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-05: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-06: risk_class='Compliance-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-07: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']",
+    "NFR-08: risk_class='Security-critical' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "final_flags": []
+}

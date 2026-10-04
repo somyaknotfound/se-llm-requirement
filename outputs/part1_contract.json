@@ -1,0 +1,21 @@
+{
+  "initial_errors": [
+    "only 0 NFRs; contract requires at least 8",
+    "FR-10: risk_class='Performance' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "initial_flags": [],
+  "repair_attempted": true,
+  "used": "initial_after_failed_repair",
+  "repair_errors": [
+    "produced 10 requirements; contract requires between 18 and 25",
+    "only 0 NFRs; contract requires at least 8",
+    "FR-10: risk_class='Performance' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "repair_flags": [],
+  "contract_passed": false,
+  "final_errors": [
+    "only 0 NFRs; contract requires at least 8",
+    "FR-10: risk_class='Performance' is not one of ['Business-critical', 'Safety-critical', 'Standard']"
+  ],
+  "final_flags": []
+}

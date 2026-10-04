@@ -1,0 +1,6 @@
+gold_id,gold_statement,req_id,statement,similarity,human_verdict
+G-ERX-01,The system shall display drug-drug and drug-allergy interaction alerts before a medication order can be signed.,FR-02,The system shall perform real-time drug-drug interaction and allergy contraindication checking at the point of ordering.,0.801,
+G-ERX-21,The system shall allow a prescriber to change a transmitted prescription through an RxChangeRequest message.,FR-05,The system shall allow the prescriber to change or cancel an e-Rx before it is transmitted.,0.773,
+G-ERX-18,The system shall send new prescriptions to the e-prescribing intermediary as NCPDP SCRIPT NewRx messages.,FR-01,The system shall allow a prescriber to issue an electronic prescription for a patient.,0.745,
+G-ERX-30,The system shall reach the e-prescribing intermediary acknowledgement within 10 seconds of signing for 95% of prescriptions.,FR-04,The system shall transmit the e-Rx to a community pharmacy through an e-prescribing intermediary.,0.662,
+G-ERX-39,The system shall retain audit logs and security documentation for at least 6 years.,NFR-05,The system shall retain all e-Rx records for at least two years from the date of their creation or receipt.,0.605,

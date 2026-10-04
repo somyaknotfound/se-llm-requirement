@@ -1,0 +1,9 @@
+id,stride,asset,description,mitigated_by,proposed_req_id
+TH-01,Spoofing,Patient's identity and consent,A malicious actor could impersonate a patient or caregiver to request prescription renewals or access sensitive health information.,NFR-REF-014,
+TH-02,Tampering,Prescription data and patient records,"An attacker could alter or corrupt the prescription data or patient records, leading to incorrect medication refills or renewals.",NFR-REF-015,
+TH-03,Repudiation,Audit logs and access records,"A user could deny performing actions, such as requesting a prescription renewal or accessing patient records.",FR-REF-019,
+TH-04,Information disclosure,Sensitive patient health information,The system could inadvertently or maliciously expose sensitive patient health information to unauthorized parties.,NFR-REF-007,
+TH-05,Denial of service,System availability and functionality,"A denial-of-service attack could disrupt the system's ability to send reminders, process renewal requests, or notify patients about their medication readiness.",NFR-REF-004,
+TH-06,Elevation of privilege,System and user permissions,"A user with lower privileges could gain higher access to patient records or system functions, leading to unauthorized actions.",FR-REF-011,
+TH-07,Spoofing,Caregiver's identity and consent,"A caregiver could be spoofed, leading to unauthorized access or actions on behalf of the patient.",FR-REF-012,
+TH-08,Information disclosure,Patient's medication reminders and renewal requests,Sensitive information about the patient's medication reminders and renewal requests could be disclosed to unauthorized parties.,FR-REF-018,

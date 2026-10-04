@@ -1,0 +1,90 @@
+req_id,control_id,citation,relation,evidence_chunk_id,rationale,similarity,needs_officer_approval,status
+FR-ERX-001,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.769,True,proposed
+FR-ERX-001,FHIR-AI-9.1.3.4,HL7 FHIR R4 AllergyIntolerance §9.1.3.4,partially,D02#S9.1.3.4#c21,Distinguishes criticality from severity of a particular reaction when recording allergies and intolerances.,0.46,True,proposed
+FR-ERX-002,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.625,True,proposed
+FR-ERX-003,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.628,True,proposed
+FR-ERX-003,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.451,True,proposed
+FR-ERX-004,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.439,True,proposed
+FR-ERX-005,FHIR-AI-9.1.3.4,HL7 FHIR R4 AllergyIntolerance §9.1.3.4,satisfies,D02#S9.1.3.4#c21,"The control distinguishes criticality from severity, which is relevant to handling allergy alerts.",0.443,True,proposed
+FR-ERX-005,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,The control ensures drug-drug and drug-allergy contraindications are automatically indicated.,0.38,True,proposed
+NFR-ERX-002,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c11,The control enables the handling of prescription details and notifications.,0.341,True,proposed
+FR-ERX-006,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,The control enables the receipt of prescription details.,0.73,True,proposed
+FR-ERX-006,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,The control represents the order with necessary details including refills.,0.637,True,proposed
+FR-ERX-007,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,The control ensures the verification of prescription details before filling.,0.584,True,proposed
+FR-ERX-007,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,The control represents the order with necessary details including refills.,0.684,True,proposed
+NFR-ERX-003,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,Enables the system to receive e-Rx prescriptions in a compliant format.,0.673,True,proposed
+NFR-ERX-003,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c13,Represents the order with necessary details as per the e-prescribing standard.,0.469,True,proposed
+FR-ERX-009,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables the system to send and receive CancelRx messages.,0.6,True,proposed
+FR-ERX-009,ONC-170.315(a)(1),45 CFR 170.315(a)(1),satisfies,D05#S170.315(a)#c02,"Enables a user to record, change, and access medication orders.",0.392,True,proposed
+FR-ERX-011,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications.,0.698,True,proposed
+FR-ERX-011,ONC-170.315(a)(10),45 CFR 170.315(a)(10),satisfies,D05#S170.315(a)#c02,Automatically checks the drug formulary or preferred drug list.,0.485,True,proposed
+FR-ERX-011,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,Enables the system to send and receive CancelRx messages.,0.459,True,proposed
+FR-ERX-012,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c04,Automatically checks the drug formulary or preferred drug list.,0.682,True,proposed
+FR-ERX-012,ONC-170.315(d)(2),45 CFR 170.315(d)(2),satisfies,D05#S170.315(d)#c16,Records actions related to electronic health information.,0.457,True,proposed
+FR-ERX-013,HIPAA-164.308(a)(1)(ii)(D),45 CFR 164.308(a)(1)(ii)(D),satisfies,D04#S164.308(a)#c05,"Regularly review records of information system activity, such as audit logs, access reports, and security incident tracking reports.",0.381,True,proposed
+FR-ERX-013,HIPAA-164.312(b),45 CFR 164.312(b),satisfies,D04#S164.312#c07,"Implement hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use electronic protected health information.",0.36,True,proposed
+NFR-ERX-004,ONC-170.315(d)(9),45 CFR 170.315(d)(9),satisfies,D05#S170.315(d)#c17,Encrypt and integrity protect message contents in accordance with the standards specified in § 170.210(a)(2) and (c)(2). (ii) Transport-level.,0.313,True,proposed
+NFR-ERX-004,ONC-170.315(b)(3),45 CFR 170.315(b)(3),partially,D05#S170.315(b)#c06,Receive and make available the contents of a XDM package formatted in accordance with the standard adopted in § 170.205(p)(1) when the technology is also being certified using an SMTP-based edge protocol.,0.313,True,proposed
+NFR-ERX-005,ONC-170.315(a)(4),45 CFR 170.315(a)(4),partially,D05#S170.315(a)#c04,Automatically check whether a drug formulary or preferred drug list exists for a given patient and medication.,0.514,True,proposed
+NFR-ERX-005,ONC-170.315(a)(10),45 CFR 170.315(a)(10),partially,D05#S170.315(a)#c04,Automatically check whether a drug formulary or preferred drug list exists for a given patient and medication.,0.47,True,proposed
+NFR-ERX-005,ONC-170.315(d)(2),45 CFR 170.315(d)(2),satisfies,D05#S170.315(d)#c16,"Record actions related to electronic health information by default; restrict disabling to a limited set of users; audit records must not be changeable, overwritable or deletable, and alteration must be detectable.",0.444,True,proposed
+NFR-ERX-006,ONC-170.315(d)(3),45 CFR 170.315(d)(3),satisfies,D05#S170.315(d)#c16,Enable a user to create an audit report for a specific time period and to sort entries in the audit log according to each of the data specified in the standards in § 170.210(e). (B) Record the audit log status (enabled or disabled) in accordance with the standard specified in § 170.210(e)(2) unless it cannot be disabled by any user;,0.613,True,proposed
+NFR-ERX-006,HIPAA-164.308(a)(1)(ii)(D),45 CFR 164.308(a)(1)(ii)(D),satisfies,D04#S164.308(a)#c05,"Regularly review records of information system activity, such as audit logs, access reports, and security incident tracking reports.",0.502,True,proposed
+NFR-ERX-006,HIPAA-164.312(b),45 CFR 164.312(b),satisfies,D04#S164.312#c07,"Implement hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use electronic protected health information.",0.48,True,proposed
+NFR-ERX-007,ONC-170.315(a)(1),45 CFR 170.315(a)(1),satisfies,D05#S170.315(a)#c02,"Enables recording, changing, and accessing medication orders.",0.517,True,proposed
+NFR-ERX-007,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.485,True,proposed
+NFR-ERX-007,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications.,0.441,True,proposed
+NFR-ERX-008,HIPAA-164.316(b)(2)(i),45 CFR 164.316(b)(2)(i),satisfies,D04#S164.316#c09,Retains required security documentation for 6 years.,0.546,True,proposed
+NFR-ERX-008,HIPAA-164.312(b),45 CFR 164.312(b),satisfies,D04#S164.312#c07,Implements mechanisms to record and examine activity.,0.34,True,proposed
+NFR-ERX-009,FHIR-SEC-6.1.0.5,HL7 FHIR R4 Security §6.1.0.5,satisfies,D03#S6.1.0.5#c12,Applies role- or attribute-based access control.,0.687,True,proposed
+NFR-ERX-009,ONC-170.315(d)(6),45 CFR 170.315(d)(6),satisfies,D05#S170.315(d)#c16,Permits access during an emergency.,0.523,True,proposed
+NFR-ERX-009,ONC-170.315(a)(1),45 CFR 170.315(a)(1),partially,D05#S170.315(a)#c02,"Enables recording, changing, and accessing medication orders (partially relevant).",0.511,True,proposed
+NFR-ERX-011,HIPAA-164.316(b)(2)(i),45 CFR 164.316(b)(2)(i),satisfies,D04#S164.316#c09,Retains required security documentation for 6 years.,0.777,True,proposed
+NFR-ERX-011,ONC-170.315(d)(3),45 CFR 170.315(d)(3),satisfies,D05#S170.315(d)#c16,Enables creating an audit report for a specific time period.,0.448,True,proposed
+NFR-ERX-011,FHIR-SEC-6.1.0.6,HL7 FHIR R4 Security §6.1.0.6,satisfies,D03#S6.1.0.6#c15,Records security-relevant events as AuditEvent resources.,0.425,True,proposed
+NFR-ERX-012,ONC-170.315(d)(1),45 CFR 170.315(d)(1),satisfies,D05#S170.315(d)#c17,Verifies a user against a unique identifier and establishes the type of access and actions permitted.,0.584,True,proposed
+NFR-ERX-012,HIPAA-164.312(a)(2)(i),45 CFR 164.312(a)(2)(i),satisfies,D04#S164.312#c07,Assigns a unique name and/or number for identifying and tracking user identity.,0.535,True,proposed
+NFR-ERX-012,FHIR-SEC-6.1.0.4,HL7 FHIR R4 Security §6.1.0.4,partially,D03#S6.1.0.4#c11,"Recommends using OpenID Connect for user authentication, which is part of the requirement.",0.465,True,proposed
+NFR-ERX-013,ONC-170.315(d)(9),45 CFR 170.315(d)(9),satisfies,D05#S170.315(d)#c17,Encrypts and integrity-protects message contents at the transport level.,0.441,True,proposed
+NFR-ERX-013,HIPAA-164.312(a)(2)(iv),45 CFR 164.312(a)(2)(iv),satisfies,D04#S164.312#c07,Implements a mechanism to encrypt and decrypt ePHI.,0.398,True,proposed
+NFR-ERX-014,ONC-170.315(d)(2),45 CFR 170.315(d)(2),satisfies,D05#S170.315(d)#c16,Records actions related to electronic health information and restricts disabling to a limited set of users.,0.603,True,proposed
+NFR-ERX-014,ONC-170.315(d)(1),45 CFR 170.315(d)(1),partially,D05#S170.315(d)#c16,"Verifies a user against a unique identifier and establishes the type of access, which is related to the requirement.",0.496,True,proposed
+NFR-ERX-014,HIPAA-164.312(b),45 CFR 164.312(b),satisfies,D04#S164.312#c07,Implements mechanisms to record and examine activity in information systems.,0.481,True,proposed
+NFR-ERX-015,ONC-170.315(d)(5),45 CFR 170.315(d)(5),satisfies,D05#S170.315(d)#c17,Automatically stops user access after a predetermined period of inactivity and requires authentication to resume.,0.709,True,proposed
+NFR-ERX-015,HIPAA-164.312(a)(2)(iii),45 CFR 164.312(a)(2)(iii),satisfies,D04#S164.312#c07,Terminates an electronic session after a predetermined time of inactivity.,0.597,True,proposed
+FR-ERX-014,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c10,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.534,True,proposed
+FR-ERX-014,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.486,True,proposed
+FR-ERX-014,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.424,True,proposed
+FR-ERX-015,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,Automatically indicates drug-drug and drug-allergy contraindications based on the patient's medication and allergy lists.,0.739,True,proposed
+FR-ERX-015,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.525,True,proposed
+FR-ERX-015,ONC-170.315(a)(10),45 CFR 170.315(a)(10),satisfies,D05#S170.315(a)#c02,Automatically checks whether a drug formulary or preferred drug list exists for a given patient and medication.,0.518,True,proposed
+FR-ERX-016,ONC-170.315(a)(10),45 CFR 170.315(a)(10),satisfies,D05#S170.315(a)#c04,Automatically checks whether a drug formulary or preferred drug list exists for a given patient and medication.,0.37,True,proposed
+FR-ERX-016,ONC-170.315(d)(5),45 CFR 170.315(d)(5),partially,D05#S170.315(d)#c17,Automatically stops user access after a predetermined period of inactivity.,0.316,True,proposed
+FR-ERX-016,HIPAA-164.312(a)(2)(iii),45 CFR 164.312(a)(2)(iii),partially,D04#S164.312#c07,Terminates an electronic session after a predetermined time of inactivity.,0.301,True,proposed
+NFR-ERX-017,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.421,True,proposed
+NFR-ERX-017,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c14,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.416,True,proposed
+NFR-ERX-017,ONC-170.315(a)(1),45 CFR 170.315(a)(1),satisfies,D05#S170.315(a)#c02,"Enables a user to record, change, and access medication orders.",0.341,True,proposed
+FR-ERX-017,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.443,True,proposed
+FR-ERX-017,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.389,True,proposed
+FR-ERX-018,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.586,True,proposed
+FR-ERX-018,ONC-170.315(a)(1),45 CFR 170.315(a)(1),satisfies,D05#S170.315(a)#c02,"Enables a user to record, change, and access medication orders.",0.504,True,proposed
+FR-ERX-018,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c06,"Represents the order with medication, subject, requester, authored date, dosage instructions and dispense request.",0.485,True,proposed
+FR-ERX-019,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.556,True,proposed
+FR-ERX-019,ONC-170.315(a)(1),45 CFR 170.315(a)(1),satisfies,D05#S170.315(a)#c02,"Enables a user to record, change, and access medication orders.",0.424,True,proposed
+FR-ERX-020,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,"Before a medication order is completed and acted upon, automatically indicates drug-drug and drug-allergy contraindications.",0.68,True,proposed
+FR-ERX-020,ONC-170.315(a)(10),45 CFR 170.315(a)(10),satisfies,D05#S170.315(a)#c02,Automatically checks whether a drug formulary or preferred drug list exists for a given patient and medication.,0.476,True,proposed
+FR-ERX-020,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c09,"Enables new prescriptions, change, cancel and renewal requests and responses.",0.471,True,proposed
+FR-ERX-021,ONC-170.315(a)(4),45 CFR 170.315(a)(4),satisfies,D05#S170.315(a)#c02,The evidence indicates that the system must automatically indicate drug-drug and drug-allergy contraindications.,0.513,True,proposed
+FR-ERX-021,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,partially,D01#S11.1.3#c14,"The evidence mentions substitution restrictions, but does not specifically address the requirement for providing a reason for prescription overrides.",0.444,True,proposed
+FR-ERX-022,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,The evidence indicates that the system must be able to cancel prescriptions.,0.426,True,proposed
+FR-ERX-022,ONC-170.315(a)(4),45 CFR 170.315(a)(4),partially,D05#S170.315(a)#c02,"The evidence mentions drug-drug and drug-allergy contraindications, but does not specifically address the requirement for notifying pharmacies of prescription cancellations.",0.414,True,proposed
+FR-ERX-023,ONC-170.315(b)(3),45 CFR 170.315(b)(3),satisfies,D05#S170.315(b)#c10,The evidence indicates that the system must be able to transmit electronic prescriptions.,0.547,True,proposed
+FR-ERX-023,FHIR-MR-11.1.3,HL7 FHIR R4 MedicationRequest §11.1.3,satisfies,D01#S11.1.3#c14,"The evidence mentions the representation of medication requests, which is relevant to transmitting prescriptions.",0.521,True,proposed
+FR-ERX-023,ONC-170.315(a)(1),45 CFR 170.315(a)(1),partially,D05#S170.315(a)#c02,"The evidence mentions enabling users to record, change, and access medication orders, but does not specifically address the requirement for transmitting prescriptions through an intermediary.",0.49,True,proposed
+NFR-ERX-019,HIPAA-164.308(a)(1)(ii)(A),45 CFR 164.308(a)(1)(ii)(A),satisfies,D04#S164.308(a)#c04,proposed to close a compliance gap,,True,proposed
+NFR-ERX-020,HIPAA-164.312(a)(1),45 CFR 164.312(a)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-ERX-021,HIPAA-164.312(a)(2)(ii),45 CFR 164.312(a)(2)(ii),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-ERX-022,HIPAA-164.312(c)(1),45 CFR 164.312(c)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-ERX-023,HIPAA-164.312(d),45 CFR 164.312(d),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-ERX-024,HIPAA-164.312(e)(1),45 CFR 164.312(e)(1),satisfies,D04#S164.312#c07,proposed to close a compliance gap,,True,proposed
+NFR-ERX-025,ONC-170.315(d)(7),45 CFR 170.315(d)(7),satisfies,D05#S170.315(d)#c17,proposed to close a compliance gap,,True,proposed

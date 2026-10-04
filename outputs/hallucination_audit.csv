@@ -1,0 +1,18 @@
+req_id,cited_entity,entity_type,verdict,evidence,severity
+FR-01,This resource covers all type of orders for medications for a patient. This includes inpatient medication orders as well as community orders (whether filled by ,evidence_quote,verified,verbatim in a cited chunk,none
+FR-02,"Before a medication order is completed and acted upon during computerized provider order entry (CPOE), interventions must automatically indicate to a user drug-",evidence_quote,verified,verbatim in a cited chunk,none
+FR-03,The electronic prescription application must require the individual practitioner to complete a two-factor authentication protocol as specified in § 1311.140(a)(,evidence_quote,verified,verbatim in a cited chunk,none
+FR-04,An electronic prescription must be transmitted from the practitioner to the pharmacy in its electronic form. At no time may an intermediary convert an electroni,evidence_quote,verified,verbatim in a cited chunk,none
+FR-05,"The application provider must establish and implement a list of auditable events. Auditable events must, at a minimum, include the following: (1) Attempted unau",evidence_quote,verified,verbatim in a cited chunk,none
+FR-06,The pharmacy application must protect the stored audit records from unauthorized deletion. The pharmacy application shall prevent modifications to the audit rec,evidence_quote,misattributed,present in corpus but not in the cited chunk(s),medium
+FR-07,Records required by this part must be maintained electronically for two years from the date of their creation or receipt.,evidence_quote,fabricated,not present anywhere in the corpus,high
+FR-08,"These instances can be linked in different ways, depending on the needs of the workflow. For guidance, refer to the Request pattern",evidence_quote,verified,verbatim in a cited chunk,none
+FR-09,"Enable a user to record, change, and access patient demographic and observations data including race, ethnicity, preferred language, sex, sex parameter for clin",evidence_quote,verified,verbatim in a cited chunk,none
+FR-11,"Any change to the content during transmission, including truncation or removal of data, will render the electronic prescription invalid.",evidence_quote,verified,verbatim in a cited chunk,none
+FR-12,An electronic prescription must be transmitted from the practitioner to the pharmacy in its electronic form. At no time may an intermediary convert an electroni,evidence_quote,verified,verbatim in a cited chunk,none
+FR-13,The electronic prescription application must not allow the transmission of an electronic prescription if an original prescription was printed prior to attempted,evidence_quote,verified,verbatim in a cited chunk,none
+FR-14,The electronic prescription application must transmit the electronic prescription as soon as possible after signature by the practitioner.,evidence_quote,verified,verbatim in a cited chunk,none
+FR-15,The electronic prescription application may print a prescription that has been transmitted only if an intermediary or the designated pharmacy notifies a practit,evidence_quote,verified,verbatim in a cited chunk,none
+FR-16,The electronic prescription data may be converted from one software version to another between the electronic prescription application and the pharmacy applicat,evidence_quote,verified,verbatim in a cited chunk,none
+FR-17,The electronic prescription application must transmit the electronic prescription as soon as possible after signature by the practitioner.,evidence_quote,verified,verbatim in a cited chunk,none
+FR-18,The electronic prescription application must transmit the electronic prescription as soon as possible after signature by the practitioner.,evidence_quote,verified,verbatim in a cited chunk,none

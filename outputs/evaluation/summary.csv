@@ -1,0 +1,115 @@
+case,system,metric,value,detail
+epcs_signing,multi_agent,precision,0.373,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,recall,0.886,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,f1,0.525,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,precision_elicited,0.419,31/74 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,requirements_generated,83,"gold has 35; by origin {'compliance_gap': 9, 'document': 18, 'stakeholder': 56} (gold not yet reviewed — provisional)"
+epcs_signing,multi_agent,category_agreement,0.366,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,ambiguity_detection_recall,0.833,5/6 seeded vague facts followed up; missed: ['F-SEC-01'] (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,conflict_detection_recall,0.0,"0/3 seeded conflicts found; 15 conflicts flagged; missed: ['C-EPCS-01', 'C-EPCS-02', 'C-EPCS-03']; both sides reached the requirements for 3/3 (gold not yet reviewed — provisional)"
+epcs_signing,multi_agent,conflict_detection_precision,0.0,"0/3 seeded conflicts found; 15 conflicts flagged; missed: ['C-EPCS-01', 'C-EPCS-02', 'C-EPCS-03']; both sides reached the requirements for 3/3 (gold not yet reviewed — provisional)"
+epcs_signing,multi_agent,control_coverage,1.0,33/33 applicable controls
+epcs_signing,multi_agent,gold_control_coverage,1.0,18/18 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+epcs_signing,multi_agent,hallucination_rate,0.054,221 citations checked
+epcs_signing,multi_agent,citation_correctness,0.73,share of 37 evidence quotes verbatim in the cited chunk
+epcs_signing,multi_agent,quality_first_draft,0.895,29148 rule pass rate before clarification
+epcs_signing,multi_agent,quality_final,0.905,29148 rule pass rate after clarification
+epcs_signing,multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+epcs_signing,multi_agent,mean_confidence,0.73,
+epcs_signing,multi_agent,escalated,22,requirements escalated for review
+epcs_signing,multi_agent,agent_calls_failed_after_repair,12,"of 165 agent calls; ['extract.document-DOC-CRED-policy', 'extract.document-DOC-FINDING-audit-finding', 'extract.document-DOC-KICKOFF-meeting-notes', 'extract.document-DOC-VENDOR-email', 'factors.primary', 'factors.secondary', 'map.1', 'map.12', 'map.15', 'map.4', 'revise.NFR-EPCS-019', 'stride']"
+epcs_signing,multi_agent,sdlc_recommendation,Waterfall,87.5%; runner-up V-Model
+epcs_signing,multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+epcs_signing,multi_agent,human_correction_rate,,no human decisions recorded yet
+epcs_signing,multi_agent,processing_minutes,93.7,"wall-clock, all steps"
+epcs_signing,multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+epcs_signing,multi_agent,injection_quarantined:INJ-EPCS-01,1,the scanner quarantined the seeded injection before any agent saw it
+epcs_signing,baseline,precision,0.611,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,baseline,recall,0.314,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,baseline,f1,0.415,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+epcs_signing,baseline,requirements_generated,18,gold has 35 (gold not yet reviewed — provisional)
+epcs_signing,baseline,control_coverage,0.485,16/33 applicable controls — upper bound: any cited chunk in the control's section counts
+epcs_signing,baseline,hallucination_rate,0.0,1 citations checked
+epcs_signing,baseline,citation_correctness,1.0,share of 1 evidence quotes verbatim in the cited chunk
+epcs_signing,baseline,quality_final,0.944,29148 rule pass rate (no clarification loop)
+epcs_signing,baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+epcs_signing,baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+epcs_signing,baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+epcs_signing,baseline,processing_minutes,5.7,model time for the Part 1 calls
+epcs_signing,multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded
+erx_issuance,multi_agent,precision,0.651,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,recall,0.622,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,f1,0.636,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,precision_elicited,0.778,28/36 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,requirements_generated,43,"gold has 45; by origin {'compliance_gap': 7, 'document': 6, 'stakeholder': 30} (gold not yet reviewed — provisional)"
+erx_issuance,multi_agent,category_agreement,0.506,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,ambiguity_detection_recall,0.857,6/7 seeded vague facts followed up; missed: ['F-PHARM-04'] (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,conflict_detection_recall,0.0,"0/3 seeded conflicts found; 5 conflicts flagged; missed: ['C-ERX-01', 'C-ERX-02', 'C-ERX-03']; both sides reached the requirements for 0/3 (gold not yet reviewed — provisional)"
+erx_issuance,multi_agent,conflict_detection_precision,0.0,"0/3 seeded conflicts found; 5 conflicts flagged; missed: ['C-ERX-01', 'C-ERX-02', 'C-ERX-03']; both sides reached the requirements for 0/3 (gold not yet reviewed — provisional)"
+erx_issuance,multi_agent,control_coverage,1.0,28/28 applicable controls
+erx_issuance,multi_agent,gold_control_coverage,1.0,19/19 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+erx_issuance,multi_agent,hallucination_rate,0.029,104 citations checked
+erx_issuance,multi_agent,citation_correctness,0.625,share of 8 evidence quotes verbatim in the cited chunk
+erx_issuance,multi_agent,quality_first_draft,0.924,29148 rule pass rate before clarification
+erx_issuance,multi_agent,quality_final,0.942,29148 rule pass rate after clarification
+erx_issuance,multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+erx_issuance,multi_agent,mean_confidence,0.745,
+erx_issuance,multi_agent,escalated,9,requirements escalated for review
+erx_issuance,multi_agent,agent_calls_failed_after_repair,11,"of 104 agent calls; ['extract.document-DOC-EMAIL-email', 'extract.document-DOC-INCIDENT-incident-report', 'extract.document-DOC-INTERFACE-legacy-system-spe', 'extract.document-DOC-KICKOFF-meeting-notes', 'extract.document-DOC-POLICY-policy', 'extract.stakeholder-architect-ARCH', 'extract.stakeholder-clinical-safety-officer-CSO', 'extract.stakeholder-pharmacist-PHARM', 'extract.stakeholder-product-owner-PO', 'extract.stakeholder-security-officer-SEC', 'stride']"
+erx_issuance,multi_agent,sdlc_recommendation,Waterfall,79.2%; runner-up V-Model
+erx_issuance,multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+erx_issuance,multi_agent,human_correction_rate,,no human decisions recorded yet
+erx_issuance,multi_agent,processing_minutes,68.8,"wall-clock, all steps"
+erx_issuance,multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+erx_issuance,multi_agent,injection_quarantined:INJ-ERX-01,1,the scanner quarantined the seeded injection before any agent saw it
+erx_issuance,baseline,precision,0.312,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,baseline,recall,0.111,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,baseline,f1,0.164,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+erx_issuance,baseline,requirements_generated,16,gold has 45 (gold not yet reviewed — provisional)
+erx_issuance,baseline,control_coverage,0.357,10/28 applicable controls — upper bound: any cited chunk in the control's section counts
+erx_issuance,baseline,hallucination_rate,0.312,16 citations checked
+erx_issuance,baseline,citation_correctness,0.688,share of 16 evidence quotes verbatim in the cited chunk
+erx_issuance,baseline,quality_final,0.953,29148 rule pass rate (no clarification loop)
+erx_issuance,baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+erx_issuance,baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+erx_issuance,baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+erx_issuance,baseline,processing_minutes,6.2,model time for the Part 1 calls
+erx_issuance,multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded
+refill_reminders,multi_agent,precision,0.29,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,recall,0.643,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,f1,0.4,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,precision_elicited,0.353,18/51 stakeholder- and document-sourced requirements matched (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,requirements_generated,62,"gold has 28; by origin {'compliance_gap': 11, 'document': 19, 'stakeholder': 32} (gold not yet reviewed — provisional)"
+refill_reminders,multi_agent,category_agreement,0.509,mean Jaccard of categories on matched pairs (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,ambiguity_detection_recall,0.75,3/4 seeded vague facts followed up; missed: ['F-SEC-02'] (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,conflict_detection_recall,0.0,"0/2 seeded conflicts found; 12 conflicts flagged; missed: ['C-REF-01', 'C-REF-02']; both sides reached the requirements for 2/2 (gold not yet reviewed — provisional)"
+refill_reminders,multi_agent,conflict_detection_precision,0.0,"0/2 seeded conflicts found; 12 conflicts flagged; missed: ['C-REF-01', 'C-REF-02']; both sides reached the requirements for 2/2 (gold not yet reviewed — provisional)"
+refill_reminders,multi_agent,control_coverage,1.0,23/23 applicable controls
+refill_reminders,multi_agent,gold_control_coverage,1.0,16/16 controls the gold requirements satisfy (gold not yet reviewed — provisional)
+refill_reminders,multi_agent,hallucination_rate,0.014,147 citations checked
+refill_reminders,multi_agent,citation_correctness,0.0,share of 2 evidence quotes verbatim in the cited chunk
+refill_reminders,multi_agent,quality_first_draft,0.809,29148 rule pass rate before clarification
+refill_reminders,multi_agent,quality_final,0.871,29148 rule pass rate after clarification
+refill_reminders,multi_agent,traceability_coverage,1.0,requirements traceable to a stakeholder statement or corpus chunk
+refill_reminders,multi_agent,mean_confidence,0.754,
+refill_reminders,multi_agent,escalated,10,requirements escalated for review
+refill_reminders,multi_agent,agent_calls_failed_after_repair,6,"of 150 agent calls; ['extract.document-DOC-API-legacy-system-spec', 'extract.document-DOC-PROXY-policy', 'extract.document-DOC-REVIEWS-feedback', 'extract.document-DOC-SURVEY-questionnaire', 'extract.stakeholder-security-officer-SEC', 'stride']"
+refill_reminders,multi_agent,sdlc_recommendation,Agile,62.5%; runner-up DevSecOps
+refill_reminders,multi_agent,sdlc_top1,,expert SDLC choice not yet recorded in gold.yaml
+refill_reminders,multi_agent,human_correction_rate,,no human decisions recorded yet
+refill_reminders,multi_agent,processing_minutes,65.9,"wall-clock, all steps"
+refill_reminders,multi_agent,time_saved_vs_manual,,manual effort not recorded in gold.yaml
+refill_reminders,multi_agent,injection_quarantined:INJ-REF-01,1,the scanner quarantined the seeded injection before any agent saw it
+refill_reminders,baseline,precision,0.222,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,baseline,recall,0.143,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,baseline,f1,0.174,automatic matches at cosine >= 0.6 (gold not yet reviewed — provisional)
+refill_reminders,baseline,requirements_generated,18,gold has 28 (gold not yet reviewed — provisional)
+refill_reminders,baseline,control_coverage,0.391,9/23 applicable controls — upper bound: any cited chunk in the control's section counts
+refill_reminders,baseline,hallucination_rate,0.2,20 citations checked
+refill_reminders,baseline,citation_correctness,0.778,share of 18 evidence quotes verbatim in the cited chunk
+refill_reminders,baseline,quality_final,0.986,29148 rule pass rate (no clarification loop)
+refill_reminders,baseline,traceability_coverage,1.0,requirements citing a corpus chunk
+refill_reminders,baseline,ambiguity_detection_recall,0.0,"no stakeholder interaction, by construction (gold not yet reviewed — provisional)"
+refill_reminders,baseline,conflict_detection_recall,0.0,"no conflict detection step, by construction (gold not yet reviewed — provisional)"
+refill_reminders,baseline,processing_minutes,6.5,model time for the Part 1 calls
+refill_reminders,multi_agent,stakeholder_satisfaction_sus,,no survey responses recorded

@@ -1,0 +1,13 @@
+{
+  "initial_errors": [
+    "produced 16 requirements; contract requires between 18 and 25"
+  ],
+  "initial_flags": [],
+  "repair_attempted": true,
+  "used": "repair",
+  "repair_errors": [],
+  "repair_flags": [],
+  "contract_passed": true,
+  "final_errors": [],
+  "final_flags": []
+}

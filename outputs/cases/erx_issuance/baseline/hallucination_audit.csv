@@ -1,0 +1,17 @@
+req_id,cited_entity,entity_type,verdict,evidence,severity
+FR-01,This resource covers all type of orders for medications for a patient. This includes inpatient medication orders as well as community orders (whether filled by ,evidence_quote,verified,verbatim in a cited chunk,none
+FR-02,"Before a medication order is completed and acted upon during computerized provider order entry (CPOE), interventions must automatically indicate to a user drug-",evidence_quote,verified,verbatim in a cited chunk,none
+FR-03,The system shall check the formulary before issuing an e-Rx.,evidence_quote,fabricated,not present anywhere in the corpus,high
+FR-04,The electronic prescription application must transmit the electronic prescription as soon as possible after signature by the practitioner.,evidence_quote,verified,verbatim in a cited chunk,none
+FR-05,The electronic prescription application may print a prescription that has been transmitted only if an intermediary or the designated pharmacy notifies a practit,evidence_quote,verified,verbatim in a cited chunk,none
+FR-06,The electronic prescription application must require the individual practitioner to complete a two-factor authentication protocol as specified in § 1311.140(a)(,evidence_quote,verified,verbatim in a cited chunk,none
+FR-07,The electronic prescription application must digitally sign at least all information required under part 1306 of this chapter.,evidence_quote,verified,verbatim in a cited chunk,none
+FR-08,"The application provider must establish and implement a list of auditable events. Auditable events must, at a minimum, include the following: (1) Attempted unau",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-01,"At least one of the individuals designated under paragraph (a) of this section must verify that the DEA registration and State authorization(s) to practice and,",evidence_quote,verified,verbatim in a cited chunk,none
+NFR-02,Technology that is designed to locally store electronic health information on end-user devices must encrypt the electronic health information stored on such dev,evidence_quote,verified,verbatim in a cited chunk,none
+NFR-03,Technology must be able to record actions related to electronic health information in accordance with the standard specified in § 170.210(e)(1); and record the ,evidence_quote,fabricated,not present anywhere in the corpus,medium
+NFR-04,Health IT must be able to electronically perform the following capabilities in accordance with applicable standards and implementation specifications adopted in,evidence_quote,misattributed,present in corpus but not in the cited chunk(s),medium
+NFR-05,Records required by this part must be maintained electronically for two years from the date of their creation or receipt.,evidence_quote,fabricated,not present anywhere in the corpus,medium
+NFR-06,Electronic records must be easily readable or easily rendered into a format that a person can read.,evidence_quote,verified,verbatim in a cited chunk,none
+NFR-07,Implement policies and procedures to protect electronic protected health information from improper alteration or destruction.,evidence_quote,misattributed,present in corpus but not in the cited chunk(s),medium
+NFR-08,Enable a user to create an audit report for a specific time period and to sort entries in the audit log according to each of the data specified in the standards,evidence_quote,verified,verbatim in a cited chunk,none

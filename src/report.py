@@ -237,6 +237,31 @@ def _case_quality_tables() -> list[str]:
     return parts
 
 
+def _case_register_tables() -> list[str]:
+    """Counts from each case's registers, so the report cites them instead of counting rows."""
+    from .cases import case_ids, case_out_dir
+
+    rows = []
+    for cid in case_ids():
+        out = case_out_dir(cid)
+        counts = {}
+        for label, path, col in [("approval items", out / "review_queue.csv", "item_type"),
+                                 ("approval priority", out / "review_queue.csv", "priority"),
+                                 ("security events", out / "security_events.csv", "kind"),
+                                 ("open issues", out / "artifacts" / "open_issues.csv", "kind"),
+                                 ("risk levels", out / "artifacts" / "risk_register.csv", "level")]:
+            if path.exists():
+                df = pd.read_csv(path).fillna("")
+                if col in df:
+                    counts[label] = f"{len(df)}: " + ", ".join(f"{k} {v}" for k, v in df[col].value_counts().items())
+        threats = out / "artifacts" / "threat_register.csv"
+        if threats.exists():
+            th = pd.read_csv(threats).fillna("")
+            counts["threats"] = f"{len(th)}: unmitigated {int((th['mitigated_by'].astype(str).str.strip() == '').sum())}"
+        rows += [{"case": cid, "register": k, "counts": v} for k, v in counts.items()]
+    return ["## Case registers", "", _md_table(pd.DataFrame(rows)), ""] if rows else []
+
+
 def _md_table(df: pd.DataFrame, max_rows: int | None = None) -> str:
     if max_rows and len(df) > max_rows:
         df = df.head(max_rows)
@@ -301,6 +326,7 @@ def write_tables(cfg, out_dir: Path) -> None:
                   _md_table(pd.read_csv(wide_path).fillna("")), ""]
     parts += _case_sdlc_tables()
     parts += _case_quality_tables()
+    parts += _case_register_tables()
 
     report_dir = ensure_dir(resolve("report"))
     (report_dir / "tables.md").write_text("\n".join(parts), encoding="utf-8")

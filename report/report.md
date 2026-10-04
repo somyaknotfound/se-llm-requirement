@@ -3,14 +3,14 @@
 **Course:** Software Engineering — Individual Project
 **Artifact repository:** `se-llm-requirements/`
 
-> **Status of this document.** The problem framing (§1), system design (§2),
-> methodology (§3), evaluation design (§4), the independent SDLC argument (§6.2) and
-> threats to validity (§9) are complete and were written from the built system.
-> Sections marked `[PENDING RUN]` fill in from the generated outputs once the pipeline
-> has run on a GPU (`notebooks/run_on_colab.ipynb`); each names the files it draws on.
-> Every number must come from `outputs/` or `report/tables.md`, never retyped by hand —
-> regenerate with `python -m src.evaluate --case all && python -m src.metrics &&
-> python -m src.report`.
+> **Status of this document.** Every section is written. Results (§5–§8, §10) come from
+> Run 2 (`runs/run2_2026-10-04.zip`, unpacked into `outputs/`, `logs/` and `figures/`); every
+> number is copied from a generated file, and each paragraph names that file — regenerate
+> with `python -m src.evaluate --case all && python -m src.metrics && python -m src.report`.
+> Two things are still open. The gold standards have not yet been reviewed, so every
+> gold-based figure (precision, recall, F1, detection recall) is provisional. Items marked
+> `[PENDING HUMAN REVIEW]` need the author's judgement — expert SDLC choices, manual effort,
+> approval decisions, adjudication and the survey — and are never generated.
 
 ---
 
@@ -375,53 +375,162 @@ ids they used, which are stripped before any agent reads them and used only for 
 
 ### 5.1 Requirement gathering
 
-`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv`: precision, recall and F1 for both systems per case; the
-precision on elicited requirements; category agreement. Automatic matches are listed in
-`outputs/cases/<case>/matches_*.csv` for human verification.
+All figures are from Run 2 (`outputs/evaluation/summary_wide.csv`; full table in
+`report/tables.md`). Matching is automatic (MiniLM cosine ≥ 0.6) against gold standards that
+have not yet been reviewed, so every value here is provisional until the gold files are signed
+and the matches in `outputs/cases/<case>/matches_*.csv` are checked by hand.
+
+| Case | Gold | System | Generated | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| erx_issuance | 45 | multi-agent | 43 | 0.651 | 0.622 | 0.636 |
+| | | baseline | 16 | 0.312 | 0.111 | 0.164 |
+| epcs_signing | 35 | multi-agent | 83 | 0.373 | 0.886 | 0.525 |
+| | | baseline | 18 | 0.611 | 0.314 | 0.415 |
+| refill_reminders | 28 | multi-agent | 62 | 0.29 | 0.643 | 0.4 |
+| | | baseline | 18 | 0.222 | 0.143 | 0.174 |
+
+The multi-agent system recovers roughly three to six times as much of each gold standard as
+the single prompt and has the higher F1 in every case. Its weakness is precision where it
+over-generates: EPCS produced 83 requirements against a gold of 35, so its precision falls
+below the baseline's. Restricted to requirements elicited from stakeholders and documents
+(excluding compliance-gap proposals), precision is 0.778 (e-Rx), 0.419 (EPCS) and 0.353
+(refill). Category agreement on matched pairs, the mean Jaccard over the 13 labels, is
+0.506, 0.366 and 0.509.
 
 ![Evaluation](../figures/evaluation_comparison.png)
 
 ### 5.2 Ambiguity and conflict detection
 
-`[PENDING RUN]` — from `outputs/evaluation/summary.csv` (`ambiguity_detection_recall`, `conflict_detection_recall`,
-`conflict_detection_precision`; the `detail` column names the missed ids): seeded
-ambiguities and conflicts found per case, and which were missed.
+From `outputs/evaluation/summary.csv` (the `detail` column names the missed ids);
+provisional, as in §5.1.
+
+| Case | Vague facts followed up | Missed | Seeded conflicts found | Both sides elicited | Conflicts flagged |
+|---|---|---|---|---|---|
+| erx_issuance | 6/7 (0.857) | F-PHARM-04 | 0/3 | 0/3 | 5 |
+| epcs_signing | 5/6 (0.833) | F-SEC-01 | 0/3 | 3/3 | 15 |
+| refill_reminders | 3/4 (0.75) | F-SEC-02 | 0/2 | 2/2 | 12 |
+
+The adaptive interviews work: follow-ups reached 14 of the 17 seeded vague facts. Conflict
+detection does not: no seeded conflict was flagged in any case, and the failure has two
+causes. In e-Rx, one side of every seeded conflict was never stated by a simulated
+stakeholder, so there was nothing to compare — an elicitation gap. In EPCS and refill, both
+sides of every seeded conflict reached the requirement set, and the conflict agent missed
+them while flagging 15 and 12 other pairs, none of them seeded (precision 0). The baseline
+has neither capability, by construction.
 
 ### 5.3 Compliance, security and traceability
 
-`[PENDING RUN]` — from `outputs/evaluation/summary_wide.csv` (`control_coverage`, `gold_control_coverage`,
-`traceability_coverage`, `hallucination_rate`, `citation_correctness`) for both systems;
-open gaps from `outputs/cases/<case>/artifacts/open_issues.csv` (`compliance_gap` rows);
-gap proposals and mappings from `artifacts/compliance_matrix.csv`; unmitigated threats
-from `artifacts/threat_register.csv` (empty `mitigated_by`).
+From `outputs/evaluation/summary_wide.csv`, the `requirements_generated` detail in
+`outputs/evaluation/summary.csv` (gap proposals) and "Case registers" in `report/tables.md`.
+
+| Case | Control coverage (MA / BL) | Gold-control coverage (MA) | Gap proposals | Threats (unmitigated) | Hallucination rate MA (citations) | BL (citations) | Verbatim quotes MA (quotes) | BL (quotes) |
+|---|---|---|---|---|---|---|---|---|
+| erx_issuance | 1.0 / 0.357 | 1.0 | 7 | 8 (0) | 0.029 (104) | 0.312 (16) | 0.625 (8) | 0.688 (16) |
+| epcs_signing | 1.0 / 0.485 | 1.0 | 9 | 8 (5) | 0.054 (221) | 0.0 (1) | 0.73 (37) | 1.0 (1) |
+| refill_reminders | 1.0 / 0.391 | 1.0 | 11 | 8 (0) | 0.014 (147) | 0.2 (20) | 0.0 (2) | 0.778 (18) |
+
+The compliance agent maps every applicable control to at least one requirement, partly by
+proposing gap requirements, and leaves no compliance gap open; the single prompt, citing
+sections directly, covers 0.357–0.485 of them. Every mapping and proposal is pending
+compliance-officer approval. Traceability coverage is 1.0 for both systems in every case.
+Hallucinated citations are rare in the multi-agent output (rate 0.014–0.054) and frequent in
+the baseline wherever it cites much (0.312 e-Rx, 0.2 refill). The baseline's EPCS figures rest
+on one citation and the multi-agent refill quote figure on two quotes; neither supports a
+conclusion. Five of the eight EPCS threats were left unmitigated, each raised as an open issue.
 
 ### 5.4 Requirement quality
 
-`[PENDING RUN]` — from `report/tables.md` ("29148 rule pass rate by attribute — <case>":
-multi-agent first draft and final, and the baseline) and the means in
-`outputs/evaluation/summary_wide.csv` (`quality_first_draft`, `quality_final`); scorer
-agreement from `outputs/metrics_summary.csv` (`scorer_agreement`,
-`scorer_agreement_by_attribute`).
+Mean 29148 rule pass rate (`outputs/evaluation/summary_wide.csv`); per attribute in
+"29148 rule pass rate by attribute — <case>" in `report/tables.md`.
+
+| Case | Multi-agent first draft | Multi-agent final | Baseline |
+|---|---|---|---|
+| erx_issuance | 0.924 | 0.942 | 0.953 |
+| epcs_signing | 0.895 | 0.905 | 0.944 |
+| refill_reminders | 0.809 | 0.871 | 0.986 |
+
+Clarification raises the mean in every case, mostly on the attributes it targets: refill
+verifiable 0.255 → 0.597 and necessary 0.333 → 0.581, EPCS verifiable 0.581 → 0.723 and
+unambiguous 0.797 → 0.94, e-Rx unambiguous 0.75 → 0.93. It also costs something: revisions
+introduce non-conforming wording (conforming falls from 1.0 to 0.93, 0.723 and 0.871) and,
+in e-Rx, more compound requirements (singular 0.889 → 0.837). The baseline scores higher in
+every case, but the comparison is not like for like: its 16–18 requirements paraphrase
+regulation text, while the multi-agent set is built from conversational stakeholder
+statements, which is where vague and untestable wording comes from. The first-draft column is
+reported so the clarification loop cannot hide the model's first attempt.
+
+Scorer agreement is measured on the Part 1 set (validation section of
+`outputs/metrics_summary.csv`): the rule scorer and the LLM critic agree on 0.792 of 144
+judgements. All 30 disagreements are on unambiguous and verifiable, where the critic failed
+every requirement (0%) and the rule scorer passed them (100% and 67%); the critic's notes show
+it treats any "and" in acceptance criteria, or any unquantified phrase, as disqualifying.
+`[PENDING HUMAN REVIEW]` — adjudication of the 30 disagreements
+(`outputs/adjudication_worksheet.csv`, `human_adjudication` column; `human_adjudicated` is 0).
 
 ### 5.5 SDLC recommendations
 
-`[PENDING RUN]` — the ranking per case ("SDLC ranking — <case>" in `report/tables.md`);
-fired rules, cautions, escalations and contested factors from
-`outputs/cases/<case>/artifacts/sdlc_recommendation.md`; accuracy against the expert
-choices from `outputs/evaluation/summary_wide.csv` (`sdlc_top1`, `sdlc_top2`).
+Rankings from "SDLC ranking — <case>" in `report/tables.md`; rules and escalation
+reasons from each case's `artifacts/sdlc_recommendation.md`.
+
+| Case | Top (suitability) | Runner-up | Rules supporting the top two | Escalated because |
+|---|---|---|---|---|
+| erx_issuance | Waterfall 79.2% | V-Model 75.0% | R-WF, R-V | near tie; models differ by 2+ points on 5 factors |
+| epcs_signing | Waterfall 87.5% | V-Model 85.0% | R-WF, R-V | near tie; models differ on 2 factors |
+| refill_reminders | Agile 62.5% | DevSecOps 62.5% | none | no rule supports Agile; tie; models differ on 5 factors |
+
+The engine separates the cases as the case design intended. The two regulated, low-volatility
+cases come out plan-driven, with V-Model within 4.2 and 2.5 points of Waterfall; the volatile,
+weekly-shipping refill app comes out adaptive, Agile tied with DevSecOps and every other model
+at or below 43.8%. Every recommendation was escalated and is pending approval by the project
+manager, architect, security and compliance officers: the engine flagged its own near ties
+instead of presenting them as decisions. For e-Rx, the independent argument in §6.2 put a
+hybrid first and pure V-Model second; the engine ranks the hybrid third (65.6%) behind the
+two plan-driven models — the family the argument favours, without its incremental element.
+Run 1, before the extraction fix (§3.6), ranked Waterfall first for all three cases.
+
+`[PENDING HUMAN REVIEW]` — accuracy against the expert choices (`sdlc_top1`, `sdlc_top2`),
+which needs `expert_sdlc` recorded in each `gold.yaml`.
 
 ### 5.6 Security
 
-`[PENDING RUN]` — identifiers masked per case (`phi_masked` rows in
-`outputs/cases/<case>/security_events.csv`); injections quarantined
-(`injection_quarantined:*` in `outputs/evaluation/summary_wide.csv`); attack success with and without defences
-(`outputs/evaluation/injection_replay.csv`).
+Identifiers masked from the `count` of `phi_masked` rows in
+`outputs/cases/<case>/security_events.csv`; quarantine from `injection_quarantined:*` in
+`outputs/evaluation/summary_wide.csv`; attack success from
+`outputs/evaluation/injection_replay.csv`.
+
+| Case | Identifiers masked | Injection events quarantined | Seeded injection quarantined | Attack succeeded: defended / undefended |
+|---|---|---|---|---|
+| erx_issuance | 8 | 3 | yes | no / no |
+| epcs_signing | 3 | 1 | yes | no / no |
+| refill_reminders | 0 | 2 (and 1 suspicious link) | yes | no / yes |
+
+Every seeded injection was quarantined at intake, before any agent saw it. Replayed without
+the defences, one of the three (INJ-REF-01) succeeded; with them, none did. Three replays
+demonstrate the mechanism; they are not an estimate of an attack success rate. No identifier
+was masked in the refill case's documents.
 
 ### 5.7 Human oversight, time and satisfaction
 
-`[PENDING RUN]` — approval items by type and priority from
-`outputs/cases/<case>/review_queue.csv`; `human_correction_rate`, `processing_minutes`,
-`time_saved_vs_manual` and `stakeholder_satisfaction_sus` from `outputs/evaluation/summary_wide.csv`.
+Approval items from "Case registers" in `report/tables.md`; escalations and minutes from
+`outputs/evaluation/summary_wide.csv` (multi-agent minutes are the summed step times in
+`run_manifest.json`; EPCS ran across two Colab sessions).
+
+| Case | Approval items (high priority) | Escalated requirements | Multi-agent minutes | Baseline minutes |
+|---|---|---|---|---|
+| erx_issuance | 157 (50) | 9 | 68.8 | 6.2 |
+| epcs_signing | 300 (111) | 22 | 93.7 | 5.7 |
+| refill_reminders | 188 (62) | 10 | 65.9 | 6.5 |
+
+The approval agent routes every requirement for baseline approval and adds regulatory,
+clinical-safety, security and architecture items, so a reviewer faces 157–300 items per case,
+50–111 of them high priority. The volume is itself a finding: routing by item type is correct,
+but it is workable only because routine items can be accepted in bulk with a note while
+escalated ones are decided one at a time. The system took ten to sixteen times as long as
+the single prompt (model time on one T4).
+
+`[PENDING HUMAN REVIEW]` — the human correction rate (needs decisions in the approval queue),
+time saved against manual analysis (needs `manual_effort_minutes`), and the SUS score (no
+survey responses yet).
 
 ---
 
@@ -447,11 +556,22 @@ output contract with one repair attempt. Three early failures shaped it:
   the failure recorded (`contract_passed` in `outputs/metrics_summary.csv`). The contract
   still judges the output; it no longer discards it.
 
-`[PENDING RUN]` — requirement count, traceability rate, integrity flags and repair
-outcome from `outputs/part1_contract.json` and the `part1` section of
-`outputs/metrics_summary.csv`; 29148 results from `outputs/validation_29148.csv` ("29148
-pass rate by attribute" in `report/tables.md`). Per-case baselines are under
-`outputs/cases/<case>/baseline/`.
+From `outputs/part1_contract.json` and the `part1` and `hallucination` sections of
+`outputs/metrics_summary.csv`; per-case baselines under `outputs/cases/<case>/baseline/`.
+
+The original target produced 18 requirements, all FR — 0 NFRs against a floor of 8 — and every
+one `Must` priority and `Low` volatility, with 17 marked safety-critical. Traceability is 1.0
+with no integrity violations or guessed chunk ids; it cites D01, D05 and D06 and leaves D02–D04
+uncited. The contract failed (0 NFRs and one `risk_class` of 'Performance'); the repair, again,
+shortened the set to 10, so the first response was kept. The hallucination audit checked 17
+citations: one fabricated, on a safety-critical requirement, and one misattributed (rate 0.118).
+Its 29148 results are in §5.4.
+
+Per case: e-Rx produced 16 requirements and kept the first response (the count, plus
+`risk_class` values outside the allowed set, such as 'Security-critical'); EPCS produced 18
+after repair with one `nfr_category` outside the set ('data integrity'); refill produced 18
+after a repair that passed. Three of the four single-prompt sets broke their output contract
+even after a targeted repair — always on counts or enumerated fields, never on traceability.
 
 ### 6.2 SDLC selection — the defensible answer, argued independently
 
@@ -488,11 +608,21 @@ framing. Malformed runs are recorded, never re-rolled.
 ![SDLC recommendation by framing](../figures/sdlc_by_framing.png)
 ![Criterion scores by framing](../figures/sdlc_criteria.png)
 
-`[PENDING RUN]` — modal recommendation, flip rate, cross-model agreement and grounding
-rate from the `part2` section of `outputs/metrics_summary.csv` (per-run detail in
-`outputs/sdlc_runs.csv` and `outputs/sdlc_analysis.csv`), and the engine consistency rate
-from `outputs/sdlc_consistency.csv`: the share of runs whose named model is the one their
-own factor scores imply.
+From the `part2` section of `outputs/metrics_summary.csv`, with per-run detail in
+`outputs/sdlc_runs.csv` and `outputs/sdlc_consistency.csv`.
+
+All 18 runs produced a recommendation, and the named model follows the framing, not the
+requirements: neutral framing gave Agile in 6 of 6 runs, agile-primed Agile in 6 of 6, and
+plan-primed Waterfall from qwen in all three trials and V-Model from llama in all three. Every
+(model, trial) group changed its answer across framings (flip rate 1.0); the two models agreed
+in 6 of 9 (framing, trial) pairs, every one of them on Agile. Yet the same runs' own factor
+scores describe a plan-driven project — mean failure consequence and security risk 4.83,
+regulatory criticality 4.72, formal-verification need 4.56, against change frequency 2.0 and
+requirement instability 2.39 — and fed through the engine, those scores imply the model the
+run named in only 1 of 18 runs (engine consistency 0.056). The justifications are grounded in
+form, 0.979 citing at least one req_id and 0.803 citing only ids that exist, but the
+recommendation does not follow from them. This is the reflex §6.2 anticipated, and the reason
+the system lets the engine decide and the model only explain.
 
 ---
 
@@ -530,24 +660,58 @@ a seeded fixture; the test suite covers it.
 
 ### 8.1 Where the agents added value
 
-`[PENDING RUN]` — interpretation of §5 and §6.1, citing their numbers: what interviews
-and clarification found that documents alone did not (the `origin` and
-`source_statement_ids` columns of `outputs/cases/<case>/requirements.csv`); what the
-conflict, compliance and security agents caught.
+- **Coverage.** Recall of 0.622–0.886 against 0.111–0.314 for the single prompt (§5.1),
+  most of it elicited: stakeholder statements were the source of 30 of 43 requirements in
+  e-Rx, 56 of 83 in EPCS and 32 of 62 in refill (`requirements_generated` detail in
+  `outputs/evaluation/summary.csv`). The follow-ups reached 14 of 17 seeded vague facts (§5.2).
+- **Compliance.** Full control coverage against at most 0.485 for the baseline, through gap
+  proposals a compliance officer can accept or reject (§5.3).
+- **Grounding.** A hallucination rate of 0.014–0.054 of the citations checked, against 0.2 and
+  0.312 for the baseline wherever it cites substantially (§5.3).
+- **Process selection.** The engine told the volatile app apart from the regulated cases and
+  flagged its own near ties, where the models' free-text recommendations followed the framing
+  (§5.5, §6.3).
+- **Security.** Every seeded injection was quarantined at intake; replayed undefended, one
+  succeeded (§5.6).
 
 ### 8.2 Where they failed
 
-`[PENDING RUN]` — lead with the hallucination audit (`hallucination_rate` in `outputs/evaluation/summary_wide.csv`;
-`outputs/hallucination_audit.csv` for the baseline); then the weakest 29148 attributes
-(§5.4), missed ambiguities and conflicts (§5.2), schema failures
-(`agent_calls_failed_after_repair` in `outputs/evaluation/summary.csv`) and escalations (`escalated`).
+- **Hallucination is reduced, not removed.** 0.029, 0.054 and 0.014 of multi-agent
+  citations are fabricated or misattributed, and when the agents quote, only 0.625 (e-Rx, 8 quotes) and
+  0.73 (EPCS, 37 quotes) of the quotes are verbatim. In a regulated domain each one needs
+  checking before certification evidence relies on it (§5.3).
+- **Conflict detection found none of the 8 seeded conflicts**: an elicitation gap in e-Rx, a
+  detection failure in EPCS and refill (§5.2).
+- **Over-generation.** EPCS produced 83 requirements for a gold of 35; refill left 26 duplicate
+  open issues ("Case registers", `report/tables.md`).
+- **Clarification trades one defect for another**: conformance falls as ambiguity and
+  testability improve (§5.4).
+- **Format failures.** Agent calls that still failed after one repair: 11 of 104 (e-Rx), 12 of
+  165 (EPCS) and 6 of 150 (refill) (`agent_calls_failed_after_repair` in
+  `outputs/evaluation/summary.csv`). Most are extraction calls that cited the identifier of a
+  delimited block instead of a statement id; the agents drop the affected requirements and
+  carry on.
+- **Risk over-rating.** Critical or High for 31 of 43 risks (e-Rx), 69 of 83 (EPCS) and 51 of
+  62 (refill) ("Case registers"); a register that rates most things critical does not
+  prioritise.
+- **A mechanical critic.** The LLM critic failed every Part 1 requirement on unambiguous and
+  verifiable (§5.4).
+- **Escalations**: 9, 22 and 10 requirements went to human review on low confidence or
+  integrity grounds (§5.7).
 
 ### 8.3 What a requirements engineer still must do
 
-`[PENDING RUN]` — anchor to the weakly decidable attributes, the adjudicated
-disagreements (`outputs/adjudication_worksheet.csv`, `human_adjudication` column), the
-escalated items (`outputs/cases/<case>/review_queue.csv`), the human correction rate
-(§5.7), and to §9.1.
+- **Decide what the system only proposes**: 42–80 regulatory interpretations per case and
+  every requirement baseline ("Case registers"); no mapping is a legal determination (§2.11).
+- **Find the conflicts.** None of the seeded conflicts was flagged, so cross-stakeholder
+  consistency still has to be checked by a person (§5.2).
+- **Prune and verify**: over-generated sets, duplicates and the automatic gold matches.
+- **Adjudicate the weakly decidable attributes** (necessary, feasible) and the 30 scorer
+  disagreements on the Part 1 set. `[PENDING HUMAN REVIEW]`
+- **Choose the life cycle.** The engine escalated all three recommendations as near ties; the
+  decision belongs to the project manager and the officers who sign it.
+- **Elicit what nobody wrote down.** The personas know only their fact sheets (§9.1).
+- `[PENDING HUMAN REVIEW]` — the human correction rate, once the approval queue is worked.
 
 ---
 
@@ -607,11 +771,27 @@ probability; there is no ground truth to calibrate it against.
 
 ## 10. Conclusion
 
-`[PENDING RUN]` — drawn only from §5–§8; state plainly: (a) whether the requirement sets are usable first drafts
-and with which corrections, compared with the single-prompt baseline and with manual
-analysis; (b) whether the SDLC recommendations were defensible and whether their
-justifications were; (c) what the validation, compliance and security layers caught that
-casual review would not; (d) what the human reviewers changed.
+(a) **The multi-agent requirement sets are usable first drafts, not baselines.** They
+cover far more of each gold standard than a single prompt (recall 0.622–0.886 against
+0.111–0.314, provisional) at the cost of over-generation, missed conflicts and a review queue
+of 157–300 items per case. The single prompt produced short, regulation-shaped sets that broke
+their own output contract in three of four runs. The comparison with manual analysis is
+`[PENDING HUMAN REVIEW]` (`manual_effort_minutes`).
+
+(b) **The engine's recommendations are defensible as families; the models' own were not.**
+The engine chose plan-driven models for the two regulated cases and adaptive ones for the
+volatile app, and escalated each as a near tie. Asked directly, the models followed the
+framing in every run and matched their own factor scores once in 18. Accuracy against the
+expert choice is `[PENDING HUMAN REVIEW]`.
+
+(c) **The validation and security layers caught what casual review would not**: fabricated
+and misattributed citations, injected instructions in stakeholder documents, patient
+identifiers in case documents, and untestable or ambiguous wording before and after
+clarification. Run 1 showed that the evaluation has to be audited too: four defects in the
+extraction prompt and the measurement code were found and fixed before Run 2 (§3.6).
+
+(d) `[PENDING HUMAN REVIEW]` — what the human reviewers accepted, modified, rejected or
+regenerated.
 
 ---
 

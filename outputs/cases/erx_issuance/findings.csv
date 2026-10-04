@@ -1,0 +1,44 @@
+req_id,kind,source,detail,round,resolved,conflict_id,resolved_round
+NFR-ERX-011,conflict,llm,"conflicts with NFR-ERX-014 (CF-01): B requires the system to prevent users from deleting audit records, which could conflict with A's requirement for retaining them for 6 years.",0,False,CF-01,
+NFR-ERX-014,conflict,llm,"conflicts with NFR-ERX-011 (CF-01): B requires the system to prevent users from deleting audit records, which could conflict with A's requirement for retaining them for 6 years.",0,False,CF-01,
+FR-ERX-001,conflict,llm,"conflicts with FR-ERX-015 (CF-05): A focuses on real-time checking at the point of ordering, while B includes issuance and real-time checking, potentially conflicting in terms of timing and scope.",0,False,CF-05,
+FR-ERX-015,conflict,llm,"conflicts with FR-ERX-001 (CF-05): A focuses on real-time checking at the point of ordering, while B includes issuance and real-time checking, potentially conflicting in terms of timing and scope.",0,False,CF-05,
+FR-ERX-010,conflict,llm,"conflicts with FR-ERX-015 (CF-06): A checks before issuing a prescription, while B handles the issuance including real-time checking, which could be seen as conflicting in terms of sequence and scope.",0,False,CF-06,
+FR-ERX-015,conflict,llm,"conflicts with FR-ERX-010 (CF-06): A checks before issuing a prescription, while B handles the issuance including real-time checking, which could be seen as conflicting in terms of sequence and scope.",0,False,CF-06,
+FR-ERX-008,conflict,llm,"conflicts with FR-ERX-010 (CF-07): A requires checking before issuing a prescription, while B allows overriding these checks, making it impossible to satisfy both simultaneously as written.",0,False,CF-07,
+FR-ERX-010,conflict,llm,"conflicts with FR-ERX-008 (CF-07): A requires checking before issuing a prescription, while B allows overriding these checks, making it impossible to satisfy both simultaneously as written.",0,False,CF-07,
+FR-ERX-003,conflict,llm,"conflicts with FR-ERX-011 (CF-09): A requires alerts before the order is signed, while B allows displaying alerts during the ordering process, which could be seen as conflicting if interpreted strictly.",0,False,CF-09,
+FR-ERX-011,conflict,llm,"conflicts with FR-ERX-003 (CF-09): A requires alerts before the order is signed, while B allows displaying alerts during the ordering process, which could be seen as conflicting if interpreted strictly.",0,False,CF-09,
+FR-ERX-004,ambiguity,rule,weak/vague term(s): quick,0,True,,1.0
+FR-ERX-005,ambiguity,rule,weak/vague term(s): handle,0,True,,1.0
+FR-ERX-005,untestable,rule,acceptance criteria state no observable outcome or threshold,0,True,,2.0
+NFR-ERX-002,ambiguity,rule,weak/vague term(s): support,0,False,,
+FR-ERX-006,untestable,rule,acceptance criteria state no observable outcome or threshold,0,False,,
+FR-ERX-007,untestable,rule,acceptance criteria state no observable outcome or threshold,0,True,,2.0
+NFR-ERX-003,untestable,rule,acceptance criteria state no observable outcome or threshold,0,True,,2.0
+FR-ERX-009,ambiguity,rule,weak/vague term(s): support,0,True,,1.0
+FR-ERX-009,untestable,rule,acceptance criteria use vague term(s): handle,0,True,,1.0
+FR-ERX-012,non_singular,rule,compound obligation near 'and audit',0,False,,
+NFR-ERX-006,non_singular,rule,compound obligation near 'and generate',0,False,,
+NFR-ERX-007,untestable,rule,acceptance criteria state no observable outcome or threshold,0,False,,
+NFR-ERX-009,non_singular,rule,semicolon suggests two obligations,0,False,,
+NFR-ERX-014,non_singular,rule,compound obligation near 'and prevent',0,False,,
+FR-ERX-015,ambiguity,rule,weak/vague term(s): handle,0,True,,1.0
+FR-ERX-015,untestable,rule,acceptance criteria state no observable outcome or threshold,0,False,,
+FR-ERX-018,ambiguity,rule,weak/vague term(s): support,0,True,,2.0
+FR-ERX-019,ambiguity,rule,weak/vague term(s): support,0,False,,
+FR-ERX-019,untestable,rule,acceptance criteria state no observable outcome or threshold,0,False,,
+FR-ERX-020,untestable,rule,acceptance criteria use vague term(s): process,0,False,,
+FR-ERX-022,ambiguity,rule,weak/vague term(s): timely,0,True,,1.0
+FR-ERX-023,ambiguity,rule,weak/vague term(s): support,0,True,,1.0
+FR-ERX-014,undefined_term,rule,undefined term(s): R4,0,False,,
+FR-ERX-004,non_singular,rule,semicolon suggests two obligations,1,False,,
+NFR-ERX-002,nonconforming,rule,statement does not open with an identified actor,1,False,,
+NFR-ERX-003,nonconforming,rule,statement does not open with an identified actor,1,False,,
+NFR-ERX-007,nonconforming,rule,statement does not open with an identified actor,1,False,,
+FR-ERX-020,ambiguity,rule,weak/vague term(s): support,1,False,,
+NFR-ERX-003,undefined_term,rule,undefined term(s): PHARM,2,False,,
+NFR-ERX-019,untestable,rule,acceptance criteria state no observable outcome or threshold,99,False,,
+NFR-ERX-021,untestable,rule,acceptance criteria state no observable outcome or threshold,99,False,,
+NFR-ERX-024,non_singular,rule,semicolon suggests two obligations,99,False,,
+NFR-ERX-025,non_singular,rule,compound obligation near 'or prevent',99,False,,

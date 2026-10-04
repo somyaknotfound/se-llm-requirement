@@ -1,0 +1,44 @@
+{
+  "case": "erx_issuance",
+  "started": "2026-10-03T07:58:00.898461+00:00",
+  "finished": "2026-10-03T09:06:50.015022+00:00",
+  "seconds_total": 4129.0,
+  "seconds_by_step": {
+    "intake": 0.0,
+    "interviews": 276.0,
+    "extraction": 1924.4,
+    "classification": 41.6,
+    "conflicts": 53.1,
+    "quality_v1": 0.1,
+    "clarification": 267.4,
+    "compliance": 467.1,
+    "security_privacy": 62.5,
+    "risk": 174.6,
+    "validation": 532.7,
+    "sdlc": 130.7,
+    "documentation": 198.5,
+    "approval": 0.3
+  },
+  "agent_model": "primary",
+  "persona_model": "secondary",
+  "model_digests": {
+    "llama3.1:8b": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "qwen2.5:7b-instruct": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+  },
+  "ollama_version": "0.34.4",
+  "knowledge_base": {
+    "kb_version": "2026-09-28",
+    "controls_version": "2026-09-28",
+    "sdlc_version": "2026-09-28",
+    "manifest_sha": "adf65966b731d94d",
+    "chunks_sha": "30a5f2fb6b217919",
+    "controls_sha": "0e55be9e1561fbb5",
+    "sdlc_sha": "9e7df934c7f423df",
+    "stakeholders_sha": "2b967c8778d27a40",
+    "pipeline_sha": "4dd8908590d78ac5",
+    "models_sha": "2ff841130a7a093e"
+  },
+  "requirements": 43,
+  "approval_items": 157,
+  "security_events": 4
+}

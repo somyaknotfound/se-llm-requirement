@@ -1,0 +1,145 @@
+req_id,attribute,rule_score,llm_score,agreement,human_adjudication,note
+FR-01,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-01,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'and dispense requests elements' is ambiguous as it is unclear if this refers to a specific element or a general concept.
+FR-01,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-01,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one 'shall' and no 'and' or 'or' connecting multiple obligations."
+FR-01,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical constraints.
+FR-01,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria mention storing the request correctly but do not provide a specific test or method to verify this storage.
+FR-01,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall'.
+FR-01,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source chunk_ids and is not marked derived without reasoning.
+FR-02,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the functionality.
+FR-02,unambiguous,1,0,disagree,,"rule: no weak terms matched || llm: The acceptance criteria includes 'and the system stores it correctly', which introduces ambiguity as to whether this is a separate obligation or part of the main one."
+FR-02,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-02,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one 'shall' in the statement."
+FR-02,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical constraints.
+FR-02,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria includes 'and the system stores it correctly', which is not observable as a separate action from setting the numberOfRepeatsAllowed element."
+FR-02,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and does not contain design details or rationale.
+FR-02,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source_chunk_ids and is not marked derived without reasoning.
+FR-03,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-03,unambiguous,1,0,disagree,,"rule: no weak terms matched || llm: The acceptance criteria includes 'and' which introduces ambiguity: 'Prescribers can set the initialFill.quantity and initialFill.duration elements in the dispenseRequest, and the system stores them correctly.'"
+FR-03,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-03,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one 'shall' and no 'and' or 'or' connecting multiple obligations."
+FR-03,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+FR-03,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria does not specify the exact method of verification or the criteria for 'correctly' storing the elements.
+FR-03,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall'.
+FR-03,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source_chunk_ids and is not marked derived without reasoning.
+FR-04,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-04,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'correctly' is vague and could be interpreted in multiple ways.
+FR-04,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-04,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+FR-04,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical constraints.
+FR-04,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify that the system stores the dispenseInterval correctly.
+FR-04,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' correctly.
+FR-04,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source_chunk_ids and is not marked derived.
+FR-05,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-05,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'correctly' is vague and could be interpreted in multiple ways regarding how the system stores the validityPeriod element.
+FR-05,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-05,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+FR-05,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+FR-05,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not specify a clear method for verifying that the system stores the validityPeriod element 'correctly'.
+FR-05,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' without design details or rationale.
+FR-05,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source_chunk_ids and is not marked derived with additional reasoning needed.
+FR-06,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-06,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'correctly' is vague and could be interpreted in multiple ways.
+FR-06,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-06,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+FR-06,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical constraints.
+FR-06,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify that the quantity is stored 'correctly'.
+FR-06,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' correctly.
+FR-06,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source chunk_ids and is not marked derived.
+FR-07,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-07,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The term 'expected number of days supply per dispense' is vague and could be interpreted differently.
+FR-07,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-07,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation in the requirement."
+FR-07,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical constraints.
+FR-07,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria do not provide a specific method to verify the system stores the value correctly.
+FR-07,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' without design details or rationale.
+FR-07,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source_chunk_ids and is not marked derived.
+FR-08,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+FR-08,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'and the system stores it correctly' is vague and could be interpreted in multiple ways.
+FR-08,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+FR-08,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+FR-08,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+FR-08,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria 'Prescribers can set the performer element in the dispenseRequest, and the system stores it correctly' are not observable without specifying what 'correctly' means."
+FR-08,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with a clear actor and obligation.
+FR-08,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement is anchored with source_chunk_ids provided.
+NFR-01,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-01,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'only authorized prescribers' is vague without defining what constitutes 'authorized.'
+NFR-01,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-01,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-01,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+NFR-01,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'Only prescribers with valid credentials can create or modify MedicationRequests' are not observable without a clear definition of 'valid credentials.'
+NFR-01,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and does not contain design details or rationale.
+NFR-01,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source chunk_ids and is not marked derived without reasoning.
+NFR-02,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-02,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'when stored locally on end-user devices' is vague and could be interpreted in multiple ways.
+NFR-02,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-02,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-02,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical and regulatory constraints.
+NFR-02,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria refer to a specific standard, but it is not clear how this can be observed or tested."
+NFR-02,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' without design details or rationale.
+NFR-02,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement cites a source chunk_id and is not marked derived with additional reasoning.
+NFR-03,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-03,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'and the audit log records any such attempts' is vague and could be interpreted in multiple ways.
+NFR-03,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-03,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-03,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+NFR-03,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'MedicationRequests are protected from unauthorized access and modification' are not observable; the audit log recording attempts is observable but does not fully cover the protection aspect.
+NFR-03,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall' verb.
+NFR-03,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement cites a source chunk_id and is not marked derived.
+NFR-04,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for ensuring compliance and security.
+NFR-04,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'can be reviewed' is vague and could imply different levels of review.
+NFR-04,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-04,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-04,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical and regulatory constraints.
+NFR-04,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'can be reviewed' are not observable or testable.
+NFR-04,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence convention.
+NFR-04,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement is anchored with a source chunk_id.
+NFR-05,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-05,unambiguous,1,0,disagree,,"rule: no weak terms matched || llm: The phrase 'within 2 seconds' is vague without specifying the unit of time (e.g., milliseconds)."
+NFR-05,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-05,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is exactly one obligation stated in the requirement."
+NFR-05,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical constraints.
+NFR-05,verifiable,1,0,disagree,,"rule: observable pass/fail condition present || llm: The acceptance criteria do not specify a unit for '2 seconds', making it unverifiable."
+NFR-05,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall'.
+NFR-05,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source chunk_ids and is not marked derived.
+NFR-06,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-06,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'comply with regulatory requirements' is vague and could be interpreted in multiple ways.
+NFR-06,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-06,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-06,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical and regulatory constraints.
+NFR-06,verifiable,0,0,agree,,"rule: acceptance criteria use vague term(s): relevant || llm: The acceptance criteria 'MedicationRequests are created, modified, and transmitted in compliance with relevant regulations' are not observable or testable without specifying the exact regulations and methods of verification."
+NFR-06,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and uses 'shall' correctly.
+NFR-06,traceable,1,1,agree,,rule: cites 2 corpus chunk(s) || llm: The requirement cites source chunk_ids and is not marked derived with external reasoning.
+NFR-07,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for secure medication transmission.
+NFR-07,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'transmitted securely' is vague and could be interpreted in multiple ways.
+NFR-07,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-07,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-07,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical and regulatory constraints.
+NFR-07,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'MedicationRequests are transmitted using a secure connection and encrypted data' are not observable or testable without specific details on the security protocols used.
+NFR-07,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall' verb.
+NFR-07,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement is anchored with a source chunk_id.
+NFR-08,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-08,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'as per regulatory requirements' is vague and could be interpreted differently.
+NFR-08,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-08,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-08,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is feasible within normal technical and regulatory constraints.
+NFR-08,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'MedicationRequests are retained in the system for at least 5 years' is not observable or testable without a specific method or tool.
+NFR-08,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format and does not contain design details or rationale.
+NFR-08,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement cites a source chunk_id and is not marked derived without reasoning.
+NFR-09,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-09,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'proper authorization' is vague and could be interpreted in multiple ways.
+NFR-09,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-09,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-09,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+NFR-09,verifiable,0,0,agree,,rule: acceptance criteria state no observable outcome or threshold || llm: The acceptance criteria 'MedicationRequests are only accessible to authorized users and cannot be disclosed without proper authorization' are not observable or testable as written.
+NFR-09,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall' keyword.
+NFR-09,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement cites a source chunk_id and is not marked derived without reasoning.
+NFR-10,necessary,1,1,agree,,[rule weakly decidable] rule: not a near-duplicate (rule cannot assess true necessity) || llm: The requirement is clearly stated and necessary for the system's functionality.
+NFR-10,unambiguous,1,0,disagree,,rule: no weak terms matched || llm: The phrase 'any such attempts are detected and logged' is vague and could be interpreted in multiple ways.
+NFR-10,complete,1,1,agree,,rule: no placeholders; acceptance criteria present || llm: The requirement stands alone and does not depend on external information.
+NFR-10,singular,1,1,agree,,"rule: single 'shall', no compound obligation detected || llm: There is only one obligation stated in the requirement."
+NFR-10,feasible,1,1,agree,,[rule weakly decidable] rule: no impossible absolute detected (rule cannot assess true feasibility) || llm: The requirement is implementable within normal technical and regulatory constraints.
+NFR-10,verifiable,1,0,disagree,,rule: observable pass/fail condition present || llm: The acceptance criteria 'MedicationRequests are protected from unauthorized modification and tampering' are not observable or testable as stated.
+NFR-10,conforming,1,1,agree,,rule: declarative actor + shall form || llm: The requirement follows the single declarative sentence format with an identified actor and 'shall' keyword.
+NFR-10,traceable,1,1,agree,,rule: cites 1 corpus chunk(s) || llm: The requirement cites a source chunk_id and is not marked derived without reasoning.
