@@ -53,6 +53,57 @@ provisional until the gold standards are reviewed. Details and sources: [the rep
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart TD
+    Sources["6 regulatory sources<br/>FHIR, HIPAA, ONC, DEA"] --> Ingest["Fetch + sha256 check"]
+    Ingest --> Chunk["Heading-aware chunking<br/>800 tokens, 120 overlap"]
+    Chunk --> Embed[MiniLM embeddings]
+    Embed --> FAISS["FAISS index<br/>cosine, flat"]
+    FAISS --> Retrieve["Faceted retrieval<br/>per-case source allowlist"]
+
+    Case["Case study<br/>personas, documents, gold"] --> Intake["Intake<br/>PHI masking + injection quarantine"]
+    Intake --> Interviews["Stakeholder interviews<br/>questions + follow-ups"]
+    Interviews <-->|answers| Personas["Simulated stakeholders<br/>llama3.1:8b, hidden fact sheet"]
+
+    Interviews --> Extract[Requirement extraction]
+    Retrieve --> Extract
+    Extract --> Classify["Classification<br/>13 categories, FR/NFR"]
+    Classify --> Conflicts["Conflict detection<br/>merge duplicates, flag contradictions"]
+    Conflicts --> Audit1[29148 audit, first draft]
+    Audit1 -->|failing requirements| Clarify["Clarification loop<br/>max 2 rounds"]
+    Clarify -->|questions| Personas
+    Clarify --> Compliance["Compliance mapping<br/>45 HIPAA / ONC / DEA controls"]
+    Retrieve --> Compliance
+    Compliance --> Security[STRIDE threat model]
+    Retrieve --> Security
+    Security --> Risk[Risk register]
+    Risk --> Validate["Final validation<br/>critic, hallucination audit, confidence"]
+
+    Validate --> Factors["SDLC factor scores<br/>both models, 13 factors"]
+    Factors --> Engine["Rules + MCDA engine"]
+    Engine --> SDLC["Ranked SDLC + tailored workflow"]
+
+    Validate --> Docs["Documentation<br/>SRS, stories, use cases, RTM, registers"]
+    SDLC --> Docs
+    Docs --> Queue["Approval queue<br/>SQLite store of record"]
+    Queue --> Review["Human review<br/>web UI / CLI, RBAC + TOTP"]
+    Review -->|accept / reject / modify / regenerate| Apply["Apply decisions<br/>regenerated items re-queued"]
+    Apply --> Docs
+
+    Baseline["Single-prompt baseline"] --> Eval["Evaluation vs gold<br/>P/R/F1, coverage, hallucination, injection replay"]
+    Retrieve --> Baseline
+    Docs --> Eval
+```
+
+The agents run on `qwen2.5:7b-instruct` through Ollama, under a coordinator that gives each
+one access only to its permitted slots on a shared blackboard and checkpoints after every
+step, so a run can resume. Simulated stakeholders run on `llama3.1:8b`; the SDLC factor
+scores come from both models.
+
+---
+
 ## What is in the box
 
 | Part | What it does | Code |
