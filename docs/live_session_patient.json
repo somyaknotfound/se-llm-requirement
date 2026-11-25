@@ -1,0 +1,90 @@
+{
+ "role": "patient",
+ "user": "2a97516c35",
+ "statements": [
+  {
+   "id": "S-LIVE-01",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 1,
+   "topic": "business_objectives",
+   "question": "What problem should this functionality solve, and how will you know it has?",
+   "text": "Paper prescriptions are easy to lose, damage, or misread due to unclear handwriting, which leads to wrong medications, delays at the pharmacy, or extra trips back to the doctor for clarification.\nHow I will know it has solved the problem: I will receive my digital prescription directly on my phone or patient portal right after my appointment, with clear dosage instructions and medication names.\nWhen I go to my chosen pharmacy, they will already have it ready to dispense without needing to call the doctor to verify anything, and I will be able to view my prescription history anytime without keeping paper copies.",
+   "follows_up": "",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-02",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 1,
+   "topic": "users_roles",
+   "question": "Who uses this, in which role, and what may each role do or not do?",
+   "text": "Patients (and authorised caregivers): Can view active and past prescriptions, check dosage instructions, select or change their preferred pharmacy, track refill status, and request renewals.\nThey cannot create, edit, alter, or sign prescriptions, nor view anyone else's records.\nDoctors / Prescribers: Can create, digitally sign, modify, or cancel prescriptions for their patients, and view the patient's medication history to check for allergies or interactions.\nThey cannot access records of patients not under their care.\nPharmacists: Can receive and verify valid e-prescriptions, dispense the prescribed medication, mark a prescription as fulfilled, and flag issues to the doctor for clarification.\nThey cannot issue new prescriptions, alter the prescribed drug or dosage without the doctor's approval, or access unrelated clinical notes",
+   "follows_up": "",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-03",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 1,
+   "topic": "data_retention",
+   "question": "Which data do you collect, who may see it, and how long must it be kept?",
+   "text": "Data collected: Basic patient details (name, date of birth, contact information), prescription details (medication name, dosage, frequency, duration, and refill count), relevant safety information (known allergies and active medications), prescriber details, and my chosen pharmacy.\nWho may see it: Only me (and any authorised caregiver I designate), my prescribing doctor and care team, and the dispensing pharmacist\u2014who should only see the prescription and relevant allergy or interaction details needed to dispense safely.\nIt must never be shared with marketers or unauthorised third parties.\nHow long it must be kept: Active and past prescription records should be retained securely for the legally required medical record period (typically 5 to 7 years, or longer for chronic conditions and minors) so my doctors and I can track medication history.\nOnce the legal retention period expires, the data should be securely deleted or anonymised.",
+   "follows_up": "",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-04",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 1,
+   "topic": "authn_authz",
+   "question": "How must users prove who they are, and how is access granted and revoked?",
+   "text": "Patients should log in using a verified account with two-factor authentication (such as an OTP via SMS/authenticator app or biometrics on mobile) after initial identity verification with a government ID or health ID.\nDoctors and pharmacists must verify their professional licences and use strong multi-factor authentication, with doctors using a digital signature to authorise prescriptions.\nGranting access: Patients receive access when they register and verify their identity, and they can explicitly grant time-bound or scoped access to a caregiver or a specific pharmacy.\nDoctors and pharmacists are granted role-based access by their healthcare organisation or licensing authority after credential verification.\nRevoking access: I should be able to immediately revoke a caregiver's or pharmacy's access from my account settings at any time.\nFor doctors and pharmacists, access must be revoked immediately by their administrator if they leave the organisation, lose their licence, or if unauthorised access is suspected, and I should be notified of any unusual login or access attempts.",
+   "follows_up": "",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-05",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 1,
+   "topic": "performance_availability",
+   "question": "How fast must it respond and how available must it be, in numbers?",
+   "text": "Viewing my active prescriptions or history should load in under 2 seconds.\nOnce my doctor signs an e-prescription, it should appear in my portal and reach my chosen pharmacy within 10 to 30 seconds so I do not have to wait around at the counter.\nAvailability: The system should be available 99.9% of the time (24/7, with less than ~45 minutes of downtime per month), since patients may need urgent prescriptions filled late at night, on weekends, or during holidays.\nPlanned maintenance should be scheduled during off-peak hours (such as 2:00 AM to 4:00 AM) with advance notice, and I should still be able to view previously downloaded or cached prescriptions offline in an emergency.",
+   "follows_up": "",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-06",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 2,
+   "topic": "",
+   "question": "You said: \"Paper prescriptions are easy to lose, damage, or misread due to unclear handwriting, which leads to wrong medications, d\". Could you make that specific \u2014 a number, a limit, a time or a concrete rule we could test?",
+   "text": "100% of prescriptions must be generated digitally using structured, standardised fields (drug name, strength, dosage, frequency, and duration) with no handwritten or ambiguous free-text entries, reducing pharmacy clarification calls caused by unreadable prescriptions to 0%.\nConcrete testable rule: The system must block a doctor from signing or issuing a prescription if any mandatory field is missing or if the prescribed drug conflicts with a recorded patient allergy.\nZero lost prescriptions & delivery limit: 100% of signed prescriptions must appear in my patient portal and reach my chosen pharmacy within 30 seconds, and remain downloadable in my account history for at least 5 years so no prescription can be lost or damaged.",
+   "follows_up": "S-LIVE-01",
+   "screened": []
+  },
+  {
+   "id": "S-LIVE-07",
+   "stakeholder": "LIVE",
+   "role": "patient",
+   "source_type": "interview",
+   "round": 2,
+   "topic": "",
+   "question": "You said: \"Data collected: Basic patient details (name, date of birth, contact information), prescription details (medication name,\". Could you make that specific \u2014 a number, a limit, a time or a concrete rule we could test?",
+   "text": "All prescription records must be retained for exactly 7 years from the date of issue (or until the patient turns 21 for minors).\nWithin 30 days after this retention period expires, the system must automatically and permanently delete or anonymise the records.\nConcrete testable access rule: Pharmacists must only be able to view the active prescription, known allergies, and current medications\u2014the system must return an access-denied error if a pharmacist or any unauthorised user attempts to view unrelated clinical notes or another patient's record.\nSharing with marketers or non-care third parties must be strictly 0%.\nAuditability & consent limits: 100% of record views, edits, and exports must be recorded in an immutable audit log with the user ID and timestamp, visible to the patient.\nAny caregiver access granted by the patient must automatically expire after 90 days unless explicitly renewed.",
+   "follows_up": "S-LIVE-03",
+   "screened": []
+  }
+ ]
+}

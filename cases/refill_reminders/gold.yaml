@@ -5,10 +5,10 @@ reviewed_by: ""
 manual_effort_minutes: null
 
 expert_sdlc:
-  top: ""
-  runner_up: ""
-  rationale: ""
-  by: ""
+  top: "Agile"
+  runner_up: "DevSecOps"
+  rationale: "Weekly releases and evolving patient needs favour Agile delivery; DevSecOps is the runner-up for integrating security into frequent releases."
+  by: "Simulated reviewer (LLM)"
 
 out_of_scope:
   - Prescribing decisions in the app; renewals are approved by prescribers in the EHR

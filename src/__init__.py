@@ -10,6 +10,16 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPLAY_OUTPUTS = "demo_outputs"
+
+
+def replaying() -> bool:
+    """SE_REPLAY=1: recorded model responses and a sandbox output folder (src/replay.py)."""
+    return os.environ.get("SE_REPLAY", "") not in ("", "0")
+
+
+if replaying():
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")  # the embedding model is cached; work without a network
 
 
 def resolve(rel: str | Path) -> Path:
@@ -28,7 +38,10 @@ def _load_yaml(name: str) -> dict[str, Any]:
 
 
 def load_pipeline() -> dict[str, Any]:
-    return _load_yaml("pipeline.yaml")
+    cfg = _load_yaml("pipeline.yaml")
+    if replaying():
+        cfg = {**cfg, "paths": {**cfg["paths"], "outputs": REPLAY_OUTPUTS}}
+    return cfg
 
 
 def load_models() -> dict[str, Any]:

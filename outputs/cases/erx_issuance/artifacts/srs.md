@@ -74,7 +74,7 @@ Out of scope:
 - Categories: functional, performance
 - Sources: S-PRES-02, S-PRES-03, S-PRES-04, S-PRES-05, S-PRES-07, S-PRES-08, S-PHARM-03 (pharmacist, prescriber)
 - Evidence: D05#S170.315(b)#c10, D05#S170.315(b)#c09; regulations: 45 CFR 170.315(a)(4), HL7 FHIR R4 AllergyIntolerance §9.1.3.4
-- Confidence: 0.5; approval: pending — **escalated:** unresolved conflict or duplication
+- Confidence: 0.5; approval: approved — **escalated:** unresolved conflict or duplication
 
 **FR-ERX-002** (v1, stakeholder) — The system shall provide a patient's active medication list and recorded allergies on the same screen as the order being written.
 
@@ -83,25 +83,25 @@ Out of scope:
 - Categories: functional, data_management
 - Sources: S-PRES-03 (prescriber)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
-**FR-ERX-003** (v1, stakeholder) — The system shall provide interaction and allergy alerts before the prescriber can sign the order, not after it has gone to the pharmacy.
+**FR-ERX-003** (v2, stakeholder) — The system shall display drug-drug interaction and drug-allergy alerts to the prescriber prior to order signature and shall prevent signing or transmission to the pharmacy until all critical alerts are acknowledged or overridden with a documented reason.
 
 - Acceptance criteria: Interaction and allergy alerts must appear before the prescriber can sign the order, not after it has been transmitted to the pharmacy.
 - Verification: Test; priority Must; risk Critical; volatility Low
 - Categories: functional, security
 - Sources: S-PRES-04, S-PRES-05, S-CSO-03 (clinical safety officer, prescriber)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.5; approval: pending — **escalated:** unresolved conflict or duplication
+- Confidence: 0.5; approval: approved — **escalated:** unresolved conflict or duplication
 
-**FR-ERX-004** (v2, stakeholder) — The system shall provide interaction and allergy alerts that come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.
+**FR-ERX-004** (v3, stakeholder) — The system shall return drug-interaction and allergy-check results within 2 seconds for at least 95% of prescription orders, measured over each calendar month.
 
 - Acceptance criteria: Interaction and allergy alerts must come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.
 - Verification: Test; priority Must; risk High; volatility Low
 - Categories: functional, performance
 - Sources: S-PRES-07, S-PRES-08, S-PRES-10 (prescriber)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 **FR-ERX-005** (v3, stakeholder) — The system shall integrate interaction and allergy alerts handling into a separate project.
 
@@ -110,7 +110,7 @@ Out of scope:
 - Categories: functional, integration
 - Sources: S-PRES-06, S-PRES-09, S-PRES-13 (prescriber)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), HL7 FHIR R4 AllergyIntolerance §9.1.3.4
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **FR-ERX-006** (v3, stakeholder) — The system shall receive prescription details including drug name, strength, dose form, quantity, directions for use, and the number of refills authorised when a prescriber requests an e-Rx.
 
@@ -119,16 +119,16 @@ Out of scope:
 - Categories: functional, integration
 - Sources: S-PHARM-01, S-PHARM-02, S-PHARM-08, S-PHARM-12 (pharmacist)
 - Evidence: —; regulations: 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
-**FR-ERX-007** (v3, stakeholder) — The system shall verify that every prescription has a drug name, strength, dose form, quantity, directions for use and the number of refills authorised before filling the prescription.
+**FR-ERX-007** (v4, stakeholder) — The system shall prevent a prescription from being transmitted for filling unless the drug name, strength, dose form, quantity, directions for use, and authorized number of refills are present.
 
 - Acceptance criteria: The system verifies the presence of a drug name, strength, dose form, quantity, directions for use and the number of refills authorised in the prescription and proceeds to fill the prescription if all details are present.
 - Verification: Test; priority Must; risk Critical; volatility Low
 - Categories: functional, security
 - Sources: S-PHARM-01, S-PHARM-09, S-PHARM-13 (pharmacist)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **FR-ERX-009** (v2, stakeholder) — The system shall send an electronic CancelRx message to the pharmacy when a cancellation occurs, and the prescriber should be able to see the pharmacy's response.
 
@@ -137,7 +137,7 @@ Out of scope:
 - Categories: functional, integration
 - Sources: S-PHARM-01, S-PHARM-11 (pharmacist)
 - Evidence: D05#S170.315(b)#c09, D05#S170.315(b)#c10; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(b)(3)
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
 **FR-ERX-011** (v1, stakeholder) — The system shall display an alert to the prescriber if a drug-drug interaction or allergy is detected.
 
@@ -146,16 +146,16 @@ Out of scope:
 - Categories: functional, stakeholder
 - Sources: S-CSO-03 (clinical safety officer)
 - Evidence: —; regulations: 45 CFR 170.315(a)(10), 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.5; approval: pending — **escalated:** unresolved conflict or duplication
+- Confidence: 0.5; approval: approved — **escalated:** unresolved conflict or duplication
 
-**FR-ERX-012** (v1, stakeholder) — The system shall log and audit any overrides of drug-drug interaction or allergy alerts.
+**FR-ERX-012** (v2, stakeholder) — The system shall record each override of a drug-interaction or allergy alert, including the prescriber, timestamp, alert, and documented override reason.
 
 - Acceptance criteria: Audit logs capture all instances where prescribers override drug-drug interaction or allergy alerts, including the reason provided.
 - Verification: Inspection; priority Must; risk High; volatility Low
 - Categories: functional, security, audit_reporting
 - Sources: S-CSO-02, S-CSO-04, S-CSO-08 (clinical safety officer)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), 45 CFR 170.315(d)(2)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 **FR-ERX-013** (v1, stakeholder) — The system shall generate a report of all alert overrides for the safety committee.
 
@@ -164,7 +164,7 @@ Out of scope:
 - Categories: functional, audit_reporting
 - Sources: S-CSO-09 (clinical safety officer)
 - Evidence: —; regulations: 45 CFR 164.308(a)(1)(ii)(D), 45 CFR 164.312(b)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **FR-ERX-014** (v3, stakeholder) — The system shall publish each order as a FHIR R4 MedicationRequest through an adapter, as per S-ARCH-13.
 
@@ -173,16 +173,16 @@ Out of scope:
 - Categories: functional, integration
 - Sources: S-ARCH-01, S-ARCH-11, S-ARCH-13 (architect)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
-**FR-ERX-015** (v3, stakeholder) — The system shall perform real-time drug-drug interaction and patient allergy contraindication checks during the issuance of electronic prescriptions.
+**FR-ERX-015** (v4, stakeholder) — The system shall perform real-time drug-drug interaction and patient-allergy contraindication checks during electronic prescription issuance and display any detected alerts to the prescriber before signing.
 
 - Acceptance criteria: The system must perform real-time drug-drug interaction and patient allergy contrindication checks during the issuance of electronic prescriptions.
 - Verification: Test; priority Must; risk Critical; volatility Medium
 - Categories: functional, security
 - Sources: S-ARCH-04, S-ARCH-08, S-ARCH-10, S-ARCH-12 (architect)
 - Evidence: —; regulations: 45 CFR 170.315(a)(10), 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.5; approval: pending — **escalated:** 29148 rule failures: verifiable; unresolved conflict or duplication
+- Confidence: 0.5; approval: approved (modified) — **escalated:** 29148 rule failures: verifiable; unresolved conflict or duplication
 
 **FR-ERX-016** (v1, stakeholder) — The system shall perform formulary checks and continue with a 'formulary unavailable' notice if the payer formulary service does not respond within 3 seconds.
 
@@ -191,16 +191,16 @@ Out of scope:
 - Categories: functional, availability_reliability
 - Sources: S-ARCH-05, S-ARCH-09 (architect)
 - Evidence: —; regulations: 45 CFR 164.312(a)(2)(iii), 45 CFR 170.315(a)(10), 45 CFR 170.315(d)(5)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
-**FR-ERX-017** (v1, stakeholder) — The prescriber shall be able to complete a routine prescription in under 90 seconds.
+**FR-ERX-017** (v2, stakeholder) — The system shall enable a prescriber to complete a routine prescription in under 90 seconds in the agreed representative usability test scenario.
 
 - Acceptance criteria: Prescribers can complete a routine prescription within 90 seconds.
 - Verification: Test; priority Must; risk High; volatility Low
 - Categories: functional, performance
 - Sources: S-PO-04 (product owner)
 - Evidence: —; regulations: 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **FR-ERX-018** (v3, document) — The system shall enable prescribers to complete a routine prescription for non-controlled medications in under 90 seconds through the EHR interface.
 
@@ -209,7 +209,7 @@ Out of scope:
 - Categories: functional, data_management
 - Sources: DOC-KICKOFF#p2, S-PO-09, S-PO-14 (meeting notes, product owner)
 - Evidence: —; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
 **FR-ERX-019** (v3, document) — The system shall process the cancellation of electronic prescriptions.
 
@@ -218,16 +218,16 @@ Out of scope:
 - Categories: functional, data_management
 - Sources: DOC-KICKOFF#p2, S-PO-10, S-PO-15 (meeting notes, product owner)
 - Evidence: D05#S170.315(b)#c09; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(b)(3)
-- Confidence: 0.875; approval: pending
+- Confidence: 0.875; approval: approved
 
-**FR-ERX-020** (v3, document) — The system shall provide real-time drug-drug interaction and allergy contraindication checking to support prescribers in completing a routine prescription in under 90 seconds.
+**FR-ERX-020** (v4, document) — The system shall perform drug-interaction and allergy checks during prescription entry and display detected alerts before the prescriber signs the prescription.
 
 - Acceptance criteria: The system checks for drug interactions and allergies during the prescription issuance process and alerts the prescriber if any are detected, ensuring that a routine prescription can be completed within 90 seconds.
 - Verification: Test; priority Must; risk Critical; volatility Low
 - Categories: functional, usability
 - Sources: DOC-KICKOFF#p2, S-PO-11, S-PO-16 (meeting notes, product owner)
 - Evidence: —; regulations: 45 CFR 170.315(a)(10), 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.875; approval: pending
+- Confidence: 0.875; approval: approved
 
 **FR-ERX-021** (v1, document) — The system shall provide a reason for every prescription override to the safety committee.
 
@@ -236,16 +236,16 @@ Out of scope:
 - Categories: functional, security
 - Sources: DOC-KICKOFF#p4 (meeting notes)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
-**FR-ERX-022** (v2, document) — The system shall notify pharmacies of prescription cancellations within 24 hours.
+**FR-ERX-022** (v3, document) — The system shall transmit prescription-cancellation notifications to the receiving pharmacy without avoidable delay and shall alert authorized staff when delivery is unsuccessful.
 
 - Acceptance criteria: Pharmacies are informed of cancelled prescriptions within 24 hours, preventing the dispensing of incorrect medications.
 - Verification: Test; priority Must; risk High; volatility Low
 - Categories: functional, availability_reliability
 - Sources: DOC-KICKOFF#p5, S-PO-12 (meeting notes, product owner)
 - Evidence: —; regulations: 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
 **FR-ERX-023** (v2, document) — The system shall transmit electronic prescriptions to community pharmacies through an intermediary.
 
@@ -254,7 +254,7 @@ Out of scope:
 - Categories: functional, integration
 - Sources: DOC-KICKOFF#p2, S-PO-13 (meeting notes, product owner)
 - Evidence: —; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
 ### 2.2 Performance requirements
 
@@ -265,7 +265,7 @@ Out of scope:
 - Categories: performance
 - Sources: S-PRES-01, S-PRES-12, S-PRES-14 (prescriber)
 - Evidence: —; regulations: 45 CFR 170.315(b)(3)
-- Confidence: 0.75; approval: pending
+- Confidence: 0.75; approval: approved
 
 ### 2.3 Usability requirements
 
@@ -276,7 +276,7 @@ Out of scope:
 - Categories: business, usability
 - Sources: S-PO-01 (product owner)
 - Evidence: —; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 ### 2.4 Security requirements
 
@@ -287,16 +287,16 @@ Out of scope:
 - Categories: security, audit_reporting
 - Sources: S-CSO-07 (clinical safety officer)
 - Evidence: D06#S1311.205(b)#c39, D06#S1311.300(a)-(h)#c42; regulations: 45 CFR 170.315(a)(10), 45 CFR 170.315(a)(4), 45 CFR 170.315(d)(2)
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
-**NFR-ERX-009** (v1, stakeholder) — The system shall limit access to a patient's medication data to the patient's care team; any access outside it must be logged and reviewed.
+**NFR-ERX-009** (v2, stakeholder) — The system shall restrict patient medication data to users with authorized care-related access and shall log all exceptional or break-glass access for subsequent review.
 
 - Acceptance criteria: Access to a patient's medication data is limited to the patient's care team, and any access outside this team is logged and reviewed.
 - Verification: Inspection; priority Must; risk High; volatility Low
 - Categories: security
 - Sources: S-COMP-02, S-COMP-03, S-COMP-04 (compliance officer)
 - Evidence: —; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(d)(6), HL7 FHIR R4 Security §6.1.0.5
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 **NFR-ERX-011** (v1, stakeholder) — The system shall retain audit logs and security documentation for at least 6 years.
 
@@ -305,7 +305,7 @@ Out of scope:
 - Categories: security
 - Sources: S-COMP-05 (compliance officer)
 - Evidence: —; regulations: 45 CFR 164.316(b)(2)(i), 45 CFR 170.315(d)(3), HL7 FHIR R4 Security §6.1.0.6
-- Confidence: 0.5; approval: pending — **escalated:** unresolved conflict or duplication
+- Confidence: 0.5; approval: approved — **escalated:** unresolved conflict or duplication
 
 **NFR-ERX-012** (v1, stakeholder) — The system shall ensure that every user has a unique account and shared logins are prohibited.
 
@@ -314,7 +314,7 @@ Out of scope:
 - Categories: security
 - Sources: S-SEC-01 (security officer)
 - Evidence: —; regulations: 45 CFR 164.312(a)(2)(i), 45 CFR 170.315(d)(1), HL7 FHIR R4 Security §6.1.0.4
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-013** (v1, stakeholder) — The system shall encrypt all prescription traffic to the pharmacy intermediary with TLS 1.2 or higher and ensure integrity protection.
 
@@ -323,16 +323,16 @@ Out of scope:
 - Categories: security
 - Sources: S-SEC-02, S-SEC-04 (security officer)
 - Evidence: —; regulations: 45 CFR 164.312(a)(2)(iv), 45 CFR 170.315(d)(9)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
-**NFR-ERX-014** (v1, stakeholder) — The system shall maintain tamper-evident audit records and prevent any application user from deleting them.
+**NFR-ERX-014** (v2, stakeholder) — The system shall maintain tamper-evident audit records and prevent application users from altering or deleting them, except through an authorized, audited retention-disposition process.
 
 - Acceptance criteria: Audit records are tamper-evident, and no user can delete them.
 - Verification: Inspection; priority Must; risk High; volatility Low
 - Categories: security, audit_reporting
 - Sources: S-SEC-03 (security officer)
 - Evidence: D06#S1311.150#c34, D06#S1311.215#c41, D06#S1311.205(b)#c39; regulations: 45 CFR 164.312(b), 45 CFR 170.315(d)(1), 45 CFR 170.315(d)(2)
-- Confidence: 0.5; approval: pending — **escalated:** 29148 rule failures: singular; unresolved conflict or duplication
+- Confidence: 0.5; approval: approved (modified) — **escalated:** 29148 rule failures: singular; unresolved conflict or duplication
 
 **NFR-ERX-015** (v1, stakeholder) — The system shall lock sessions after 15 minutes of inactivity and require re-authentication to resume.
 
@@ -341,7 +341,7 @@ Out of scope:
 - Categories: security
 - Sources: S-SEC-08 (security officer)
 - Evidence: —; regulations: 45 CFR 164.312(a)(2)(iii), 45 CFR 170.315(d)(5)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-019** (v1, compliance_gap) — The system shall conduct an accurate and thorough assessment of the potential risks and vulnerabilities to the confidentiality, integrity, and availability of ePHI related to electronic prescription issuance.
 
@@ -350,7 +350,7 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D04#S164.308(a)#c04; regulations: 45 CFR 164.308(a)(1)(ii)(A)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 **NFR-ERX-020** (v1, compliance_gap) — The system shall allow access to systems that maintain ePHI only to persons or software programs that have been granted access rights.
 
@@ -359,7 +359,7 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D04#S164.312#c07; regulations: 45 CFR 164.312(a)(1)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-022** (v1, compliance_gap) — The system shall protect ePHI from improper alteration or destruction.
 
@@ -368,7 +368,7 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D04#S164.312#c07; regulations: 45 CFR 164.312(c)(1)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-023** (v1, compliance_gap) — The system shall verify that a person or entity seeking access to ePHI is the one claimed.
 
@@ -377,7 +377,7 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D04#S164.312#c07; regulations: 45 CFR 164.312(d)
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-024** (v1, compliance_gap) — The system shall guard against unauthorized access to ePHI being transmitted over an electronic communications network; integrity controls and encryption are addressable.
 
@@ -386,7 +386,7 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D04#S164.312#c07; regulations: 45 CFR 164.312(e)(1)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 **NFR-ERX-025** (v1, compliance_gap) — The system shall encrypt electronic health information stored on end-user devices after use stops, or prevent it from being stored locally.
 
@@ -395,38 +395,38 @@ Out of scope:
 - Categories: security
 - Sources: —
 - Evidence: D05#S170.315(d)#c17; regulations: 45 CFR 170.315(d)(7)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 ### 2.5 Regulatory requirements
 
-**NFR-ERX-004** (v1, stakeholder) — The system shall be ONC-certified before the go-live date.
+**NFR-ERX-004** (v2, stakeholder) — The system shall support completion of the applicable ONC Health IT Certification Program requirements identified for the e-prescribing module before go-live.
 
 - Acceptance criteria: The e-prescribing module is certified by the Office of the National Coordinator for Health Information Technology (ONC) and meets all required standards.
 - Verification: Test; priority Must; risk Critical; volatility Low
 - Categories: regulatory
 - Sources: S-CSO-01, DOC-KICKOFF#p6, S-PRES-01 (clinical safety officer, meeting notes, prescriber)
 - Evidence: D05#S170.315(b)#c09, D05#S170.315(b)#c10, D05#S170.315(a)#c02; regulations: 45 CFR 170.315(b)(3), 45 CFR 170.315(d)(9)
-- Confidence: 0.3; approval: pending — **escalated:** fabricated or misattributed citation
+- Confidence: 0.3; approval: approved (modified) — **escalated:** fabricated or misattributed citation
 
-**NFR-ERX-007** (v3, stakeholder) — NFR-ERX-007: The system shall be certified against the ONC criteria for CPOE medications, drug-drug and drug-allergy interaction checks, and electronic prescribing before go-live.
+**NFR-ERX-007** (v4, stakeholder) — The system shall implement the applicable ONC certification criteria for medication CPOE, drug-drug and drug-allergy interaction checking, and electronic prescribing that are included in the approved certification scope.
 
 - Acceptance criteria: The system is certified against the ONC criteria for CPOE medications, drug-drug and drug-allergy interaction checks, and electronic prescribing.
 - Verification: Test; priority Must; risk Critical; volatility Low
 - Categories: regulatory, integration
 - Sources: S-COMP-01, S-COMP-08 (compliance officer)
 - Evidence: D05#S170.315(b)#c10, D06#S1311.305#c45; regulations: 45 CFR 170.315(a)(1), 45 CFR 170.315(a)(4), 45 CFR 170.315(b)(3)
-- Confidence: 0.3; approval: pending — **escalated:** 29148 rule failures: verifiable, conforming; fabricated or misattributed citation
+- Confidence: 0.3; approval: approved (modified) — **escalated:** 29148 rule failures: verifiable, conforming; fabricated or misattributed citation
 
 ### 2.6 Availability and reliability requirements
 
-**NFR-ERX-006** (v1, stakeholder) — The system shall analyze the audit trail at least once every calendar day and generate an incident report.
+**NFR-ERX-006** (v2, stakeholder) — The system shall analyze prescription audit events at least once every calendar day and generate an incident report for events that meet the organization's documented security-incident criteria.
 
 - Acceptance criteria: The system reviews the audit trail daily and produces a report identifying any security incidents that could compromise prescription records.
 - Verification: Inspection; priority Must; risk High; volatility Low
 - Categories: audit_reporting, availability_reliability
 - Sources: S-CSO-07 (clinical safety officer)
 - Evidence: D06#S1311.205(b)#c39, D06#S1311.300(a)-(h)#c42; regulations: 45 CFR 164.308(a)(1)(ii)(D), 45 CFR 164.312(b), 45 CFR 170.315(d)(3)
-- Confidence: 0.3; approval: pending — **escalated:** 29148 rule failures: singular; fabricated or misattributed citation
+- Confidence: 0.3; approval: approved (modified) — **escalated:** 29148 rule failures: singular; fabricated or misattributed citation
 
 **NFR-ERX-016** (v1, stakeholder) — The system shall be available at least 99.9% per month.
 
@@ -435,7 +435,7 @@ Out of scope:
 - Categories: availability_reliability
 - Sources: S-ARCH-07 (architect)
 - Evidence: —; regulations: —
-- Confidence: 0.812; approval: pending
+- Confidence: 0.812; approval: approved
 
 **NFR-ERX-021** (v1, compliance_gap) — The system shall establish procedures for obtaining necessary ePHI during an emergency.
 
@@ -444,7 +444,7 @@ Out of scope:
 - Categories: availability_reliability
 - Sources: —
 - Evidence: D04#S164.312#c07; regulations: 45 CFR 164.312(a)(2)(ii)
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 ### 2.7 Data requirements
 
@@ -455,7 +455,7 @@ Out of scope:
 - Categories: data_management
 - Sources: S-COMP-02, S-COMP-05 (compliance officer)
 - Evidence: D06#S1311.305#c45; regulations: 45 CFR 164.312(b), 45 CFR 164.316(b)(2)(i)
-- Confidence: 0.938; approval: pending
+- Confidence: 0.938; approval: approved
 
 ### 2.8 Interface and integration requirements
 
@@ -466,7 +466,7 @@ Out of scope:
 - Categories: integration
 - Sources: S-PHARM-04, S-PHARM-10 (pharmacist)
 - Evidence: —; regulations: 45 CFR 170.315(b)(3), HL7 FHIR R4 MedicationRequest §11.1.3
-- Confidence: 0.781; approval: pending
+- Confidence: 0.781; approval: approved
 
 ## 3. Verification
 

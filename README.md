@@ -33,7 +33,7 @@ Each run keeps its progress in its own Drive folder (`RUN_NAME` in the first cel
 name starts a fresh run without touching an earlier one. Earlier runs' results zips are
 archived in `runs/`.
 
-Runs are deterministic: seeded calls, prompts verified byte-identical across processes,
+Runs are seeded and controlled: fixed-seed calls, prompts verified byte-identical across processes,
 Ollama pinned to one version and serving one request at a time, and embeddings on the CPU.
 Each session's commit, GPU, model digests and package versions are recorded in
 `outputs/run_environment/`.
@@ -198,11 +198,24 @@ python -m src.evaluate --case all --injection-replay
 python -m src.metrics && python -m src.report
 ```
 
+### Demo without a model
+
+Replay mode runs the real pipeline on the recorded Run 2 model responses, in a sandbox folder
+(`demo_outputs/`), in under a minute per case. The full script is in [docs/DEMO.md](docs/DEMO.md);
+the diagrams are in [docs/architecture.md](docs/architecture.md).
+
+```bat
+set SE_REPLAY=1
+python -m src.replay reset --case erx_issuance
+python -m src.orchestrator --case erx_issuance
+python -m src.app
+```
+
 ### Human review
 
 ```bash
 python -m src.approve add-user --user laura --role compliance_officer
-python -m src.app            # web UI: sign in, approval queue, artefacts, live interview, survey
+python -m src.app            # web UI: overview, sign in, pipeline, approval queue, artefacts, interview, results, survey
 python -m src.approve list --case erx_issuance --user laura
 python -m src.approve decide --case erx_issuance --user laura APR-014 accept --note "mapping confirmed"
 python -m src.orchestrator --case erx_issuance --apply-decisions

@@ -1,6 +1,15 @@
 # SDLC recommendation
 
-**Recommended:** Waterfall (79.2%) — runner-up V-Model. Status: pending approval by project manager, architect, security officer, compliance officer.
+**Recommended:** Waterfall (79.2%) — runner-up V-Model. Status: rejected by the reviewers.
+
+## Sign-offs
+
+| Role | Decision | By | Note |
+|---|---|---|---|
+| project manager | reject | somyak | Select V-Model: safety-critical prescribing needs explicit verification and validation mapped to requirements; the Waterfall/V-Model scores are close. |
+| architect | reject | somyak | Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements. |
+| security officer | reject | somyak | Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements. |
+| compliance officer | reject | somyak | Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements. |
 
 | Rank | Model | Suitability | Supporting rules |
 |---|---|---|---|

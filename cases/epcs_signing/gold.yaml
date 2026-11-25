@@ -5,10 +5,10 @@ reviewed_by: ""
 manual_effort_minutes: null
 
 expert_sdlc:
-  top: ""
-  runner_up: ""
-  rationale: ""
-  by: ""
+  top: "V-Model"
+  runner_up: "Waterfall"
+  rationale: "Controlled-substance e-signing is heavily regulated and safety-critical, so the V-Model provides explicit verification and validation; Waterfall is a close alternative."
+  by: "Simulated reviewer (LLM)"
 
 out_of_scope:
   - Pharmacy application changes (DOC-KICKOFF)

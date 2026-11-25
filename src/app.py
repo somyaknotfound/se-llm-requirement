@@ -4,14 +4,17 @@
     python -m src.app --share      # a temporary public HTTPS link (Colab)
 
 Tabs:
+  Overview         the architecture and the end-to-end flow
   Sign in          password + TOTP one-time code; the session holds the user's roles
-  Approval queue   the items routed to your roles; accept, reject, modify or regenerate
+  Run pipeline     run a case step by step (replay mode only: a run replaces the case's outputs)
+  Approval queue   the items routed to your roles; accept, reject, modify or regenerate; apply
   Artefacts        the SRS, stories, registers and SDLC recommendation for a case
   Live interview   a real person answers the interaction agent as a stakeholder; the
                    transcript is masked, screened for injection and saved for extraction
+  Results          the SDLC ranking, quality, security events and the evaluation against gold
   Survey           the System Usability Scale plus three usefulness items
 
-Nothing is shown before sign-in. Every decision is recorded under the signed-in user
+No case data is shown before sign-in. Every decision is recorded under the signed-in user
 and the role they act in, and appended to the case's decision log.
 """
 
@@ -21,12 +24,17 @@ import argparse
 import csv
 import hashlib
 import json
+import os
+import subprocess
+import sys
+from collections.abc import Iterator
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from . import load_pipeline, store
+from . import PROJECT_ROOT, load_pipeline, replaying, store
 from .approve import authenticate
 from .cases import case_ids, case_out_dir, load_case
 from .evaluate import SUS_ITEMS, _eval_dir
@@ -95,6 +103,76 @@ def _save_survey(role: str, sus: list[int], useful: list[int], comment: str) -> 
     return f"Thank you. Your SUS score is {score:.1f} / 100."
 
 
+def _mermaid_head() -> str:
+    """Gradio bundles Mermaid but leaves the diagrams in Markdown as text; render them with its own copy."""
+    import gradio as gr
+
+    assets = Path(gr.__file__).parent / "templates" / "frontend" / "assets"
+    bundle = next(assets.glob("mermaid.core-*.js"), None)
+    if bundle is None:
+        return ""
+    return f"""<script type="module">
+import mermaid from "/assets/{bundle.name}";
+setInterval(() => {{
+  const nodes = [...document.querySelectorAll("div.mermaid:not([data-processed])")].filter(n => n.offsetParent);
+  if (!nodes.length) return;
+  const dark = document.body.classList.contains("dark");
+  mermaid.initialize({{ startOnLoad: false, theme: dark ? "dark" : "neutral" }});
+  mermaid.run({{ nodes, suppressErrors: true }});
+}}, 400);
+</script>"""
+
+
+def _stream(*module_args: str) -> Iterator[str]:
+    """Run a project command and yield its output so far, line by line."""
+    proc = subprocess.Popen([sys.executable, "-u", "-m", *module_args], cwd=PROJECT_ROOT, text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding="utf-8", errors="replace",
+                            env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    lines = ["$ python -m " + " ".join(module_args)]
+    yield lines[0]
+    for line in proc.stdout:
+        if not line.strip() or line.startswith("[critic]") or "Loading weights" in line:
+            continue
+        lines.append(line.rstrip())
+        yield "\n".join(lines)
+    if proc.wait():
+        lines.append(f"command failed (exit code {proc.returncode})")
+        yield "\n".join(lines)
+
+
+def _results(case_id: str) -> tuple[str, pd.DataFrame]:
+    state = _state(case_id)
+    if not state:
+        return "This case has not been run yet.", pd.DataFrame()
+    reqs = [r for r in state["requirements"] if r.get("status", "active") == "active"]
+    rec = (state.get("sdlc") or {}).get("recommendation")
+    events = state.get("security_events", [])
+    snaps = {s["label"]: s for s in state.get("validation", {}).get("snapshots", [])}
+    lines = [
+        f"### {load_case(case_id)['functionality']['name']}", "",
+        f"- **{len(reqs)}** requirements: {sum(r['type'] == 'FR' for r in reqs)} functional, "
+        f"{sum(r['type'] == 'NFR' for r in reqs)} non-functional; "
+        f"**{sum(bool(r.get('escalate')) for r in reqs)}** escalated",
+        f"- ISO/IEC/IEEE 29148 rule pass rate: **{snaps.get('v1', {}).get('mean_pass_rate')}** first draft, "
+        f"**{snaps.get('final', {}).get('mean_pass_rate')}** final",
+        f"- **{len(state.get('compliance', []))}** control mappings, **{len(state.get('risks', []))}** risks, "
+        f"**{len(state.get('threats', []))}** threats, **{len(state.get('conflicts', []))}** conflicts or duplicates",
+        f"- Security: **{sum(e['kind'] == 'prompt_injection' for e in events)}** injected instructions quarantined, "
+        f"**{sum(e.get('count', 0) for e in events if e['kind'] == 'phi_masked')}** identifiers masked",
+    ]
+    if rec:
+        lines += ["", f"### SDLC: {rec['top']} ({state['sdlc']['status'].replace('_', ' ')})", "",
+                  "| Rank | Model | Suitability | Rules fired |", "|---|---|---|---|"]
+        lines += [f"| {i} | {r['model']} | {r['pct']}% | {', '.join(r['rule_support']) or '-'} |"
+                  for i, r in enumerate(rec["ranking"], start=1)]
+        lines += [""] + [f"- Escalated: {reason}" for reason in rec.get("escalation_reasons", [])]
+    path = _eval_dir() / "summary_wide.csv"
+    table = pd.read_csv(path) if path.exists() else pd.DataFrame()
+    if not table.empty:
+        table = table[table["case"] == case_id].drop(columns="case").fillna("")
+    return "\n".join(lines), table
+
+
 def build():
     import gradio as gr
 
@@ -108,6 +186,12 @@ def build():
     with gr.Blocks(title="SE LLM-RE") as demo:
         session = gr.State({})
         gr.Markdown("# Requirements engineering assistant — e-prescribing case studies")
+        if replaying():
+            gr.Markdown("> **Replay mode.** Model responses are the recorded Run 2 responses; everything else "
+                        "runs live, in a sandbox folder.")
+
+        with gr.Tab("Overview"):
+            gr.Markdown((PROJECT_ROOT / "docs" / "architecture.md").read_text(encoding="utf-8"))
 
         with gr.Tab("Sign in"):
             user = gr.Textbox(label="User")
@@ -125,6 +209,24 @@ def build():
 
             sign_btn.click(sign_in, [user, password, otp], [session, sign_msg])
 
+        with gr.Tab("Run pipeline"):
+            gr.Markdown("Runs all 14 steps on one case. A run replaces the case's outputs and its recorded "
+                        "decisions, so it is available here only in replay mode.")
+            p_case = gr.Dropdown(cases, label="Case", value=cases[0] if cases else None)
+            p_run = gr.Button("Run the pipeline", variant="primary")
+            p_log = gr.Textbox(label="Pipeline output", lines=33, max_lines=33)
+
+            def run_pipeline(case_id, sess):
+                if not _signed_in(sess):
+                    yield "Sign in first."
+                    return
+                if not replaying():
+                    yield "Not available: a run would replace the real outputs. Start the app with SE_REPLAY=1."
+                    return
+                yield from _stream("src.orchestrator", "--case", case_id)
+
+            p_run.click(run_pipeline, [p_case, session], [p_log])
+
         with gr.Tab("Approval queue"):
             q_case = gr.Dropdown(cases, label="Case", value=cases[0] if cases else None)
             q_load = gr.Button("Load my queue")
@@ -140,10 +242,22 @@ def build():
             q_bulk_note = gr.Textbox(label="Bulk note: what you reviewed (required)")
             q_bulk = gr.Button("Accept every routine (normal-priority) item for this role")
             q_msg = gr.Markdown()
+            q_apply = gr.Button("Apply recorded decisions to the requirements")
+            q_log = gr.Textbox(label="Apply output", lines=3)
+
+            def apply_recorded(case_id, sess):
+                if not _signed_in(sess):
+                    yield "Sign in first."
+                    return
+                yield from _stream("src.orchestrator", "--case", case_id, "--apply-decisions")
+
+            q_apply.click(apply_recorded, [q_case, session], [q_log])
 
             def load_queue(case_id, sess):
                 if not _signed_in(sess):
                     return pd.DataFrame(columns=QUEUE_COLUMNS), gr.update(choices=[]), "**Sign in first.**"
+                if not store.db_path(case_out_dir(case_id)).exists():
+                    return pd.DataFrame(columns=QUEUE_COLUMNS), gr.update(choices=[]), "**Run this case first.**"
                 frame = store.approvals(case_out_dir(case_id))
                 frame = frame[frame["required_role"].isin(sess["roles"])][QUEUE_COLUMNS]
                 return frame, gr.update(choices=sess["roles"], value=sess["roles"][0]), f"{len(frame)} pending"
@@ -224,12 +338,12 @@ def build():
             interview = gr.State({})
 
             def context(case_id):
-                from .llm import OllamaClient
+                from .llm import make_client
 
                 run_dir = case_out_dir(case_id) / "live"
                 run_dir.mkdir(parents=True, exist_ok=True)
                 return AgentContext(case=public_case(load_case(case_id)), board=Blackboard(),
-                                    client=OllamaClient(), run_dir=run_dir, cfg=load_pipeline(), step="live_interview")
+                                    client=make_client(), run_dir=run_dir, cfg=load_pipeline(), step="live_interview")
 
             def start(case_id, role, sess):
                 if not _signed_in(sess):
@@ -274,6 +388,29 @@ def build():
             i_start.click(start, [i_case, i_role, session], [chat, interview, i_msg])
             i_send.click(send, [i_answer, interview, chat], [chat, interview, i_answer, i_msg])
 
+        with gr.Tab("Results"):
+            r_case = gr.Dropdown(cases, label="Case", value=cases[0] if cases else None)
+            with gr.Row():
+                r_show = gr.Button("Show results", variant="primary")
+                r_eval = gr.Button("Evaluate against the gold standard")
+            r_log = gr.Textbox(label="Evaluation output", lines=4, max_lines=4)
+            r_md = gr.Markdown()
+            r_df = gr.Dataframe(interactive=False, wrap=True, label="Multi-agent system vs single-prompt baseline")
+
+            def show_results(case_id, sess):
+                return _results(case_id) if _signed_in(sess) else ("**Sign in first.**", pd.DataFrame())
+
+            def evaluate(case_id, sess):
+                if not _signed_in(sess):
+                    yield "Sign in first.", "", pd.DataFrame()
+                    return
+                for text in _stream("src.evaluate", "--case", "all"):
+                    yield text, gr.skip(), gr.skip()
+                yield (text, *_results(case_id))
+
+            r_show.click(show_results, [r_case, session], [r_md, r_df])
+            r_eval.click(evaluate, [r_case, session], [r_log, r_md, r_df])
+
         with gr.Tab("Survey"):
             s_role = gr.Dropdown(sorted(templates["roles"]), label="Your role")
             gr.Markdown("1 = strongly disagree, 5 = strongly agree")
@@ -299,7 +436,7 @@ def main() -> int:
     ap.add_argument("--share", action="store_true", help="create a temporary public HTTPS link")
     ap.add_argument("--port", type=int, default=7860)
     args = ap.parse_args()
-    build().launch(share=args.share, server_port=args.port)
+    build().launch(share=args.share, server_port=args.port, head=_mermaid_head())
     return 0
 
 

@@ -4,6 +4,12 @@
     python -m src.approve list   --case erx_issuance --user laura
     python -m src.approve decide --case erx_issuance --user laura APR-014 accept --note "mapping confirmed"
     python -m src.approve decide --case erx_issuance --user samuel APR-002 modify --text "The system shall ..."
+    python -m src.approve export --case erx_issuance --user laura --out review.csv
+    python -m src.approve import --case erx_issuance --user laura review.csv
+
+export writes the pending escalated items with the full requirement text into a sheet;
+the reviewer fills decision, note and modified_text per row, and import records each row
+as an individual decision under the reviewer's identity, with the same role checks.
 
 Access control: every reviewer is a named user with one or more roles in
 config/users.local.yaml (never committed). Signing in takes the password (PBKDF2,
@@ -18,9 +24,12 @@ from __future__ import annotations
 
 import argparse
 import getpass
+import json
 import os
+from pathlib import Path
 from typing import Any
 
+import pandas as pd
 import yaml
 
 from . import resolve
@@ -56,6 +65,58 @@ def authenticate(user: str, password: str, otp: str) -> list[str]:
     if not ok:
         raise PermissionError("sign-in failed: unknown user, wrong password or wrong one-time code")
     return list(record["roles"])
+
+
+SHEET_INPUT = ["decision", "note", "modified_text"]
+
+
+def export_sheet(run_dir: Path, roles: list[str], out: Path, priority: str = "high") -> int:
+    """Write the pending items for these roles, with requirement details, to a review sheet."""
+    frame = store.approvals(run_dir)
+    frame = frame[frame["required_role"].isin(roles)]
+    if priority != "all":
+        frame = frame[frame["priority"] == priority]
+    state_path = run_dir / "state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    reqs = {r["req_id"]: r for r in state.get("requirements", [])}
+
+    def detail(item_id: str, key: str) -> str:
+        value = reqs.get(item_id, {}).get(key, "")
+        return "; ".join(value) if isinstance(value, list) else str(value or "")
+
+    sheet = frame[["id", "priority", "required_role", "item_type", "item_id", "reason"]].copy()
+    for key in ["statement", "acceptance_criteria", "source_statement_ids", "source_chunk_ids", "regulations"]:
+        sheet[key] = [detail(i, key) for i in sheet["item_id"]]
+    for col in SHEET_INPUT:
+        sheet[col] = ""
+    sheet.to_csv(out, index=False, encoding="utf-8-sig")  # utf-8-sig so Excel shows the text correctly
+    return len(sheet)
+
+
+def import_sheet(run_dir: Path, user: str, roles: list[str], sheet_path: Path) -> tuple[list[str], list[str]]:
+    """Record every filled row as its own decision. -> (recorded ids, error messages).
+
+    Rows without a decision are skipped; a row without a note is refused, because the
+    note is the evidence that the item was read.
+    """
+    sheet = pd.read_csv(sheet_path, encoding="utf-8-sig", dtype=str).fillna("")
+    done, errors = [], []
+    for row in sheet.itertuples():
+        decision = row.decision.strip().lower()
+        if not decision:
+            continue
+        if not row.note.strip():
+            errors.append(f"{row.id}: add a note saying why")
+            continue
+        if row.required_role not in roles:
+            errors.append(f"{row.id}: needs the {row.required_role} role")
+            continue
+        try:
+            store.decide(run_dir, row.id, decision, user, row.required_role, row.note.strip(), row.modified_text.strip())
+            done.append(row.id)
+        except (KeyError, ValueError, PermissionError) as exc:
+            errors.append(f"{row.id}: {exc}")
+    return done, errors
 
 
 def _sign_in(args) -> list[str]:
@@ -95,6 +156,19 @@ def main() -> int:
     b.add_argument("decision", choices=["accept", "reject"])
     b.add_argument("--note", required=True, help="what you reviewed before deciding")
 
+    e = sub.add_parser("export", help="write your pending items, with requirement text, to a review sheet")
+    e.add_argument("--case", required=True)
+    e.add_argument("--user", required=True)
+    e.add_argument("--otp")
+    e.add_argument("--out", required=True)
+    e.add_argument("--priority", choices=["high", "normal", "all"], default="high")
+
+    im = sub.add_parser("import", help="record the decisions filled into a review sheet, row by row")
+    im.add_argument("--case", required=True)
+    im.add_argument("--user", required=True)
+    im.add_argument("--otp")
+    im.add_argument("sheet")
+
     args = ap.parse_args()
 
     if args.cmd == "add-user":
@@ -121,6 +195,19 @@ def main() -> int:
             flag = "!" if r["priority"] == "high" else " "
             print(f"{flag} {r['id']}  {r['required_role']:<24} {r['item_type']:<26} {r['item_id']:<14} {r['reason'][:80]}")
         return 0
+
+    if args.cmd == "export":
+        n = export_sheet(run_dir, roles, Path(args.out), args.priority)
+        print(f"wrote {n} pending {args.priority}-priority item(s) to {args.out}; fill decision "
+              f"({', '.join(sorted(store.DECISIONS))}), note and, for modify, modified_text")
+        return 0
+
+    if args.cmd == "import":
+        done, errors = import_sheet(run_dir, args.user, roles, Path(args.sheet))
+        print(f"recorded {len(done)} decision(s)")
+        for err in errors:
+            print(f"  not recorded — {err}")
+        return 1 if errors else 0
 
     role = args.role or (roles[0] if len(roles) == 1 else None)
     if role is None or role not in roles:

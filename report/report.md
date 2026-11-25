@@ -7,10 +7,17 @@
 > Run 2 (`runs/run2_2026-10-04.zip`, unpacked into `outputs/`, `logs/` and `figures/`); every
 > number is copied from a generated file, and each paragraph names that file — regenerate
 > with `python -m src.evaluate --case all && python -m src.metrics && python -m src.report`.
-> Two things are still open. The gold standards have not yet been reviewed, so every
-> gold-based figure (precision, recall, F1, detection recall) is provisional. Items marked
-> `[PENDING HUMAN REVIEW]` need the author's judgement — expert SDLC choices, manual effort,
-> approval decisions, adjudication and the survey — and are never generated.
+> Human and simulated review are kept apart throughout (§9.9):
+>
+> - **Done by a person (the author):** the e-Rx approval queue (157 items, all six roles)
+>   and the usability survey (one respondent).
+> - **Done by an LLM the author ran, labelled "Simulated reviewer (LLM)":** verdicts on the
+>   automatic gold matches, adjudication of the 12 scorer disagreements, and the expert SDLC
+>   choice for each case. These are reported under separate `*_llm_verified` and `simulated_*`
+>   names and never count as human.
+> - **Not done:** review of the gold standards by a person (an LLM reviewed them, §9.2), so every gold-based figure (precision, recall,
+>   F1, detection recall) is provisional; manual-effort timing; the EPCS and refill approval
+>   queues.
 
 ---
 
@@ -310,6 +317,12 @@ the first call after a resume may differ from an uninterrupted run. The call log
 this directly: `repeated_calls_identical` in `outputs/metrics_summary.csv` counts identical
 calls that returned identical text.
 
+The call log also makes the run re-executable without a model. Replay mode (`SE_REPLAY=1`,
+`src/replay.py`) runs the real pipeline and answers a call only when the model, system prompt,
+prompt and sampling parameters match a recorded call exactly. Replaying the three cases used 717
+recorded calls with no miss and reproduced each archived Run 2 `state.json` field for field, apart
+from timestamps, timings and file paths. This verifies the code around the model, not the model.
+
 ### 3.6 Runs
 
 Run 1 (archived in `runs/`) exercised the whole pipeline on the GPU and exposed four
@@ -345,7 +358,7 @@ ids they used, which are stripped before any agent reads them and used only for 
 
 | Metric | Definition |
 |---|---|
-| Precision / recall / F1 | One-to-one matching of generated to gold requirements at cosine ≥ 0.6 (MiniLM); human-verified matches replace the automatic count when recorded |
+| Precision / recall / F1 | One-to-one matching of generated to gold requirements at cosine ≥ 0.6 (MiniLM); human-verified matches replace the automatic count when recorded; a simulated LLM review is reported separately as `*_llm_verified` |
 | Completeness | Recall |
 | Precision (elicited) | Precision over stakeholder- and document-sourced requirements only |
 | Category agreement | Mean Jaccard of multi-label categories on matched pairs |
@@ -395,9 +408,31 @@ over-generates: EPCS produced 83 requirements against a gold of 35, so its preci
 below the baseline's. Restricted to requirements elicited from stakeholders and documents
 (excluding compliance-gap proposals), precision is 0.778 (e-Rx), 0.419 (EPCS) and 0.353
 (refill). Category agreement on matched pairs, the mean Jaccard over the 13 labels, is
-0.506, 0.366 and 0.509.
+0.5, 0.366 and 0.509. The e-Rx figures are measured after the author's approval decisions
+were applied (§5.7).
 
 ![Evaluation](../figures/evaluation_comparison.png)
+
+**Simulated match review.** An LLM run by the author, not a person, judged each automatic
+match in `outputs/cases/<case>/matches_*.csv` (`simulated_verdict`; `human_verdict` is
+empty). Counting only the matches it accepted (`*_llm_verified` in
+`outputs/evaluation/summary_wide.csv`):
+
+| Case | System | Precision: automatic → LLM-verified | Recall: automatic → LLM-verified |
+|---|---|---|---|
+| erx_issuance | multi-agent | 0.651 → not computed | 0.622 → not computed |
+| | baseline | 0.312 → 0.062 | 0.111 → 0.022 |
+| epcs_signing | multi-agent | 0.373 → 0.157 | 0.886 → 0.371 |
+| | baseline | 0.611 → 0.056 | 0.314 → 0.029 |
+| refill_reminders | multi-agent | 0.29 → 0.097 | 0.643 → 0.214 |
+| | baseline | 0.222 → 0.0 | 0.143 → 0.0 |
+
+The simulated reviewer rejected most automatic matches, the baseline's more than the
+multi-agent system's, so the multi-agent lead widens under it. Either cosine ≥ 0.6 is a
+lenient criterion or the simulated reviewer is strict. Without a human verdict the two cannot
+be told apart, so neither column is a verified result. For e-Rx the multi-agent figure is not
+computed: applying the approval decisions changed requirement texts and matches, the review
+covers only 13 of the 28 current matches, and a partial review would understate precision.
 
 ### 5.2 Ambiguity and conflict detection
 
@@ -464,8 +499,12 @@ Scorer agreement is measured on the Part 1 set (validation section of
 judgements. All 30 disagreements are on unambiguous and verifiable, where the critic failed
 every requirement (0%) and the rule scorer passed them (100% and 67%); the critic's notes show
 it treats any "and" in acceptance criteria, or any unquantified phrase, as disqualifying.
-`[PENDING HUMAN REVIEW]` — adjudication of the 30 disagreements
-(`outputs/adjudication_worksheet.csv`, `human_adjudication` column; `human_adjudicated` is 0).
+The 12 highest-priority disagreements in `outputs/adjudication_worksheet.csv`, all on
+verifiable, were adjudicated by the simulated reviewer, not by hand (`simulated_adjudication`;
+`human_adjudication` is empty and `human_adjudicated` is 0). It sided with the rule scorer in
+6 and with the critic in 6 (`simulated_adjudicated` in `outputs/metrics_summary.csv`). An even
+split from a third model says neither scorer is clearly right on verifiability; it does not
+say which one is.
 
 ### 5.5 SDLC recommendations
 
@@ -481,15 +520,23 @@ reasons from each case's `artifacts/sdlc_recommendation.md`.
 The engine separates the cases as the case design intended. The two regulated, low-volatility
 cases come out plan-driven, with V-Model within 4.2 and 2.5 points of Waterfall; the volatile,
 weekly-shipping refill app comes out adaptive, Agile tied with DevSecOps and every other model
-at or below 43.8%. Every recommendation was escalated and is pending approval by the project
-manager, architect, security and compliance officers: the engine flagged its own near ties
-instead of presenting them as decisions. For e-Rx, the independent argument in §6.2 put a
+at or below 43.8%. Every recommendation was escalated for approval by the project manager,
+architect, security and compliance officers: the engine flagged its own near ties instead of
+presenting them as decisions. For e-Rx the author, signing as all four, rejected Waterfall
+and asked for V-Model, citing verification and validation mapped to safety-critical
+requirements and the closeness of the two scores (sign-offs in
+`outputs/cases/erx_issuance/artifacts/sdlc_recommendation.md`). The EPCS and refill
+recommendations are still pending. For e-Rx, the independent argument in §6.2 put a
 hybrid first and pure V-Model second; the engine ranks the hybrid third (65.6%) behind the
 two plan-driven models — the family the argument favours, without its incremental element.
 Run 1, before the extraction fix (§3.6), ranked Waterfall first for all three cases.
 
-`[PENDING HUMAN REVIEW]` — accuracy against the expert choices (`sdlc_top1`, `sdlc_top2`),
-which needs `expert_sdlc` recorded in each `gold.yaml`.
+Accuracy is measured against an expert choice recorded by the simulated reviewer, not by a
+person (`expert_sdlc.by: "Simulated reviewer (LLM)"` in each `gold.yaml`): V-Model for e-Rx
+and EPCS, Agile for refill. The engine's top choice matches in 1 of 3 cases (refill), and its
+top two contain the choice in 3 of 3 (`sdlc_top1`, `sdlc_top2`). Both misses are the
+Waterfall/V-Model near ties the engine had already escalated. For e-Rx the simulated choice
+is §6.2's second choice, and both §6.2 and the simulated reviewer argued against pure Waterfall.
 
 ### 5.6 Security
 
@@ -528,9 +575,34 @@ but it is workable only because routine items can be accepted in bulk with a not
 escalated ones are decided one at a time. The system took ten to sixteen times as long as
 the single prompt (model time on one T4).
 
-`[PENDING HUMAN REVIEW]` — the human correction rate (needs decisions in the approval queue),
-time saved against manual analysis (needs `manual_effort_minutes`), and the SUS score (no
-survey responses yet).
+**Human review (e-Rx only).** The author worked the whole e-Rx queue, signed in with TOTP and
+holding all six roles, so one person stands in for six reviewers. The 50 high-priority items
+were decided one at a time with a note each, through an exported review sheet
+(`python -m src.approve export` / `import`): 25 accepted, 16 modified, 9 rejected. The 107
+normal-priority items were accepted in bulk. Applying the decisions approved 38 requirements
+and rewrote 13 (`decisions.jsonl`, `requirement_history`). Counted per requirement, 13 of the
+43 were modified or rejected by a reviewer, a human correction rate of 0.302
+(`human_correction_rate`). The EPCS (300 items) and refill (188) queues were not worked, and
+their correction rate is reported as missing.
+
+Working the queue exposed a defect: text corrections made under a non-baseline role, such as
+the clinical safety officer, were recorded but never applied to the requirement. They are now
+applied, while the approval status stays with the product owner's baseline item
+(`tests/test_orchestrator_offline.py`). A second defect followed: applying decisions rewrote the
+model-written user stories, use cases and process workflow as empty files, because they cannot be
+rebuilt without a model. They are now kept, the story of a rejected requirement is dropped, and
+stories and use cases whose requirements a reviewer changed are marked out of date.
+
+**Time against manual analysis** is not measured: `manual_effort_minutes` was not recorded,
+so `time_saved_vs_manual` is missing.
+
+**Usability.** One survey response, from the author in the clinical safety officer role:
+SUS 82.5 (`stakeholder_satisfaction_sus`; `outputs/evaluation/survey_responses.csv`). The
+usefulness items scored 5 (questions relevant to the role), 4 (requirements captured what
+was said) and 2 (would accept as a first draft). The respondent also built the system, so
+this is a self-assessment, not a measure of stakeholder satisfaction. The survey is
+system-wide, so the same value appears under every case in the summary tables. Four
+accidental duplicate submissions, made within 25 seconds, were removed and the last kept.
 
 ---
 
@@ -635,8 +707,9 @@ verifiable, conforming and traceable by two independent scorers: a rule scorer (
 words, compound-obligation and multiple-`shall` detection, missing acceptance criteria,
 placeholders, citation integrity, absolute claims, near-duplicates) and an LLM critic
 that judges each requirement in its own call on a fresh context. `necessary` and
-`feasible` are only weakly decidable by rule, and are tagged as such. Disagreements are
-adjudicated by hand.
+`feasible` are only weakly decidable by rule, and are tagged as such. Disagreements go to a
+worksheet for human adjudication; in this submission a simulated reviewer adjudicated them
+instead (§5.4).
 
 ![29148 pass rate](../figures/validation_29148.png)
 ![Scorer agreement](../figures/scorer_agreement.png)
@@ -706,12 +779,14 @@ a seeded fixture; the test suite covers it.
 - **Find the conflicts.** None of the seeded conflicts was flagged, so cross-stakeholder
   consistency still has to be checked by a person (§5.2).
 - **Prune and verify**: over-generated sets, duplicates and the automatic gold matches.
-- **Adjudicate the weakly decidable attributes** (necessary, feasible) and the 30 scorer
-  disagreements on the Part 1 set. `[PENDING HUMAN REVIEW]`
+- **Adjudicate the weakly decidable attributes** (necessary, feasible) and the scorer
+  disagreements on the Part 1 set (12 in the worksheet). Only a simulated reviewer has
+  adjudicated these, and it split 6–6 (§5.4); a person still has to decide them.
 - **Choose the life cycle.** The engine escalated all three recommendations as near ties; the
   decision belongs to the project manager and the officers who sign it.
 - **Elicit what nobody wrote down.** The personas know only their fact sheets (§9.1).
-- `[PENDING HUMAN REVIEW]` — the human correction rate, once the approval queue is worked.
+- **Correct the drafts.** Reviewing e-Rx, the author modified or rejected 13 of 43
+  requirements (0.302, §5.7): about one in three still needed a person.
 
 ---
 
@@ -728,10 +803,17 @@ with people.
 
 ### 9.2 Synthetic case materials and gold standards
 
-The personas, documents and gold standards were drafted with AI assistance and reviewed
-by the author. A gold standard written by the same hand as the cases may favour phrasings
-the system also produces; the matching threshold was fixed in advance and automatic
-matches are verified by hand to limit this.
+The personas, documents and gold standards were drafted with AI assistance. The gold
+standards have not been reviewed by a person (`reviewed_by` is empty in each `gold.yaml`). An LLM,
+labelled as such, checked all 108 gold requirements against their cited sources
+(`outputs/evaluation/simulated_review/gold_review.md`): 90 supported, 18 with a concern, and 8
+possibly missing. The main one is that the EPCS gold cites 21 CFR 1311.105 and 1311.125, which
+govern individual practitioners, where a hospital falls under 1311.110 and 1311.130. No gold
+requirement was changed, since correcting the reference after seeing the results would tune it. A
+gold standard written by the same hand as the cases may favour phrasings the system also
+produces. The matching threshold was fixed in advance to limit this, and the design calls for
+automatic matches to be verified by hand; in this submission they were reviewed only by an
+LLM (§9.9).
 
 ### 9.3 Same-family judging
 
@@ -767,6 +849,21 @@ and are reported in full so the ranking can be recomputed under other weights.
 The confidence score is a transparent heuristic over support and quality, not a
 probability; there is no ground truth to calibrate it against.
 
+### 9.9 Simulated review and a single human reviewer
+
+Part of the review this design assigns to people was done by an LLM the author ran: the
+verdicts on automatic gold matches, the adjudication of scorer disagreements, and the expert
+SDLC choice. Its output is stored in separate columns (`simulated_verdict`,
+`simulated_adjudication`) and metrics (`*_llm_verified`, `simulated_adjudicated`), and each
+SDLC choice is attributed to "Simulated reviewer (LLM)" in `gold.yaml`. The human columns are
+left empty, and nothing simulated is counted as human. An LLM reviewer carries the
+same-family concern of §9.3, so these figures show how a second model reads the output; they
+do not validate it.
+
+The human data is narrow too: one reviewer acting in all six roles on one case, and one
+survey respondent who also built the system. The correction rate and the SUS score are
+single-observer figures, and no inter-rater agreement can be computed.
+
 ---
 
 ## 10. Conclusion
@@ -775,14 +872,17 @@ probability; there is no ground truth to calibrate it against.
 cover far more of each gold standard than a single prompt (recall 0.622–0.886 against
 0.111–0.314, provisional) at the cost of over-generation, missed conflicts and a review queue
 of 157–300 items per case. The single prompt produced short, regulation-shaped sets that broke
-their own output contract in three of four runs. The comparison with manual analysis is
-`[PENDING HUMAN REVIEW]` (`manual_effort_minutes`).
+their own output contract in three of four runs. A simulated review of the matches lowers
+both systems' scores sharply and widens the gap (§5.1). No comparison with manual analysis
+was made, because manual effort was not timed.
 
 (b) **The engine's recommendations are defensible as families; the models' own were not.**
 The engine chose plan-driven models for the two regulated cases and adaptive ones for the
 volatile app, and escalated each as a near tie. Asked directly, the models followed the
-framing in every run and matched their own factor scores once in 18. Accuracy against the
-expert choice is `[PENDING HUMAN REVIEW]`.
+framing in every run and matched their own factor scores once in 18. Against a simulated
+reviewer's choices, not a person's, the engine's top pick matched in 1 of 3 cases and its top
+two in 3 of 3. The one human sign-off, for e-Rx, also rejected the engine's Waterfall for its
+runner-up, V-Model (§5.5).
 
 (c) **The validation and security layers caught what casual review would not**: fabricated
 and misattributed citations, injected instructions in stakeholder documents, patient
@@ -790,8 +890,10 @@ identifiers in case documents, and untestable or ambiguous wording before and af
 clarification. Run 1 showed that the evaluation has to be audited too: four defects in the
 extraction prompt and the measurement code were found and fixed before Run 2 (§3.6).
 
-(d) `[PENDING HUMAN REVIEW]` — what the human reviewers accepted, modified, rejected or
-regenerated.
+(d) **A person still has to correct about one requirement in three.** Reviewing every e-Rx
+approval item, the author accepted 25, modified 16 and rejected 9 of the 50 high-priority
+items and accepted the 107 routine ones; 13 of the 43 requirements were changed or rejected
+(0.302). That is one reviewer on one case (§9.9).
 
 ---
 

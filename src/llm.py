@@ -25,7 +25,7 @@ from typing import Any
 
 import requests
 
-from . import ensure_dir, load_models, load_pipeline, resolve
+from . import ensure_dir, load_models, load_pipeline, replaying, resolve
 
 
 class LLMError(RuntimeError):
@@ -288,6 +288,14 @@ class OllamaClient:
     def _log(self, record: dict[str, Any]) -> None:
         with self.log_path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def make_client() -> Any:
+    if replaying():
+        from .replay import ReplayClient
+
+        return ReplayClient()
+    return OllamaClient()
 
 
 def _match_model(wanted: str, available: list[str]) -> str | None:

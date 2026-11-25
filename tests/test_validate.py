@@ -91,3 +91,14 @@ def test_empty_adjudication_cells_are_not_counted_as_human_verdicts(tmp_path):
                   "human_adjudication": [None, None]}).to_csv(tmp_path / "validation_29148.csv", index=False)
     rows = {r["metric"]: r["value"] for r in validation_metrics(tmp_path)}
     assert rows["human_adjudicated"] == 0
+
+
+def test_adjudications_are_counted_from_the_worksheet(tmp_path):
+    from src.metrics import validation_metrics
+
+    pd.DataFrame({"req_id": ["R1"], "attribute": ["verifiable"], "rule_score": [1], "llm_score": [0],
+                  "agreement": ["disagree"], "human_adjudication": [None]}).to_csv(tmp_path / "validation_29148.csv", index=False)
+    pd.DataFrame({"req_id": ["R1", "R2"], "human_adjudication": ["rule", None]}).to_csv(
+        tmp_path / "adjudication_worksheet.csv", index=False)
+    rows = {r["metric"]: r["value"] for r in validation_metrics(tmp_path)}
+    assert rows["human_adjudicated"] == 1

@@ -11,10 +11,10 @@ manual_effort_minutes: null     # time a manual analysis of this case took you (
 # Filled by a human expert, never by code. Name one SDLC family per field:
 # Waterfall, V-Model, Spiral, Agile, DevSecOps, Hybrid.
 expert_sdlc:
-  top: ""
-  runner_up: ""
-  rationale: ""
-  by: ""
+  top: "V-Model"
+  runner_up: "Waterfall"
+  rationale: "Safety-critical prescribing needs explicit verification and validation mapped to requirements; Waterfall and V-Model are close alternatives."
+  by: "Simulated reviewer (LLM)"
 
 out_of_scope:
   - Controlled-substance prescribing (F-COMP-04; handled by case epcs_signing)

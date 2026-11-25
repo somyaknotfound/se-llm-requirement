@@ -24,6 +24,8 @@ As a prescriber, I want interaction and allergy alerts to appear before I can si
 Given the prescriber is writing an order, When the system checks for interactions and allergies, Then interaction and allergy alerts must appear before the prescriber can sign the order.
 ```
 
+> **Out of date:** human review changed FR-ERX-003. Re-check it.
+
 ## FR-ERX-004
 
 As a prescriber, I want interaction and allergy alerts to come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it, so that the system does not delay my workflow.
@@ -31,6 +33,8 @@ As a prescriber, I want interaction and allergy alerts to come back within 2 sec
 ```gherkin
 Given the prescriber is writing an order, When the system checks for interactions and allergies, Then interaction and allergy alerts must come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.
 ```
+
+> **Out of date:** human review changed FR-ERX-004. Re-check it.
 
 ## FR-ERX-005
 
@@ -57,6 +61,8 @@ Given a prescription without a drug name, When the system attempts to fill the p
 Given a prescription with all required details present, When the system verifies the prescription, Then the prescription is filled successfully.
 ```
 
+> **Out of date:** human review changed FR-ERX-007. Re-check it.
+
 ## FR-ERX-009
 
 As a prescriber, I want to be notified if a drug-drug interaction or allergy is detected, so that I can avoid prescribing potentially harmful combinations.
@@ -82,6 +88,8 @@ As a system, I want to generate a report of all alert overrides for the safety c
 Given multiple instances of alert overrides, When the system generates a report, Then the report details all instances of overrides and the reasons provided.
 ```
 
+> **Out of date:** human review changed FR-ERX-012. Re-check it.
+
 ## FR-ERX-013
 
 As a system, I want to log and audit any overrides of drug-drug interaction or allergy alerts, so that the safety committee can track instances where alerts were overridden.
@@ -106,6 +114,8 @@ As a system, I want to perform real-time drug-drug interaction and patient aller
 Given a prescriber is issuing an electronic prescription, When the system performs real-time drug-drug interaction and patient allergy contraindication checks, Then the system must alert the prescriber if any interactions or contraindications are detected.
 ```
 
+> **Out of date:** human review changed FR-ERX-015. Re-check it.
+
 ## FR-ERX-016
 
 As a system, I want to perform formulary checks and continue with a 'formulary unavailable' notice if the payer formulary service does not respond within 3 seconds, so that prescribers can still proceed with issuing prescriptions even when formulary services are slow or unavailable.
@@ -121,6 +131,8 @@ As a prescriber, I want to be able to complete a routine prescription in under 9
 ```gherkin
 Given a prescriber is issuing a routine prescription, When the prescriber completes the prescription within 90 seconds, Then the system must indicate that the prescription has been completed successfully.
 ```
+
+> **Out of date:** human review changed FR-ERX-017. Re-check it.
 
 ## FR-ERX-018
 
@@ -146,6 +158,8 @@ As a system, I want to provide real-time drug-drug interaction and allergy contr
 Given a prescriber is issuing an electronic prescription, When the system performs real-time drug-drug interaction and patient allergy contraindication checks, Then the system must alert the prescriber if any interactions or contraindications are detected, ensuring that a routine prescription can be completed within 90 seconds.
 ```
 
+> **Out of date:** human review changed FR-ERX-020. Re-check it.
+
 ## FR-ERX-021
 
 As a prescriber, I want the system to provide a reason for every prescription override to the safety committee, so that the safety committee can understand the rationale behind the override.
@@ -163,6 +177,8 @@ As a system administrator, I want the system to notify pharmacies of prescriptio
 Given a prescription is cancelled, When the system sends a notification to the pharmacy, Then the pharmacy receives the notification within 24 hours.
 Given a pharmacy receives a notification about a cancelled prescription, When the pharmacy checks the status of the prescription, Then the status reflects that it has been cancelled.
 ```
+
+> **Out of date:** human review changed FR-ERX-022. Re-check it.
 
 ## FR-ERX-023
 

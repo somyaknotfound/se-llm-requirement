@@ -39,3 +39,30 @@ def test_bulk_decisions_skip_escalated_items_and_respect_roles(tmp_path):
     assert set(left["id"]) == {"APR-002", "APR-003"}
     log = store.decisions(tmp_path)
     assert list(log["note"]) == ["[bulk] read the SRS section 2.1"]
+
+
+def test_review_sheet_round_trip_records_each_row_and_refuses_bad_ones(tmp_path):
+    import json
+
+    import pandas as pd
+
+    store.save(tmp_path, {"approvals": _queue()})
+    (tmp_path / "state.json").write_text(json.dumps({"requirements": [
+        {"req_id": "FR-X-002", "statement": "The system shall do X.", "regulations": ["R1", "R2"]}]}))
+    sheet = tmp_path / "review.csv"
+    assert approve.export_sheet(tmp_path, ["product_owner"], sheet) == 1          # only the high item
+    frame = pd.read_csv(sheet, encoding="utf-8-sig", dtype=str).fillna("")
+    assert frame.loc[0, "statement"] == "The system shall do X." and frame.loc[0, "regulations"] == "R1; R2"
+
+    frame.loc[0, "decision"] = "accept"
+    frame.to_csv(sheet, index=False, encoding="utf-8-sig")
+    done, errors = approve.import_sheet(tmp_path, "sam", ["product_owner"], sheet)
+    assert done == [] and "note" in errors[0]                                    # no note, no decision
+
+    frame.loc[0, "note"] = "checked against case facts"
+    frame.to_csv(sheet, index=False, encoding="utf-8-sig")
+    done, errors = approve.import_sheet(tmp_path, "sam", ["product_owner"], sheet)
+    assert done == ["APR-002"] and errors == []
+    assert list(store.decisions(tmp_path)["note"]) == ["checked against case facts"]
+    done, errors = approve.import_sheet(tmp_path, "sam", ["product_owner"], sheet)
+    assert done == [] and "already" in errors[0]                                 # no double decisions

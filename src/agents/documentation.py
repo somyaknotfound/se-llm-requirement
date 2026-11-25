@@ -20,6 +20,8 @@ chunks and controls behind each requirement.
 
 from __future__ import annotations
 
+import re
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
@@ -37,6 +39,8 @@ TITLES = {"functional": "Functional requirements", "performance": "Performance r
           "data_management": "Data requirements", "integration": "Interface and integration requirements",
           "audit_reporting": "Audit and reporting requirements", "operational": "Operational requirements",
           "business": "Business requirements", "stakeholder": "Stakeholder requirements"}
+
+STALE = "> **Out of date:** human review changed"
 
 
 def _primary(req: dict[str, Any]) -> str:
@@ -69,9 +73,6 @@ class DocumentationAgent(Agent):
                 path.write_text(content, encoding="utf-8")
             written[name] = str(path)
 
-        stories = self._stories(live) if llm else {}
-        use_cases = self._use_cases(live) if llm else []
-
         save("srs.md", self._srs(live, statements))
         save("rtm.csv", self._rtm(live, statements))
         save("compliance_matrix.csv", self._compliance_matrix())
@@ -83,9 +84,15 @@ class DocumentationAgent(Agent):
         save("data_requirements.md", self._subset(live, "data_management", "Data requirements"))
         save("interface_requirements.md", self._subset(live, "integration", "Interface requirements"))
         save("sdlc_recommendation.md", self._sdlc())
-        save("user_stories.md", self._stories_md(live, stories))
-        save("use_cases.md", self._use_cases_md(use_cases))
-        save("process_workflow.md", self._process(use_cases))
+        if llm:
+            use_cases = self._use_cases(live)
+            save("user_stories.md", self._stories_md(live, self._stories(live)))
+            save("use_cases.md", self._use_cases_md(use_cases))
+            save("process_workflow.md", self._process(use_cases))
+        else:
+            # Model-written, so they cannot be rebuilt without a model: keep them, and mark
+            # what the human decisions made out of date.
+            self._refresh_llm_artefacts(out, reqs, live)
 
         index = self.read("artifacts", {}) or {}
         index.update(written)
@@ -234,10 +241,17 @@ class DocumentationAgent(Agent):
         rec = s.get("recommendation")
         if not rec:
             return "# SDLC recommendation\n\nNot produced: " + str(s.get("reason", "the SDLC step did not run")) + "\n"
+        if s.get("sign_offs"):
+            status = f"Status: {s['status']} by the reviewers."
+        else:
+            status = "Status: pending approval by " + ", ".join(r.replace('_', ' ') for r in s["approval_roles"]) + "."
         lines = ["# SDLC recommendation", "",
-                 f"**Recommended:** {rec['top']} ({rec['ranking'][0]['pct']}%) — runner-up {rec['runner_up']}. "
-                 "Status: pending approval by " + ", ".join(r.replace('_', ' ') for r in s["approval_roles"]) + ".", "",
-                 "| Rank | Model | Suitability | Supporting rules |", "|---|---|---|---|"]
+                 f"**Recommended:** {rec['top']} ({rec['ranking'][0]['pct']}%) — runner-up {rec['runner_up']}. " + status, ""]
+        if s.get("sign_offs"):
+            lines += ["## Sign-offs", "", "| Role | Decision | By | Note |", "|---|---|---|---|"]
+            lines += [f"| {o['role'].replace('_', ' ')} | {o['decision']} | {o['by']} | {o['note']} |" for o in s["sign_offs"]]
+            lines += [""]
+        lines += ["| Rank | Model | Suitability | Supporting rules |", "|---|---|---|---|"]
         lines += [f"| {i} | {r['model']} | {r['pct']}% | {', '.join(r['rule_support']) or '—'} |"
                   for i, r in enumerate(rec["ranking"], start=1)]
         lines += ["", "## Decision factors (median of both models)", "", "| Factor | Score |", "|---|---|"]
@@ -314,6 +328,31 @@ class DocumentationAgent(Agent):
                 u["req_ids"] = [x for x in as_list(u.get("req_ids")) if x in ids]
                 ucs.append(u)
         return ucs
+
+    def _refresh_llm_artefacts(self, out: Path, reqs: list[dict[str, Any]], live: list[dict[str, Any]]) -> None:
+        rejected = {r["req_id"] for r in reqs} - {r["req_id"] for r in live}
+        changed = {h["req_id"] for h in self.read("requirement_history", []) or []
+                   if h["event"] in {"human_modify", "human_regenerate"}} - rejected
+
+        def story(section: str) -> str:
+            rid = section.split(None, 2)[1]
+            if rid in rejected:
+                return ""
+            return section + (f"{STALE} {rid}. Re-check it.\n\n" if rid in changed else "")
+
+        def use_case(section: str) -> str:
+            line = re.search(r"^- Realises: (.*)$", section, re.M)
+            ids = line.group(1).split(", ") if line else []
+            out_of_date = [f"{i} (rejected)" if i in rejected else i for i in ids if i in rejected | changed]
+            return section + (f"{STALE} {', '.join(out_of_date)}. Re-check it.\n\n" if out_of_date else "")
+
+        for name, refresh in (("user_stories.md", story), ("use_cases.md", use_case)):
+            path = out / name
+            if not path.exists():
+                continue
+            text = re.sub(rf"^{re.escape(STALE)}.*\n\n?", "", path.read_text(encoding="utf-8"), flags=re.M)
+            head, *sections = re.split(r"(?m)^(?=## )", text)
+            path.write_text(head + "".join(refresh(x) for x in sections), encoding="utf-8")
 
     @staticmethod
     def _stories_md(live: list[dict[str, Any]], stories: dict[str, dict[str, Any]]) -> str:

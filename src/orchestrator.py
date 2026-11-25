@@ -84,9 +84,9 @@ class Coordinator:
         self.run_dir = run_dir or case_out_dir(case_id)
         self.run_dir.mkdir(parents=True, exist_ok=True)
         if client is None:
-            from .llm import OllamaClient
+            from .llm import make_client
 
-            client = OllamaClient()
+            client = make_client()
         self.client = client
         self.board = Blackboard()
         self.ctx = AgentContext(case=public_case(self.case), board=self.board, client=client,
@@ -447,13 +447,23 @@ class Coordinator:
         counts = {"accepted": 0, "rejected": 0, "modified": 0, "regenerated": 0}
         for _, d in decided.iterrows():
             item = by_id.get(d["approval_id"])
-            if item is None:
+            if item is None or item.get("decided_at") == d["at"]:     # already applied on an earlier run
                 continue
             item.update(status=store.DECISIONS[d["decision"]], decision=d["decision"],
                         decided_by=d["user"], decided_at=d["at"], note=d["note"], modified_text=d["modified_text"])
-            if item["item_type"] != "requirement_baseline" or d["item_id"] not in reqs:
+            if d["item_id"] not in reqs:
                 continue
             req = reqs[d["item_id"]]
+            if item["item_type"] != "requirement_baseline":
+                # Any role may correct the text (e.g. the clinical safety officer); the approval
+                # status stays with the product owner's baseline item.
+                if d["decision"] == "modify" and d["modified_text"] != req["statement"]:
+                    req.update(statement=d["modified_text"], version=int(req.get("version", 1)) + 1)
+                    counts["modified"] += 1
+                    self.board.append("requirement_history", {"req_id": req["req_id"], "event": "human_modify",
+                                                              "by": d["user"], "role": d["role"],
+                                                              "version": req["version"]})
+                continue
             if d["decision"] == "accept":
                 req["approval_status"] = "approved"
                 counts["accepted"] += 1
@@ -479,12 +489,24 @@ class Coordinator:
                                                       "by": d["user"], "role": d["role"], "version": req.get("version")})
         self.board.put("requirements", list(reqs.values()))
         self.board.put("approvals", queue)
+        self._apply_sdlc_sign_offs(queue)
         self.ctx.step = "documentation"
         DocumentationAgent(self.ctx).run(llm=False)
         store.save(self.run_dir, self.board.to_dict(), fresh=False)
         self.checkpoint()
         self.export()
         return counts
+
+    def _apply_sdlc_sign_offs(self, queue: list[dict]) -> None:
+        """The recommendation is approved only when every sign-off accepts it."""
+        sign_offs = [q for q in queue if q["item_type"] == "sdlc_selection"]
+        sdlc = self.board.get("sdlc")
+        if not sdlc or not sign_offs or any(q["status"] == "pending" for q in sign_offs):
+            return
+        sdlc["status"] = "approved" if all(q["decision"] == "accept" for q in sign_offs) else "rejected"
+        sdlc["sign_offs"] = [{"role": q["required_role"], "decision": q["decision"], "by": q["decided_by"],
+                              "note": q["note"]} for q in sign_offs]
+        self.board.put("sdlc", sdlc)
 
 
 def main() -> int:
@@ -505,6 +527,8 @@ def main() -> int:
         manifest = coordinator.run(resume=args.resume)
         print(f"\n[{cid}] done in {manifest['seconds_total']}s: {manifest['requirements']} requirements, "
               f"{manifest['approval_items']} approval items -> {coordinator.run_dir}")
+        if hasattr(coordinator.client, "summary"):
+            print(f"[{cid}] {coordinator.client.summary()}")
     return 0
 
 

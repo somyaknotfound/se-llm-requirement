@@ -27,6 +27,8 @@ Alternate and exception flows:
 
 Postconditions: The electronic prescription is issued and transmitted to the pharmacy.; The prescriber can see the pharmacy's response to the cancellation request if applicable.; The safety committee has a record of all alert overrides.
 
+> **Out of date:** human review changed FR-ERX-003, FR-ERX-004, FR-ERX-007, FR-ERX-012, FR-ERX-015. Re-check it.
+
 ## UC-2 Cancelling an Electronic Prescription and Notifying the Pharmacy
 
 - Primary actor: Prescriber
@@ -46,6 +48,8 @@ Alternate and exception flows:
 - If the pharmacy does not respond within 24 hours, the system sends a notification to the prescriber.
 
 Postconditions: The electronic prescription is cancelled.; The prescriber is informed of the pharmacy's response.; The safety committee has a record of all prescription cancellations.
+
+> **Out of date:** human review changed FR-ERX-022. Re-check it.
 
 ## UC-3 Transmitting an Electronic Prescription to a Community Pharmacy
 
@@ -89,4 +93,6 @@ Alternate and exception flows:
 - If any interactions or allergies are detected, the prescriber reviews the alerts and decides whether to override them or proceed with the prescription within 90 seconds.
 
 Postconditions: The electronic prescription is issued and transmitted to the pharmacy.; The prescriber is informed of the completion time.; The safety committee has a record of all prescription completions.
+
+> **Out of date:** human review changed FR-ERX-017. Re-check it.
 

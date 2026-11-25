@@ -174,6 +174,56 @@ def test_approvals_rbac_and_applying_decisions(run):
     assert len(store.decisions(run_dir)) == 2                                          # log kept
 
 
+def test_modifications_by_other_roles_change_the_text_but_not_the_approval(run):
+    coord, _, _, run_dir = run
+    items = store.approvals(run_dir)
+    reqs = {r["req_id"] for r in coord.board.get("requirements")}
+    other = items[(items["item_type"] != "requirement_baseline") & items["item_id"].isin(reqs)].iloc[0]
+    before = {r["req_id"]: r for r in coord.board.get("requirements")}[other["item_id"]]
+    version, status = int(before.get("version", 1)), before.get("approval_status")
+    store.decide(run_dir, other["id"], "modify", "cso", other["required_role"],
+                 modified_text="The system shall display interaction alerts before signing.")
+    coord.apply_decisions()
+    req = {r["req_id"]: r for r in coord.board.get("requirements")}[other["item_id"]]
+    assert req["statement"] == "The system shall display interaction alerts before signing."
+    assert req["version"] == version + 1 and req.get("approval_status") == status
+
+
+def test_applying_decisions_keeps_model_written_artefacts(run):
+    coord, _, _, run_dir = run
+    stories = run_dir / "artifacts" / "user_stories.md"
+    before = stories.read_text(encoding="utf-8")
+    ids = re.findall(r"(?m)^## (\S+)", before)
+    items = store.approvals(run_dir)
+    base = items[(items["item_type"] == "requirement_baseline") & items["item_id"].isin(ids)]
+    rejected, changed = base.iloc[0], base.iloc[1]
+    store.decide(run_dir, rejected["id"], "reject", "sam", "product_owner")
+    store.decide(run_dir, changed["id"], "modify", "sam", "product_owner", modified_text="The system shall log it.")
+    for _ in range(2):                                                # a second run adds nothing
+        coord.apply_decisions()
+        after = stories.read_text(encoding="utf-8")
+        left = re.findall(r"(?m)^## (\S+)", after)
+        assert left == [i for i in ids if i != rejected["item_id"]]
+        assert after.count(f"human review changed {changed['item_id']}.") == 1
+    assert "## " in (run_dir / "artifacts" / "use_cases.md").read_text(encoding="utf-8")
+    assert "mermaid" in (run_dir / "artifacts" / "process_workflow.md").read_text(encoding="utf-8")
+
+
+def test_sdlc_is_rejected_unless_every_sign_off_accepts(run):
+    coord, _, _, run_dir = run
+    items = store.approvals(run_dir)
+    sign_offs = items[items["item_type"] == "sdlc_selection"]
+    assert len(sign_offs) > 1
+    for i, (_, q) in enumerate(sign_offs.iterrows()):
+        coord.apply_decisions()
+        assert coord.board.get("sdlc")["status"] == "pending_approval"
+        store.decide(run_dir, q["id"], "accept" if i else "reject", "pm", q["required_role"], note="prefer V-Model")
+    coord.apply_decisions()
+    sdlc = coord.board.get("sdlc")
+    assert sdlc["status"] == "rejected" and len(sdlc["sign_offs"]) == len(sign_offs)
+    assert "Status: rejected" in (run_dir / "artifacts" / "sdlc_recommendation.md").read_text(encoding="utf-8")
+
+
 def test_resume_makes_no_new_model_calls(run):
     _, _, _, run_dir = run
     llm = FakeLLM()

@@ -129,9 +129,17 @@ def validation_metrics(out_dir: Path) -> list[dict[str, Any]]:
     else:
         out.append(("scorer_agreement", "n/a", "LLM critic did not run"))
 
-    # fillna first: astype(str) turns an empty cell into "nan", which would count as a verdict.
-    adjudicated = val[val["human_adjudication"].fillna("").astype(str).str.strip().ne("")]
-    out.append(("human_adjudicated", len(adjudicated), "conflicts resolved by hand"))
+    # Verdicts are written in the worksheet, not in validation_29148.csv. fillna first:
+    # astype(str) turns an empty cell into "nan", which would count as a verdict.
+    sheet_path = out_dir / "adjudication_worksheet.csv"
+    sheet = pd.read_csv(sheet_path) if sheet_path.exists() else val
+    done = sheet["human_adjudication"].fillna("").astype(str).str.strip().ne("")
+    out.append(("human_adjudicated", int(done.sum()), f"of {len(sheet)} worksheet disagreements resolved by hand"))
+    if "simulated_adjudication" in sheet:
+        sim = sheet["simulated_adjudication"].fillna("").astype(str).str.strip().str.lower()
+        sim = sim[sim.ne("")]
+        out.append(("simulated_adjudicated", len(sim),
+                    f"LLM review, not human: {sim.value_counts().to_dict()} (rule = scorer right, llm = critic right)"))
     return _rows("validation", out)
 
 

@@ -1,0 +1,28 @@
+{
+  "created_utc": "2026-11-22T05:01:03.669502+00:00",
+  "classification": "simulated_llm_review_not_human_review",
+  "match_rows": 97,
+  "adjudication_rows": 12,
+  "match_yes": 33,
+  "match_no": 64,
+  "adjudication_rule": 6,
+  "adjudication_llm": 6,
+  "gold_mapping": {
+    "gold0": {
+      "top": "V-Model",
+      "runner_up": "Waterfall",
+      "by": "Simulated reviewer (LLM)"
+    },
+    "gold1": {
+      "top": "V-Model",
+      "runner_up": "Waterfall",
+      "by": "Simulated reviewer (LLM)"
+    },
+    "gold2": {
+      "top": "Agile",
+      "runner_up": "DevSecOps",
+      "by": "Simulated reviewer (LLM)"
+    }
+  },
+  "warning": "Do not describe these outputs as genuine human judgments. Confirm all rows with an authorized human reviewer if the study or evaluation requires human-in-the-loop ground truth."
+}

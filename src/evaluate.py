@@ -26,7 +26,9 @@ For each case it compares the multi-agent system with the single-prompt baseline
 Anything that needs a human — gold review, expert SDLC, manual effort, decisions,
 survey responses — is reported as missing rather than estimated. Automatic matches
 are written to a sheet with an empty `human_verdict` column; once it is filled, the
-precision is recomputed from the verified matches.
+precision is recomputed from the verified matches. A `simulated_verdict` column holds an
+LLM's review of the same matches; it is reported under separate `*_llm_verified` metrics
+and never counts as human verification.
 """
 
 from __future__ import annotations
@@ -94,12 +96,17 @@ def prf(tp: int, n_generated: int, n_gold: int) -> dict[str, float]:
     return {"precision": round(p, 3), "recall": round(r, 3), "f1": round(f, 3)}
 
 
-def _verified_tp(sheet: Path) -> int | None:
-    """True positives after human verification, if the sheet has been filled in."""
+VERDICT_COLUMNS = ["human_verdict", "simulated_verdict", "simulated_reason"]
+
+
+def _verified_tp(sheet: Path, column: str = "human_verdict") -> int | None:
+    """True positives after verification in `column`, if the sheet has been filled in."""
     if not sheet.exists():
         return None
     df = pd.read_csv(sheet).fillna("")
-    verdicts = df["human_verdict"].astype(str).str.strip().str.lower()
+    if column not in df:
+        return None
+    verdicts = df[column].astype(str).str.strip().str.lower()
     if not verdicts.ne("").any():
         return None
     return int(verdicts.isin({"yes", "y", "match", "1", "true"}).sum())
@@ -216,7 +223,8 @@ def _sus(role_filter: str | None = None) -> dict[str, Any]:
             v = int(r[f"sus_{i}"])
             total += (v - 1) if i % 2 else (5 - v)
         scores.append(total * 2.5)
-    return {"value": round(sum(scores) / len(scores), 1), "detail": f"{len(scores)} respondent(s), SUS 0-100"}
+    return {"value": round(sum(scores) / len(scores), 1),
+            "detail": f"{len(scores)} respondent(s), SUS 0-100; one system-wide survey, same value in every case"}
 
 
 def _baseline_seconds(case_id: str) -> float | None:
@@ -241,7 +249,8 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
     gold_by_id = {g["id"]: g for g in gold_reqs}
     out_dir = case_out_dir(case_id)
     provisional = "" if gold.get("reviewed_by") else " (gold not yet reviewed — provisional)"
-    gold_based = {"precision", "recall", "f1", "precision_elicited", "category_agreement",
+    gold_based = {"precision", "recall", "f1", "precision_llm_verified", "recall_llm_verified",
+                  "f1_llm_verified", "precision_elicited", "category_agreement",
                   "ambiguity_detection_recall", "conflict_detection_recall", "conflict_detection_precision",
                   "gold_control_coverage", "requirements_generated"}
     rows: list[dict[str, Any]] = []
@@ -264,6 +273,7 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
         basis = "human-verified matches" if tp is not None else f"automatic matches at cosine >= {threshold}"
         for k, v in scores.items():
             add("multi_agent", k, v, basis)
+        _add_simulated_prf(add, "multi_agent", sheet, len(reqs), len(gold_reqs))
         # Gap and threat proposals are generated from the control catalogue, not elicited;
         # precision over the elicited requirements alone shows what they do to the score.
         elicited = [r for r in reqs if r.get("origin") in {"stakeholder", "document"}]
@@ -312,9 +322,12 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
         _human_corrections(add, out_dir)
         manifest_path = out_dir / "run_manifest.json"
         if manifest_path.exists():
-            secs = json.loads(manifest_path.read_text(encoding="utf-8"))["seconds_total"]
-            add("multi_agent", "processing_minutes", round(secs / 60, 1), "wall-clock, all steps")
-            manual = gold.get("manual_effort_minutes")
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            secs = manifest["seconds_total"]
+            replayed = manifest["ollama_version"].startswith("replay")
+            add("multi_agent", "processing_minutes", None if replayed else round(secs / 60, 1),
+                "replayed from the log, so not a model run time" if replayed else "wall-clock, all steps")
+            manual = None if replayed else gold.get("manual_effort_minutes")
             add("multi_agent", "time_saved_vs_manual", round(1 - (secs / 60) / manual, 3) if manual else None,
                 f"manual analysis took {manual} min" if manual else "manual effort not recorded in gold.yaml")
         injection_events = [e for e in state.get("security_events", []) if e.get("kind") == "prompt_injection"]
@@ -337,6 +350,7 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
         tp = _verified_tp(sheet)
         for k, v in prf(tp if tp is not None else len(auto), len(base_reqs), len(gold_reqs)).items():
             add("baseline", k, v, "human-verified matches" if tp is not None else f"automatic matches at cosine >= {threshold}")
+        _add_simulated_prf(add, "baseline", sheet, len(base_reqs), len(gold_reqs))
         add("baseline", "requirements_generated", len(base_reqs), f"gold has {len(gold_reqs)}")
         cov = _control_coverage(case, _baseline_controls(base))
         add("baseline", "control_coverage", cov["value"],
@@ -364,14 +378,34 @@ def evaluate_case(case_id: str, threshold: float, embed=_embed) -> list[dict[str
     return rows
 
 
+def _add_simulated_prf(add, system: str, sheet: Path, n_generated: int, n_gold: int) -> None:
+    tp = _verified_tp(sheet, "simulated_verdict")
+    if tp is None:
+        return
+    filled = pd.read_csv(sheet).fillna("")["simulated_verdict"].astype(str).str.strip().ne("")
+    if not filled.all():
+        # Unreviewed matches would count as misses and understate the score.
+        add(system, "precision_llm_verified", None,
+            f"simulated LLM review covers {int(filled.sum())}/{len(filled)} current matches; not computed")
+        return
+    for k, v in prf(tp, n_generated, n_gold).items():
+        add(system, f"{k}_llm_verified", v, "simulated LLM review of the automatic matches — not human verification")
+
+
 def _write_sheet(path: Path, auto: list[dict[str, Any]]) -> None:
-    """Write the automatic matches for verification, keeping verdicts already entered."""
+    """Write the automatic matches for verification, keeping verdicts already entered.
+
+    A verdict is kept only while the pair's generated text is unchanged: a modified
+    requirement is a new claim and needs a new verdict.
+    """
     frame = pd.DataFrame(auto, columns=["gold_id", "gold_statement", "req_id", "statement", "similarity"])
-    frame["human_verdict"] = ""
-    if path.exists():
-        old = pd.read_csv(path).fillna("")
-        keep = {(r.gold_id, r.req_id): r.human_verdict for r in old.itertuples()}
-        frame["human_verdict"] = [keep.get((g, r), "") for g, r in zip(frame["gold_id"], frame["req_id"])]
+    old = pd.read_csv(path, dtype=str).fillna("") if path.exists() else pd.DataFrame()
+    keys = list(zip(frame["gold_id"], frame["req_id"], frame["statement"]))
+    for col in VERDICT_COLUMNS:
+        keep = {}
+        if col in old:
+            keep = dict(zip(zip(old["gold_id"], old["req_id"], old["statement"]), old[col]))
+        frame[col] = [keep.get(k, "") for k in keys]
     frame.to_csv(path, index=False, encoding="utf-8")
 
 
@@ -386,8 +420,9 @@ def _sdlc_accuracy(add, state: dict[str, Any], gold: dict[str, Any]) -> None:
         add("multi_agent", "sdlc_top1", None, "expert SDLC choice not yet recorded in gold.yaml")
         return
     top2 = [r["model"] for r in rec["ranking"][:2]]
-    add("multi_agent", "sdlc_top1", int(rec["top"] == expert), f"engine {rec['top']} vs expert {expert}")
-    add("multi_agent", "sdlc_top2", int(expert in top2), f"engine top-2 {top2} vs expert {expert}")
+    who = (gold.get("expert_sdlc") or {}).get("by") or "expert"
+    add("multi_agent", "sdlc_top1", int(rec["top"] == expert), f"engine {rec['top']} vs {who}: {expert}")
+    add("multi_agent", "sdlc_top2", int(expert in top2), f"engine top-2 {top2} vs {who}: {expert}")
 
 
 def _human_corrections(add, out_dir: Path) -> None:
@@ -397,13 +432,15 @@ def _human_corrections(add, out_dir: Path) -> None:
     if d.empty:
         add("multi_agent", "human_correction_rate", None, "no human decisions recorded yet")
         return
-    base = d[d["item_type"] == "requirement_baseline"]
-    if base.empty:
+    # Per requirement, not per decision: a requirement is corrected if any role changed or
+    # rejected it (the clinical safety officer's modifications change the text too).
+    reqs = d[d["item_id"].astype(str).str.match(r"^N?FR-")]
+    if reqs.empty:
         add("multi_agent", "human_correction_rate", None, "no requirement decisions recorded yet")
         return
-    corrected = base["decision"].isin(["modify", "reject", "regenerate"]).sum()
-    add("multi_agent", "human_correction_rate", round(float(corrected / len(base)), 3),
-        f"{corrected}/{len(base)} requirement decisions changed or rejected the output")
+    changed = reqs["decision"].isin(["modify", "reject", "regenerate"]).groupby(reqs["item_id"]).any()
+    add("multi_agent", "human_correction_rate", round(float(changed.mean()), 3),
+        f"{int(changed.sum())}/{len(changed)} reviewed requirements modified or rejected by a reviewer")
 
 
 # --- prompt-injection replay --------------------------------------------------------------
@@ -418,13 +455,13 @@ def injection_replay(case_id: str) -> list[dict[str, Any]]:
     """
     from .agents import AgentContext, Blackboard, RequirementExtractionAgent
     from .generate_reqs import build_evidence, load_prompt, render
-    from .llm import OllamaClient
+    from .llm import make_client
     from .orchestrator import _paragraphs, public_case
     from .security import Vault, mask, quarantine
 
     case = load_case(case_id)
     gold = load_gold(case_id)
-    client = OllamaClient()
+    client = make_client()
     run_dir = ensure_dir(case_out_dir(case_id) / "injection_replay")
     ctx = AgentContext(case=public_case(case), board=Blackboard(), client=client, run_dir=run_dir, step="injection_replay")
     agent = RequirementExtractionAgent(ctx)

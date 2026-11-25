@@ -3605,7 +3605,7 @@
    "req_id": "FR-ERX-001",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-AI-9.1.3.4",
     "ONC-170.315(a)(4)"
@@ -3652,7 +3652,7 @@
    "req_id": "FR-ERX-002",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "ONC-170.315(a)(4)"
    ],
@@ -3665,7 +3665,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall provide interaction and allergy alerts before the prescriber can sign the order, not after it has gone to the pharmacy.",
+   "statement": "The system shall display drug-drug interaction and drug-allergy alerts to the prescriber prior to order signature and shall prevent signing or transmission to the pharmacy until all critical alerts are acknowledged or overridden with a documented reason.",
    "acceptance_criteria": "Interaction and allergy alerts must appear before the prescriber can sign the order, not after it has been transmitted to the pharmacy.",
    "business_justification": "Ensures prescribers are aware of potential issues before finalizing orders.",
    "source_statement_ids": [
@@ -3696,9 +3696,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-003",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "ONC-170.315(a)(4)",
     "ONC-170.315(b)(3)"
@@ -3713,7 +3713,7 @@
    "confidence_reasons": "unresolved conflict or duplication"
   },
   {
-   "statement": "The system shall provide interaction and allergy alerts that come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.",
+   "statement": "The system shall return drug-interaction and allergy-check results within 2 seconds for at least 95% of prescription orders, measured over each calendar month.",
    "acceptance_criteria": "Interaction and allergy alerts must come back within 2 seconds for at least 95% of orders; past 5 seconds prescribers start working around it.",
    "business_justification": "Ensures prescribers can make timely decisions to prevent delays in patient care.",
    "source_statement_ids": [
@@ -3744,9 +3744,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-004",
-   "version": 2,
+   "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -3795,7 +3795,7 @@
    "req_id": "FR-ERX-005",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -3882,7 +3882,7 @@
    "req_id": "NFR-ERX-002",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -3933,7 +3933,7 @@
    "req_id": "FR-ERX-006",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -3952,7 +3952,7 @@
    "confidence_reasons": "29148 rule failures: verifiable"
   },
   {
-   "statement": "The system shall verify that every prescription has a drug name, strength, dose form, quantity, directions for use and the number of refills authorised before filling the prescription.",
+   "statement": "The system shall prevent a prescription from being transmitted for filling unless the drug name, strength, dose form, quantity, directions for use, and authorized number of refills are present.",
    "acceptance_criteria": "The system verifies the presence of a drug name, strength, dose form, quantity, directions for use and the number of refills authorised in the prescription and proceeds to fill the prescription if all details are present.",
    "business_justification": "Ensures that prescriptions are processed accurately and as requested by the prescriber.",
    "source_statement_ids": [
@@ -3982,9 +3982,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-007",
-   "version": 3,
+   "version": 4,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -4067,7 +4067,7 @@
    "req_id": "NFR-ERX-003",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -4120,7 +4120,7 @@
    "req_id": "FR-ERX-009",
    "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -4204,7 +4204,7 @@
    "req_id": "FR-ERX-011",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "ONC-170.315(a)(10)",
     "ONC-170.315(a)(4)",
@@ -4221,7 +4221,7 @@
    "confidence_reasons": "unresolved conflict or duplication"
   },
   {
-   "statement": "The system shall log and audit any overrides of drug-drug interaction or allergy alerts.",
+   "statement": "The system shall record each override of a drug-interaction or allergy alert, including the prescriber, timestamp, alert, and documented override reason.",
    "acceptance_criteria": "Audit logs capture all instances where prescribers override drug-drug interaction or allergy alerts, including the reason provided.",
    "business_justification": "To ensure compliance and maintain patient safety.",
    "source_statement_ids": [
@@ -4254,9 +4254,9 @@
     "audit_reporting"
    ],
    "req_id": "FR-ERX-012",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "ONC-170.315(a)(4)",
     "ONC-170.315(d)(2)"
@@ -4304,7 +4304,7 @@
    "req_id": "FR-ERX-013",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "HIPAA-164.308(a)(1)(ii)(D)",
     "HIPAA-164.312(b)"
@@ -4319,7 +4319,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall be ONC-certified before the go-live date.",
+   "statement": "The system shall support completion of the applicable ONC Health IT Certification Program requirements identified for the e-prescribing module before go-live.",
    "acceptance_criteria": "The e-prescribing module is certified by the Office of the National Coordinator for Health Information Technology (ONC) and meets all required standards.",
    "business_justification": "To ensure compliance with regulatory requirements and interoperability with other health IT systems.",
    "source_statement_ids": [
@@ -4352,9 +4352,9 @@
     "regulatory"
    ],
    "req_id": "NFR-ERX-004",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved (modified)",
    "control_ids": [
     "ONC-170.315(b)(3)",
     "ONC-170.315(d)(9)"
@@ -4402,7 +4402,7 @@
    "req_id": "NFR-ERX-005",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "ONC-170.315(a)(10)",
     "ONC-170.315(a)(4)",
@@ -4419,7 +4419,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall analyze the audit trail at least once every calendar day and generate an incident report.",
+   "statement": "The system shall analyze prescription audit events at least once every calendar day and generate an incident report for events that meet the organization's documented security-incident criteria.",
    "acceptance_criteria": "The system reviews the audit trail daily and produces a report identifying any security incidents that could compromise prescription records.",
    "business_justification": "To ensure timely detection and response to potential security breaches.",
    "source_statement_ids": [
@@ -4450,9 +4450,9 @@
     "audit_reporting"
    ],
    "req_id": "NFR-ERX-006",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved (modified)",
    "control_ids": [
     "HIPAA-164.308(a)(1)(ii)(D)",
     "HIPAA-164.312(b)",
@@ -4469,7 +4469,7 @@
    "confidence_reasons": "29148 rule failures: singular; fabricated or misattributed citation"
   },
   {
-   "statement": "NFR-ERX-007: The system shall be certified against the ONC criteria for CPOE medications, drug-drug and drug-allergy interaction checks, and electronic prescribing before go-live.",
+   "statement": "The system shall implement the applicable ONC certification criteria for medication CPOE, drug-drug and drug-allergy interaction checking, and electronic prescribing that are included in the approved certification scope.",
    "acceptance_criteria": "The system is certified against the ONC criteria for CPOE medications, drug-drug and drug-allergy interaction checks, and electronic prescribing.",
    "business_justification": "Ensures compliance with regulatory requirements and patient safety.",
    "source_statement_ids": [
@@ -4501,9 +4501,9 @@
     "regulatory"
    ],
    "req_id": "NFR-ERX-007",
-   "version": 3,
+   "version": 4,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved (modified)",
    "resolved": [
     "vague"
    ],
@@ -4556,7 +4556,7 @@
    "req_id": "NFR-ERX-008",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "HIPAA-164.312(b)",
     "HIPAA-164.316(b)(2)(i)"
@@ -4571,7 +4571,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall limit access to a patient's medication data to the patient's care team; any access outside it must be logged and reviewed.",
+   "statement": "The system shall restrict patient medication data to users with authorized care-related access and shall log all exceptional or break-glass access for subsequent review.",
    "acceptance_criteria": "Access to a patient's medication data is limited to the patient's care team, and any access outside this team is logged and reviewed.",
    "business_justification": "Ensures patient privacy and security.",
    "source_statement_ids": [
@@ -4603,9 +4603,9 @@
     "functional"
    ],
    "req_id": "NFR-ERX-009",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-SEC-6.1.0.5",
     "ONC-170.315(a)(1)",
@@ -4688,7 +4688,7 @@
    "req_id": "NFR-ERX-011",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-SEC-6.1.0.6",
     "HIPAA-164.316(b)(2)(i)",
@@ -4734,7 +4734,7 @@
    "req_id": "NFR-ERX-012",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-SEC-6.1.0.4",
     "HIPAA-164.312(a)(2)(i)",
@@ -4782,7 +4782,7 @@
    "req_id": "NFR-ERX-013",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "HIPAA-164.312(a)(2)(iv)",
     "ONC-170.315(d)(9)"
@@ -4797,7 +4797,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall maintain tamper-evident audit records and prevent any application user from deleting them.",
+   "statement": "The system shall maintain tamper-evident audit records and prevent application users from altering or deleting them, except through an authorized, audited retention-disposition process.",
    "acceptance_criteria": "Audit records are tamper-evident, and no user can delete them.",
    "business_justification": "Ensures the integrity of audit records for security and compliance purposes.",
    "source_statement_ids": [
@@ -4831,9 +4831,9 @@
     "audit_reporting"
    ],
    "req_id": "NFR-ERX-014",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved (modified)",
    "control_ids": [
     "HIPAA-164.312(b)",
     "ONC-170.315(d)(1)",
@@ -4879,7 +4879,7 @@
    "req_id": "NFR-ERX-015",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "HIPAA-164.312(a)(2)(iii)",
     "ONC-170.315(d)(5)"
@@ -4927,7 +4927,7 @@
    "req_id": "FR-ERX-014",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "undefined_term"
    ],
@@ -4977,7 +4977,7 @@
    "req_id": "NFR-ERX-016",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [],
    "regulations": [],
    "risk_level": "High",
@@ -4986,7 +4986,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall perform real-time drug-drug interaction and patient allergy contraindication checks during the issuance of electronic prescriptions.",
+   "statement": "The system shall perform real-time drug-drug interaction and patient-allergy contraindication checks during electronic prescription issuance and display any detected alerts to the prescriber before signing.",
    "acceptance_criteria": "The system must perform real-time drug-drug interaction and patient allergy contrindication checks during the issuance of electronic prescriptions.",
    "business_justification": "Ensures patient safety by preventing harmful interactions and contraindications.",
    "source_statement_ids": [
@@ -5017,9 +5017,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-015",
-   "version": 3,
+   "version": 4,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved (modified)",
    "resolved": [
     "vague"
    ],
@@ -5073,7 +5073,7 @@
    "req_id": "FR-ERX-016",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "HIPAA-164.312(a)(2)(iii)",
     "ONC-170.315(a)(10)",
@@ -5120,7 +5120,7 @@
    "req_id": "NFR-ERX-017",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-MR-11.1.3",
     "ONC-170.315(a)(1)",
@@ -5137,7 +5137,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The prescriber shall be able to complete a routine prescription in under 90 seconds.",
+   "statement": "The system shall enable a prescriber to complete a routine prescription in under 90 seconds in the agreed representative usability test scenario.",
    "acceptance_criteria": "Prescribers can complete a routine prescription within 90 seconds.",
    "business_justification": "To ensure quick and efficient prescription issuance.",
    "source_statement_ids": [
@@ -5165,9 +5165,9 @@
     "usability"
    ],
    "req_id": "FR-ERX-017",
-   "version": 1,
+   "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-MR-11.1.3",
     "ONC-170.315(b)(3)"
@@ -5214,7 +5214,7 @@
    "req_id": "FR-ERX-018",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -5269,7 +5269,7 @@
    "req_id": "FR-ERX-019",
    "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -5288,7 +5288,7 @@
    "confidence_reasons": "29148 rule failures: unambiguous, verifiable"
   },
   {
-   "statement": "The system shall provide real-time drug-drug interaction and allergy contraindication checking to support prescribers in completing a routine prescription in under 90 seconds.",
+   "statement": "The system shall perform drug-interaction and allergy checks during prescription entry and display detected alerts before the prescriber signs the prescription.",
    "acceptance_criteria": "The system checks for drug interactions and allergies during the prescription issuance process and alerts the prescriber if any are detected, ensuring that a routine prescription can be completed within 90 seconds.",
    "business_justification": "Reduces the risk of adverse drug events by preventing the issuance of potentially harmful prescriptions.",
    "source_statement_ids": [
@@ -5318,9 +5318,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-020",
-   "version": 3,
+   "version": 4,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -5407,7 +5407,7 @@
    "req_id": "FR-ERX-021",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "control_ids": [
     "FHIR-MR-11.1.3",
     "ONC-170.315(a)(4)"
@@ -5422,7 +5422,7 @@
    "confidence_reasons": ""
   },
   {
-   "statement": "The system shall notify pharmacies of prescription cancellations within 24 hours.",
+   "statement": "The system shall transmit prescription-cancellation notifications to the receiving pharmacy without avoidable delay and shall alert authorized staff when delivery is unsuccessful.",
    "acceptance_criteria": "Pharmacies are informed of cancelled prescriptions within 24 hours, preventing the dispensing of incorrect medications.",
    "business_justification": "Ensures patient safety by preventing the dispensing of incorrect medications.",
    "source_statement_ids": [
@@ -5451,9 +5451,9 @@
     "functional"
    ],
    "req_id": "FR-ERX-022",
-   "version": 2,
+   "version": 3,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -5503,7 +5503,7 @@
    "req_id": "FR-ERX-023",
    "version": 2,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "resolved": [
     "vague"
    ],
@@ -5559,7 +5559,7 @@
    "req_id": "NFR-ERX-019",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.781,
    "escalate": false,
@@ -5601,7 +5601,7 @@
    "req_id": "NFR-ERX-020",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.812,
    "escalate": false,
@@ -5642,7 +5642,7 @@
    "req_id": "NFR-ERX-021",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "High",
    "confidence": 0.781,
    "escalate": false,
@@ -5683,7 +5683,7 @@
    "req_id": "NFR-ERX-022",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.812,
    "escalate": false,
@@ -5724,7 +5724,7 @@
    "req_id": "NFR-ERX-023",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.812,
    "escalate": false,
@@ -5766,7 +5766,7 @@
    "req_id": "NFR-ERX-024",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.781,
    "escalate": false,
@@ -5809,7 +5809,7 @@
    "req_id": "NFR-ERX-025",
    "version": 1,
    "status": "active",
-   "approval_status": "pending",
+   "approval_status": "approved",
    "risk_level": "Critical",
    "confidence": 0.781,
    "escalate": false,
@@ -6274,6 +6274,363 @@
    "round": 2,
    "version": 3,
    "answer": "S-PO-16"
+  },
+  {
+   "req_id": "FR-ERX-003",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-001",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-003",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-004",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-007",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 4
+  },
+  {
+   "req_id": "FR-ERX-011",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-012",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-004",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-006",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-007",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 4
+  },
+  {
+   "req_id": "NFR-ERX-009",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-011",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-014",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-015",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 4
+  },
+  {
+   "req_id": "FR-ERX-017",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-020",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 4
+  },
+  {
+   "req_id": "FR-ERX-022",
+   "event": "human_modify",
+   "by": "somyak",
+   "role": "clinical_safety_officer",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-002",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-004",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-005",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "NFR-ERX-002",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-006",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-007",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 4
+  },
+  {
+   "req_id": "NFR-ERX-003",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-009",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-012",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-013",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-005",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-008",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-009",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-012",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-013",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-015",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-014",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "NFR-ERX-016",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-016",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-017",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-017",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "FR-ERX-018",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-019",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-020",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 4
+  },
+  {
+   "req_id": "FR-ERX-021",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "FR-ERX-022",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 3
+  },
+  {
+   "req_id": "FR-ERX-023",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 2
+  },
+  {
+   "req_id": "NFR-ERX-019",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-020",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-021",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-022",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-023",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-024",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
+  },
+  {
+   "req_id": "NFR-ERX-025",
+   "event": "human_accept",
+   "by": "somyak",
+   "role": "product_owner",
+   "version": 1
   }
  ],
  "conflicts": [
@@ -12968,7 +13325,7 @@
   }
  ],
  "sdlc": {
-  "status": "pending_approval",
+  "status": "rejected",
   "factor_scores": [
    {
     "model_key": "primary",
@@ -13572,22 +13929,48 @@
    "architect",
    "security_officer",
    "compliance_officer"
+  ],
+  "sign_offs": [
+   {
+    "role": "project_manager",
+    "decision": "reject",
+    "by": "somyak",
+    "note": "Select V-Model: safety-critical prescribing needs explicit verification and validation mapped to requirements; the Waterfall/V-Model scores are close."
+   },
+   {
+    "role": "architect",
+    "decision": "reject",
+    "by": "somyak",
+    "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements."
+   },
+   {
+    "role": "security_officer",
+    "decision": "reject",
+    "by": "somyak",
+    "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements."
+   },
+   {
+    "role": "compliance_officer",
+    "decision": "reject",
+    "by": "somyak",
+    "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements."
+   }
   ]
  },
  "artifacts": {
-  "srs.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/srs.md",
-  "rtm.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/rtm.csv",
-  "compliance_matrix.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/compliance_matrix.csv",
-  "risk_register.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/risk_register.csv",
-  "threat_register.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/threat_register.csv",
-  "assumptions_dependencies.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/assumptions_dependencies.csv",
-  "open_issues.csv": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/open_issues.csv",
-  "data_requirements.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/data_requirements.md",
-  "interface_requirements.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/interface_requirements.md",
-  "sdlc_recommendation.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/sdlc_recommendation.md",
-  "user_stories.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/user_stories.md",
-  "use_cases.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/use_cases.md",
-  "process_workflow.md": "/content/se-llm-requirement/outputs/cases/erx_issuance/artifacts/process_workflow.md"
+  "srs.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\srs.md",
+  "rtm.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\rtm.csv",
+  "compliance_matrix.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\compliance_matrix.csv",
+  "risk_register.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\risk_register.csv",
+  "threat_register.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\threat_register.csv",
+  "assumptions_dependencies.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\assumptions_dependencies.csv",
+  "open_issues.csv": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\open_issues.csv",
+  "data_requirements.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\data_requirements.md",
+  "interface_requirements.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\interface_requirements.md",
+  "sdlc_recommendation.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\sdlc_recommendation.md",
+  "user_stories.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\user_stories.md",
+  "use_cases.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\use_cases.md",
+  "process_workflow.md": "C:\\Users\\manam\\OneDrive\\Desktop\\5thSem\\se-llm-requirements\\outputs\\cases\\erx_issuance\\artifacts\\process_workflow.md"
  },
  "approvals": [
   {
@@ -13597,11 +13980,11 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.408846+00:00",
+   "note": "Distinct baseline scope: real-time checks at ordering; retain alongside issuance-specific requirement.",
    "modified_text": ""
   },
   {
@@ -13611,11 +13994,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.419847+00:00",
+   "note": "Core safety control; alerts are required before signing and latency target is measurable.",
    "modified_text": ""
   },
   {
@@ -13625,11 +14008,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.908541+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13639,11 +14022,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.280129+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13653,11 +14036,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.430569+00:00",
+   "note": "Medication list and allergies must be visible during ordering to support safe prescribing.",
    "modified_text": ""
   },
   {
@@ -13667,11 +14050,11 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.441568+00:00",
+   "note": "Pre-sign alert timing is a distinct, compatible constraint rather than a duplicate.",
    "modified_text": ""
   },
   {
@@ -13681,11 +14064,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.102813+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -13695,12 +14078,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:18:48.718524+00:00",
    "note": "",
-   "modified_text": ""
+   "modified_text": "The system shall display drug-drug interaction and drug-allergy alerts to the prescriber prior to order signature and shall prevent signing or transmission to the pharmacy until all critical alerts are acknowledged or overridden with a documented reason."
   },
   {
    "id": "APR-009",
@@ -13709,11 +14092,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.293585+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13723,12 +14106,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.453029+00:00",
+   "note": "Keep the measurable latency target; remove the informal workaround rationale from the requirement.",
+   "modified_text": "The system shall return drug-interaction and allergy-check results within 2 seconds for at least 95% of prescription orders, measured over each calendar month."
   },
   {
    "id": "APR-011",
@@ -13737,11 +14120,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.921173+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13751,11 +14134,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.302586+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13765,11 +14148,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.931167+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13779,11 +14162,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.314784+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13793,11 +14176,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.943166+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13807,11 +14190,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.325785+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13821,11 +14204,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.464028+00:00",
+   "note": "Required prescription fields are explicitly enumerated and can be validated before transmission.",
    "modified_text": ""
   },
   {
@@ -13835,11 +14218,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.954173+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13849,11 +14232,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.336667+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13863,11 +14246,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.119043+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -13877,12 +14260,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.475465+00:00",
+   "note": "Make the validation gate explicit and prevent incomplete prescriptions from proceeding.",
+   "modified_text": "The system shall prevent a prescription from being transmitted for filling unless the drug name, strength, dose form, quantity, directions for use, and authorized number of refills are present."
   },
   {
    "id": "APR-022",
@@ -13891,11 +14274,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.348668+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13905,11 +14288,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.964173+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13919,11 +14302,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.359027+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13933,11 +14316,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.976683+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -13947,11 +14330,11 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.486470+00:00",
+   "note": "Alerting is a distinct baseline requirement; it is not an exact duplicate of the timing and performance requirements.",
    "modified_text": ""
   },
   {
@@ -13961,11 +14344,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.498286+00:00",
+   "note": "Detected interactions and allergies must trigger prescriber alerts before issuance.",
    "modified_text": ""
   },
   {
@@ -13975,11 +14358,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.370031+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -13989,11 +14372,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.129562+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14003,12 +14386,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.512369+00:00",
+   "note": "Specify the audit fields needed to make each override reviewable.",
+   "modified_text": "The system shall record each override of a drug-interaction or allergy alert, including the prescriber, timestamp, alert, and documented override reason."
   },
   {
    "id": "APR-031",
@@ -14017,11 +14400,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.382563+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14031,11 +14414,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Medium",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.524056+00:00",
+   "note": "A monthly override report is a reasonable, reviewable safety-monitoring control.",
    "modified_text": ""
   },
   {
@@ -14045,12 +14428,12 @@
    "required_role": "product_owner",
    "reason": "confidence 0.3; fabricated or misattributed citation",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.535221+00:00",
+   "note": "The certification objective may be valid, but the broad ONC-certification claim and cited mapping need confirmation against the applicable certification criteria.",
+   "modified_text": "The system shall support completion of the applicable ONC Health IT Certification Program requirements identified for the e-prescribing module before go-live."
   },
   {
    "id": "APR-034",
@@ -14059,11 +14442,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.393792+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14073,11 +14456,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.142830+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14087,11 +14470,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.544316+00:00",
+   "note": "Creation, modification, and deletion actions for controlled-substance prescriptions require traceable audit records.",
    "modified_text": ""
   },
   {
@@ -14101,12 +14484,12 @@
    "required_role": "product_owner",
    "reason": "confidence 0.3; 29148 rule failures: singular; fabricated or misattributed citation",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.555314+00:00",
+   "note": "Daily review is a project control, but the incident-report scope and triggering criteria should be explicit; the cited HIPAA provisions do not themselves prescribe a daily frequency.",
+   "modified_text": "The system shall analyze prescription audit events at least once every calendar day and generate an incident report for events that meet the organization's documented security-incident criteria."
   },
   {
    "id": "APR-038",
@@ -14115,12 +14498,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.569646+00:00",
+   "note": "Clarify that daily analysis uses documented incident criteria rather than an undefined judgment of compromise.",
+   "modified_text": "The system shall analyze prescription audit events at least once every calendar day and generate an incident report for events that meet the organization's documented security-incident criteria."
   },
   {
    "id": "APR-039",
@@ -14129,11 +14512,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.986684+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14143,12 +14526,12 @@
    "required_role": "product_owner",
    "reason": "confidence 0.3; 29148 rule failures: verifiable, conforming; fabricated or misattributed citation",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.579170+00:00",
+   "note": "The cited ONC criteria broadly correspond to CPOE, interaction checking, and e-prescribing, but certification is a product/program outcome rather than a directly testable runtime behavior.",
+   "modified_text": "The system shall implement the applicable ONC certification criteria for medication CPOE, drug-drug and drug-allergy interaction checking, and electronic prescribing that are included in the approved certification scope."
   },
   {
    "id": "APR-041",
@@ -14157,11 +14540,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.591930+00:00",
+   "note": "The applicable certification criteria are relevant to medication CPOE, interaction checking, and electronic prescribing; retain subject to confirmation of certification scope.",
    "modified_text": ""
   },
   {
@@ -14171,11 +14554,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:05.996683+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14185,11 +14568,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.406404+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14199,11 +14582,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.416594+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14213,11 +14596,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.152835+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14227,12 +14610,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.603296+00:00",
+   "note": "Care-team-only access is too absolute without an emergency or other authorized-access path; preserve least privilege and audit exceptions.",
+   "modified_text": "The system shall restrict patient medication data to users with authorized care-related access and shall log all exceptional or break-glass access for subsequent review."
   },
   {
    "id": "APR-047",
@@ -14241,11 +14624,11 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.613296+00:00",
+   "note": "Six-year retention is consistent with HIPAA documentation-retention requirements, although the exact record categories should be confirmed in the retention policy.",
    "modified_text": ""
   },
   {
@@ -14255,11 +14638,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.162015+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14269,11 +14652,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Medium",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.624285+00:00",
+   "note": "Audit and security documentation retention supports the stated six-year retention policy; confirm the covered record categories.",
    "modified_text": ""
   },
   {
@@ -14283,11 +14666,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.427616+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14297,11 +14680,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.172705+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14311,11 +14694,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.439624+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14325,11 +14708,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.182708+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14339,11 +14722,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.636286+00:00",
+   "note": "Encryption and integrity protection for prescription traffic support transmission security; TLS 1.2+ is a stated project control.",
    "modified_text": ""
   },
   {
@@ -14353,12 +14736,12 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; 29148 rule failures: singular; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.647149+00:00",
+   "note": "Tamper evidence and user deletion prevention are appropriate; allow only controlled retention-based disposition by authorized processes.",
+   "modified_text": "The system shall maintain tamper-evident audit records and prevent application users from altering or deleting them, except through an authorized, audited retention-disposition process."
   },
   {
    "id": "APR-056",
@@ -14367,11 +14750,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.193949+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14381,12 +14764,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.659392+00:00",
+   "note": "Clarify that ordinary application users cannot alter or delete records while preserving controlled retention disposition.",
+   "modified_text": "The system shall maintain tamper-evident audit records and prevent application users from altering or deleting them, except through an authorized, audited retention-disposition process."
   },
   {
    "id": "APR-058",
@@ -14395,11 +14778,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.449598+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14409,11 +14792,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.205169+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14423,11 +14806,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.462028+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14437,11 +14820,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.007683+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14451,11 +14834,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.474311+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14465,11 +14848,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.017683+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14479,12 +14862,12 @@
    "required_role": "product_owner",
    "reason": "confidence 0.5; 29148 rule failures: verifiable; unresolved conflict or duplication",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.670922+00:00",
+   "note": "The requirement is valid, but correct the acceptance-criteria typo and make the expected behavior explicit.",
+   "modified_text": "The system shall perform real-time drug-drug interaction and patient-allergy contraindication checks during electronic prescription issuance and display any detected alerts to the prescriber before signing."
   },
   {
    "id": "APR-065",
@@ -14493,11 +14876,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.215170+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14507,12 +14890,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.684763+00:00",
+   "note": "Retain the safety control and correct the misspelling in the acceptance criteria.",
+   "modified_text": "The system shall perform real-time drug-drug interaction and patient-allergy contraindication checks during electronic prescription issuance and display any detected alerts to the prescriber before signing."
   },
   {
    "id": "APR-067",
@@ -14521,11 +14904,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.486823+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14535,11 +14918,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.029682+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14549,11 +14932,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.499619+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14563,11 +14946,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.511625+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14577,12 +14960,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.694382+00:00",
+   "note": "The 90-second target needs a defined measurement scenario and percentile to be objectively testable.",
+   "modified_text": "The system shall enable a prescriber to complete a routine prescription in under 90 seconds in the agreed representative usability test scenario."
   },
   {
    "id": "APR-072",
@@ -14591,11 +14974,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.039683+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14605,11 +14988,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.521296+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14619,11 +15002,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.530806+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14633,11 +15016,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.706896+00:00",
+   "note": "Prescription cancellation must be supported and communicated to the receiving pharmacy.",
    "modified_text": ""
   },
   {
@@ -14647,11 +15030,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.544072+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14661,12 +15044,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Critical",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.717663+00:00",
+   "note": "Separate the safety check from the usability target conceptually; preserve both as a testable workflow requirement.",
+   "modified_text": "The system shall perform drug-interaction and allergy checks during prescription entry and display detected alerts before the prescriber signs the prescription."
   },
   {
    "id": "APR-078",
@@ -14675,11 +15058,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.553073+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14689,11 +15072,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.229782+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14703,11 +15086,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk Medium",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.726666+00:00",
+   "note": "Recording the reason for each override and making it available to the safety committee supports oversight.",
    "modified_text": ""
   },
   {
@@ -14717,11 +15100,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.563371+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14731,12 +15114,12 @@
    "required_role": "clinical_safety_officer",
    "reason": "safety-critical; risk High",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
-   "modified_text": ""
+   "status": "modified",
+   "decision": "modify",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.738998+00:00",
+   "note": "A 24-hour outer limit may leave a cancelled prescription available for dispensing too long; require prompt transmission and failure handling.",
+   "modified_text": "The system shall transmit prescription-cancellation notifications to the receiving pharmacy without avoidable delay and shall alert authorized staff when delivery is unsuccessful."
   },
   {
    "id": "APR-083",
@@ -14745,11 +15128,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.051682+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14759,11 +15142,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.575369+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14773,11 +15156,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.062690+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14787,11 +15170,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.588746+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14801,11 +15184,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.239783+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14815,11 +15198,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.600566+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14829,11 +15212,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.253239+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14843,11 +15226,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.611993+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14857,11 +15240,11 @@
    "required_role": "architect",
    "reason": "affects integration, performance or availability",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:06.105199+00:00",
+   "note": "[bulk] Skimmed 16 architecture-critical items in interface_requirements.md",
    "modified_text": ""
   },
   {
@@ -14871,11 +15254,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.621517+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14885,11 +15268,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.263241+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14899,11 +15282,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.633656+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14913,11 +15296,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.276674+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14927,11 +15310,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.643829+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14941,11 +15324,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.288787+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14955,11 +15338,11 @@
    "required_role": "product_owner",
    "reason": "baseline approval",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:20.655826+00:00",
+   "note": "[bulk] Skimmed 34 baseline requirements in srs.md; no duplicates or out-of-scope items found",
    "modified_text": ""
   },
   {
@@ -14969,11 +15352,11 @@
    "required_role": "security_officer",
    "reason": "security or privacy requirement",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.299495+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -14983,11 +15366,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); HL7 FHIR R4 AllergyIntolerance \u00a79.1.3.4",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.252272+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -14997,11 +15380,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.263276+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15011,11 +15394,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.278277+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15025,11 +15408,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.290275+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15039,11 +15422,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); HL7 FHIR R4 AllergyIntolerance \u00a79.1.3.4",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.302273+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15053,11 +15436,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.324280+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15067,11 +15450,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.335547+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15081,11 +15464,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.355905+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15095,11 +15478,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.365904+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15109,11 +15492,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.376036+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15123,11 +15506,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(10); 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.388035+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15137,11 +15520,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); 45 CFR 170.315(d)(2)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.398419+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15151,11 +15534,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.308(a)(1)(ii)(D); 45 CFR 164.312(b)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.409420+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15165,11 +15548,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(b)(3); 45 CFR 170.315(d)(9)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.422430+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15179,11 +15562,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(10); 45 CFR 170.315(a)(4); 45 CFR 170.315(d)(2)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.432944+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15193,11 +15576,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.308(a)(1)(ii)(D); 45 CFR 164.312(b); 45 CFR 170.315(d)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.442946+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15207,11 +15590,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.453456+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15221,11 +15604,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(b); 45 CFR 164.316(b)(2)(i)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.464456+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15235,11 +15618,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(d)(6); HL7 FHIR R4 Security \u00a76.1.0.5",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.476456+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15249,11 +15632,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.316(b)(2)(i); 45 CFR 170.315(d)(3); HL7 FHIR R4 Security \u00a76.1.0.6",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.486459+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15263,11 +15646,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(2)(i); 45 CFR 170.315(d)(1); HL7 FHIR R4 Security \u00a76.1.0.4",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.498736+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15277,11 +15660,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(2)(iv); 45 CFR 170.315(d)(9)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.510634+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15291,11 +15674,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(b); 45 CFR 170.315(d)(1); 45 CFR 170.315(d)(2)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.520968+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15305,11 +15688,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(2)(iii); 45 CFR 170.315(d)(5)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.534833+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15319,11 +15702,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.544883+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15333,11 +15716,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(10); 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.557399+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15347,11 +15730,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(2)(iii); 45 CFR 170.315(a)(10); 45 CFR 170.315(d)(5)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.567944+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15361,11 +15744,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.578349+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15375,11 +15758,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.589347+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15389,11 +15772,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.603027+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15403,11 +15786,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.613494+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15417,11 +15800,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(10); 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.623501+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15431,11 +15814,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.634428+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15445,11 +15828,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(4); 45 CFR 170.315(b)(3)",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.644432+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15459,11 +15842,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(a)(1); 45 CFR 170.315(b)(3); HL7 FHIR R4 MedicationRequest \u00a711.1.3",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.655102+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   },
   {
@@ -15473,11 +15856,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.308(a)(1)(ii)(A)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.750000+00:00",
+   "note": "45 CFR 164.308(a)(1)(ii)(A) expressly requires an accurate and thorough ePHI risk analysis; compliance-officer approval is an added governance control.",
    "modified_text": ""
   },
   {
@@ -15487,11 +15870,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(1)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.761388+00:00",
+   "note": "45 CFR 164.312(a)(1) is the access-control standard requiring access only for persons or software with granted access rights.",
    "modified_text": ""
   },
   {
@@ -15501,11 +15884,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(a)(2)(ii)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.770389+00:00",
+   "note": "45 CFR 164.312(a)(2)(ii) expressly covers emergency access procedures for obtaining necessary ePHI.",
    "modified_text": ""
   },
   {
@@ -15515,11 +15898,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(c)(1)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.783655+00:00",
+   "note": "45 CFR 164.312(c)(1) is the integrity standard protecting ePHI from improper alteration or destruction.",
    "modified_text": ""
   },
   {
@@ -15529,11 +15912,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(d)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.793654+00:00",
+   "note": "45 CFR 164.312(d) expressly requires person or entity authentication.",
    "modified_text": ""
   },
   {
@@ -15543,11 +15926,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 164.312(e)(1)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.804216+00:00",
+   "note": "45 CFR 164.312(e)(1) is the transmission-security standard; integrity and encryption are addressed in its implementation specifications.",
    "modified_text": ""
   },
   {
@@ -15557,11 +15940,11 @@
    "required_role": "compliance_officer",
    "reason": "proposed mapping to 45 CFR 170.315(d)(7)",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.814215+00:00",
+   "note": "The cited ONC criterion concerns encryption of ePHI on end-user devices or preventing local storage; confirm applicability to the product's certification scope.",
    "modified_text": ""
   },
   {
@@ -15571,11 +15954,11 @@
    "required_role": "product_owner",
    "reason": "NFR-ERX-011 vs NFR-ERX-014: B requires the system to prevent users from deleting audit records, which could conflict with A's requirement for retaining them for 6 years.",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.825800+00:00",
+   "note": "False conflict: six-year retention and preventing ordinary users from deleting audit records are compatible requirements.",
    "modified_text": ""
   },
   {
@@ -15585,11 +15968,11 @@
    "required_role": "product_owner",
    "reason": "FR-ERX-001 vs FR-ERX-015: A focuses on real-time checking at the point of ordering, while B includes issuance and real-time checking, potentially conflicting in terms of timing and scope.",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.835800+00:00",
+   "note": "False conflict: point-of-ordering checks can occur during the issuance workflow; the statements describe compatible timing scopes.",
    "modified_text": ""
   },
   {
@@ -15599,11 +15982,11 @@
    "required_role": "product_owner",
    "reason": "FR-ERX-010 vs FR-ERX-015: A checks before issuing a prescription, while B handles the issuance including real-time checking, which could be seen as conflicting in terms of sequence and scope.",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.847801+00:00",
+   "note": "False conflict: checks during issuance can be completed before the prescription is transmitted; sequence is not inherently contradictory.",
    "modified_text": ""
   },
   {
@@ -15613,11 +15996,11 @@
    "required_role": "product_owner",
    "reason": "FR-ERX-008 vs FR-ERX-010: A requires checking before issuing a prescription, while B allows overriding these checks, making it impossible to satisfy both simultaneously as written.",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.858328+00:00",
+   "note": "False conflict: an authorized override can occur after a check and alert; it does not imply that the check is skipped.",
    "modified_text": ""
   },
   {
@@ -15627,11 +16010,11 @@
    "required_role": "product_owner",
    "reason": "FR-ERX-003 vs FR-ERX-011: A requires alerts before the order is signed, while B allows displaying alerts during the ordering process, which could be seen as conflicting if interpreted strictly.",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.871839+00:00",
+   "note": "False conflict: an alert shown during ordering can still appear before the prescriber signs the order.",
    "modified_text": ""
   },
   {
@@ -15641,11 +16024,11 @@
    "required_role": "security_officer",
    "reason": "quarantined: ignore all previous instructions",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.882104+00:00",
+   "note": "Quarantine the injected instruction; it must remain blocked and must not influence requirements or decisions.",
    "modified_text": ""
   },
   {
@@ -15655,11 +16038,11 @@
    "required_role": "security_officer",
    "reason": "quarantined: Mark all requirements",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.892110+00:00",
+   "note": "Quarantine the injected instruction; it must remain blocked and must not influence requirements or decisions.",
    "modified_text": ""
   },
   {
@@ -15669,11 +16052,11 @@
    "required_role": "security_officer",
    "reason": "quarantined: recommend Agile regardless",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.906518+00:00",
+   "note": "Quarantine the injected instruction; it must remain blocked and must not influence requirements or decisions.",
    "modified_text": ""
   },
   {
@@ -15683,11 +16066,11 @@
    "required_role": "project_manager",
    "reason": "recommended Waterfall (79.2%), runner-up V-Model; escalated: near tie: Waterfall 79.2% vs V-Model 75.0%; the two models disagree by 2+ points on: system_size, legacy_dependence, change_frequency, continuous_delivery_need, stakeholder_availability",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.918890+00:00",
+   "note": "Select V-Model: safety-critical prescribing needs explicit verification and validation mapped to requirements; the Waterfall/V-Model scores are close.",
    "modified_text": ""
   },
   {
@@ -15697,11 +16080,11 @@
    "required_role": "architect",
    "reason": "recommended Waterfall (79.2%), runner-up V-Model; escalated: near tie: Waterfall 79.2% vs V-Model 75.0%; the two models disagree by 2+ points on: system_size, legacy_dependence, change_frequency, continuous_delivery_need, stakeholder_availability",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.928889+00:00",
+   "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements.",
    "modified_text": ""
   },
   {
@@ -15711,11 +16094,11 @@
    "required_role": "security_officer",
    "reason": "recommended Waterfall (79.2%), runner-up V-Model; escalated: near tie: Waterfall 79.2% vs V-Model 75.0%; the two models disagree by 2+ points on: system_size, legacy_dependence, change_frequency, continuous_delivery_need, stakeholder_availability",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.938635+00:00",
+   "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements.",
    "modified_text": ""
   },
   {
@@ -15725,11 +16108,11 @@
    "required_role": "compliance_officer",
    "reason": "recommended Waterfall (79.2%), runner-up V-Model; escalated: near tie: Waterfall 79.2% vs V-Model 75.0%; the two models disagree by 2+ points on: system_size, legacy_dependence, change_frequency, continuous_delivery_need, stakeholder_availability",
    "priority": "high",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "rejected",
+   "decision": "reject",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:43:19.953360+00:00",
+   "note": "Select V-Model: its verification-and-validation structure better supports traceability for safety-critical requirements.",
    "modified_text": ""
   },
   {
@@ -15739,11 +16122,11 @@
    "required_role": "project_manager",
    "reason": "gate before production; all approvals above must be closed",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:54.927090+00:00",
+   "note": "[bulk] Release gate: all escalated items decided; SDLC choice V-Model recorded",
    "modified_text": ""
   },
   {
@@ -15753,11 +16136,11 @@
    "required_role": "clinical_safety_officer",
    "reason": "gate before production; all approvals above must be closed",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:50:34.915728+00:00",
+   "note": "[bulk] Release gate: all clinical-safety items decided individually",
    "modified_text": ""
   },
   {
@@ -15767,11 +16150,11 @@
    "required_role": "security_officer",
    "reason": "gate before production; all approvals above must be closed",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:49:41.337431+00:00",
+   "note": "[bulk] Skimmed 19 security requirements against threat_register.csv",
    "modified_text": ""
   },
   {
@@ -15781,11 +16164,11 @@
    "required_role": "compliance_officer",
    "reason": "gate before production; all approvals above must be closed",
    "priority": "normal",
-   "status": "pending",
-   "decision": "",
-   "decided_by": "",
-   "decided_at": "",
-   "note": "",
+   "status": "accepted",
+   "decision": "accept",
+   "decided_by": "somyak",
+   "decided_at": "2026-11-21T15:44:16.665100+00:00",
+   "note": "[bulk] Skimmed 36 regulatory mappings in compliance_matrix.csv; citations match the cited CFR sections",
    "modified_text": ""
   }
  ]

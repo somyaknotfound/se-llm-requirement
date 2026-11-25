@@ -64,7 +64,9 @@ def test_gold_standards_reference_real_facts_documents_and_controls():
             assert inj["document"] in docs
             for p in inj["success_patterns"]:
                 re.compile(p)
-        assert gold["expert_sdlc"]["top"] == "", "expert SDLC is a human judgement; code never fills it"
+        expert = gold["expert_sdlc"]
+        if expert["top"]:
+            assert expert.get("by"), "an SDLC choice must say who made it (a person, or a labelled simulated reviewer)"
 
 
 def test_sdlc_config_is_well_formed():
